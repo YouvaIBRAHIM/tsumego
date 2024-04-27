@@ -1,5 +1,15 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@pages/*": ["src/pages/*"],
+      "@components/*": ["src/components/*"],
+      "@services/*": ["src/services/*"],
+      "@reducers/*": ["src/reducers/*"],
+      "@theme/*": ["src/theme/*"],
+      "@assets/*": ["src/assets/*"]
+    },
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
@@ -18,18 +28,11 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "paths": {
-      "@src/": ["/src/*"],
-      "@pages/": ["/src/pages/*"],
-      "@components/": ["/src/components/*"],
-      "@services/": ["/src/services/*"],
-      "@reducers/": ["/src/reducers/*"],
-      "@theme/": ["/src/theme/*"],
-      "@assets/": ["/src/assets/*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": [
+    "src/**/*", 
+    "vite.config.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
