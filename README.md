@@ -48,7 +48,7 @@ Dans le terminal :
    - `localhost:8000`--> accès à l'interface Django
    - `localhost:8081`--> accès à la bdd via mongoExpress
 
-#### Arrêter les conteuneurs Docker
+#### Arrêter les conteneurs Docker
 
 Dans le terminal:
 
