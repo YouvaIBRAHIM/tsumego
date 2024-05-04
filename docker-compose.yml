@@ -1,0 +1,55 @@
+# Use root/example as user/password credentials
+version: "3.8"
+
+services:
+  db:
+    container_name: ${MONGO_DB_NAME}
+    image: mongo:7.0.8
+    restart: always
+    ports:
+      - 27017:${MONGO_DB_PORT}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_PWD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+    volumes:
+      - go-project-mongo-data:/var/lib/mongo
+    networks:
+      - backend-go-project
+
+  mongo-express:
+    container_name: go_project_db_express
+    image: mongo-express:1.0.2-18
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_DB_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_DB_PWD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_DB_USERNAME}:${MONGO_DB_PWD}@${MONGO_DB_NAME}:${MONGO_DB_PORT}/
+      ME_CONFIG_BASICAUTH: "false"
+    depends_on:
+      - db
+    networks:
+      - backend-go-project
+
+  web:
+    container_name: go_project_web
+    tty: true
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./backend/:/home/project
+    depends_on:
+      - db
+    networks:
+      - backend-go-project
+
+volumes:
+  go-project-mongo-data:
+
+networks:
+  backend-go-project:
