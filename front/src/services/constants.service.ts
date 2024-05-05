@@ -30,3 +30,35 @@ export const breakpoints = {
     xl: 1536,
     xxl: 1920,
 }
+
+
+export const colors = {
+    dark: {
+        primary: {
+            main: '#003892',
+        },
+        divider: '#9e9e9e',
+        background: {
+            default: '#212121',
+            paper: '#424242',
+        },
+        text: {
+            primary: '#fff',
+            secondary: '#9e9e9e',
+        }
+    },
+    light: {
+        primary: {
+            main: '#cfd8dc',
+        },
+        divider: '#9e9e9e',
+        background: {
+            default: '#eeeeee',
+            paper: '#e0e0e0',
+        },
+        text: {
+            primary: '#212121',
+            secondary: '#424242',
+        }
+    }
+}

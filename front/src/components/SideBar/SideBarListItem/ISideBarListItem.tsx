@@ -5,6 +5,7 @@ export interface ISideBarListItem {
     id: string
     icon: ReactElement
     label: string
-    action: () => void
+    action?: () => void
+    link?: string
 }
 

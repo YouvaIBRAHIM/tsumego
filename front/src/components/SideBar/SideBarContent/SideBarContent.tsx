@@ -1,13 +1,8 @@
-import { Box, Divider, List, styled } from '@mui/material'
+import { Box, Divider, List } from '@mui/material'
 import { ISideBarContent } from '@components/SideBar/SideBarContent/ISideBarContent'
 import SideBarListItem from '@components/SideBar/SideBarListItem/SideBarListItem'
 import Switch from '@components/Switch'
 import { useColorMode } from '@src/reducers/theme.reducer'
-
-
-const DrawerFooter = styled(Box)({
-    marginTop: 'auto',
-})
 
 const DrawerContent = ({
     sideBarHeader,
@@ -33,12 +28,15 @@ const DrawerContent = ({
                         <SideBarListItem
                             sideBarListElement={sideBarListElement}
                             key={sideBarListElement.id}
-
                         />
                     ))}
                 </List>
             )}
-            <DrawerFooter>
+            <Box 
+                sx={{
+                    marginTop: 'auto'
+                }}
+            >
                 <Divider />
 
                 <Switch
@@ -52,7 +50,7 @@ const DrawerContent = ({
                         },
                     }}
                 />
-            </DrawerFooter>
+            </Box>
         </>
     )
 }

@@ -10,6 +10,7 @@ import ArrowTooltips from '@components/ArrowTooltips'
 import { truncateString } from '@services/utils.service'
 import { sideBarConst } from '@services/constants.service'
 import { useSideBar } from '@src/reducers/sidebar.reducer'
+import { useNavigate } from 'react-router-dom'
 
 const SideBarListItem = ({
     sideBarListElement,
@@ -17,7 +18,15 @@ const SideBarListItem = ({
     sideBarListElement: ISideBarListItem
 }) => {
     const { isOpen } = useSideBar()
+    const navigate = useNavigate();
 
+    const onHandleClick = () => {
+        if (sideBarListElement?.link) {
+            navigate(sideBarListElement.link)
+        }else if (sideBarListElement?.action) {
+            sideBarListElement.action()
+        }
+    }
     return (
         <ArrowTooltips
             title={sideBarListElement.label}
@@ -28,7 +37,7 @@ const SideBarListItem = ({
                 key={sideBarListElement.id}
                 disablePadding
                 sx={{ display: 'block' }}
-                onClick={sideBarListElement.action}
+                onClick={onHandleClick}
             >
                 <ListItemButton
                     sx={{

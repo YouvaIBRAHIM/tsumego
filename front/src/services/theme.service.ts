@@ -1,5 +1,5 @@
 import { PaletteMode } from '@mui/material'
-import { breakpoints, sideBarConst } from '@services/constants.service'
+import { breakpoints, colors, sideBarConst } from '@services/constants.service'
 
 
 declare module '@mui/material/styles' {
@@ -64,35 +64,7 @@ export const getTheme = (mode: PaletteMode) => ({
     },
     palette: {
         mode,
-        ...(mode === 'light'
-            ? {
-                  primary: {
-                      main: '#cfd8dc',
-                  },
-                  divider: '#9e9e9e',
-                  background: {
-                      default: '#eeeeee',
-                      paper: '#e0e0e0',
-                  },
-                  text: {
-                      primary: '#212121',
-                      secondary: '#424242',
-                  },
-              }
-            : {
-                  primary: {
-                      main: '#003892',
-                  },
-                  divider: '#9e9e9e',
-                  background: {
-                      default: '#212121',
-                      paper: '#424242',
-                  },
-                  text: {
-                      primary: '#fff',
-                      secondary: '#9e9e9e',
-                  },
-              }),
+        ...{...colors[mode]},
     },
     components: {
         MuiContainer: {

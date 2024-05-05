@@ -11,13 +11,13 @@ const sideBarList = [
         id: 'home',
         label: "Accueil",
         icon: <HouseSimple size={24} />,
-        action: () => console.log('home')
+        link: '/'
     },
     {
         id: 'history',
         label: 'Historique',
         icon: <ClockCounterClockwise size={24} />,
-        action: () => console.log('history')
+        link: '/history'
     },
 ]
 
@@ -27,7 +27,6 @@ const sideBarHeader = {
     icon: <Plus size={24} />,
     action: () => console.log('new_party')
 }
-
 
 const SideBar = () => {
     const { isOpen, toggleOpenSideBar } = useSideBar()

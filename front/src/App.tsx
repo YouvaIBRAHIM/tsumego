@@ -3,7 +3,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useMemo } from 'react';
 import { getTheme } from '@services/theme.service';
 import { useColorMode } from '@reducers/theme.reducer';
-import Home from '@pages/Home.page';
+import { RouterProvider } from 'react-router-dom';
+import { router } from '@services/router.service';
 
 function App() {
   const { colorMode } = useColorMode();
@@ -11,9 +12,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Home />
+      <RouterProvider router={router} />
     </ThemeProvider>
-
   )
 }
 
