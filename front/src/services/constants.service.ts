@@ -1,15 +1,6 @@
-export const sideBarConst: {
-    openedWidth: number
-    closedWidth: number
-    mobileClosedWidth: number
-    backgroundColor: {
-        listItemBg: {
-            light: string
-            dark: string
-        }
-    }
-    labelMaxLength: number
-} = {
+import { IBreakPoints, ISideBarConsts, ThemeObject } from "@src/types/constants.type"
+
+export const sideBarConst: ISideBarConsts = {
     openedWidth: 300,
     closedWidth: 80,
     mobileClosedWidth: 0,
@@ -20,9 +11,10 @@ export const sideBarConst: {
         },
     },
     labelMaxLength: 20,
+    transitionDuration: 300 // ms
 }
 
-export const breakpoints = {
+export const breakpoints: IBreakPoints = {
     xs: 0,
     sm: 640,
     md: 900,
@@ -31,8 +23,7 @@ export const breakpoints = {
     xxl: 1920,
 }
 
-
-export const colors = {
+export const colors: ThemeObject = {
     dark: {
         primary: {
             main: '#003892',
@@ -62,3 +53,5 @@ export const colors = {
         }
     }
 }
+
+export const TOOLBAR_HEIGTH: number = 3 //rem

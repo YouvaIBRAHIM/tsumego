@@ -11,6 +11,8 @@ export default defineConfig({
       "@components": "/src/components",
       "@services": "/src/services",
       "@reducers": "/src/reducers",
+      "@routers": "/src/routers",
+      "@types": "/src/types",
       "@theme": "/src/theme",
       "@assets": "/src/assets"
     }

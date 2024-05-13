@@ -1,4 +1,6 @@
 import { PaletteMode } from "@mui/material"
+import { IAsideListData } from "@src/components/AsideList/AsideList"
+import { IProblem } from "@src/types/problem.type"
 
 export const truncateString = (string: string, maxLength: number) => {
     return string.length > maxLength
@@ -6,16 +8,15 @@ export const truncateString = (string: string, maxLength: number) => {
         : string
 }
 
-export const getItemFromLocalStorage = (key: string): any => {
+export const getItemFromLocalStorage = (key: string): string | null => {
     try {
-        const item: any = localStorage.getItem(key)
-        return JSON.parse(item)
+        return localStorage.getItem(key)
     } catch (error) {
         return null
     }
 }
 
-export const setItemInLocalStorage = (key: string, value: any): void => {
+export const setItemInLocalStorage = (key: string, value: unknown): void => {
     try {
         localStorage.setItem(key, JSON.stringify(value))
     } catch {
@@ -24,7 +25,8 @@ export const setItemInLocalStorage = (key: string, value: any): void => {
 }
 
 export const getDefaultThemeMode = (): PaletteMode => {
-    const themeModeFromLocalStorage = getItemFromLocalStorage('colorMode')
+    const colorMode = getItemFromLocalStorage('colorMode')
+    const themeModeFromLocalStorage = colorMode && JSON.parse(colorMode)
     
     if (!themeModeFromLocalStorage) {
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -32,3 +34,10 @@ export const getDefaultThemeMode = (): PaletteMode => {
     return themeModeFromLocalStorage
 }
 
+export const problemListDataToAsideListData = (data: IProblem[]): IAsideListData[] => {
+    return data.map(el => ({
+        id: el.id,
+        label: el.label,
+        value: el.problem
+    }))
+}

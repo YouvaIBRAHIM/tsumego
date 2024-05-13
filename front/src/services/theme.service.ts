@@ -1,6 +1,5 @@
 import { PaletteMode } from '@mui/material'
-import { breakpoints, colors, sideBarConst } from '@services/constants.service'
-
+import { TOOLBAR_HEIGTH, breakpoints, colors, sideBarConst } from '@services/constants.service'
 
 declare module '@mui/material/styles' {
     interface BreakpointOverrides {
@@ -15,7 +14,7 @@ declare module '@mui/material/styles' {
 
 export const getTheme = (mode: PaletteMode) => ({
     typography: {
-        fontFamily: `"Inter", "Poppins"`,
+        fontFamily: '"Inter", "Poppins"',
         fontSize: 14,
         fontWeightLight: 400,
         fontWeightRegular: 500,
@@ -64,7 +63,7 @@ export const getTheme = (mode: PaletteMode) => ({
     },
     palette: {
         mode,
-        ...{...colors[mode]},
+        ...colors[mode],
     },
     components: {
         MuiContainer: {
@@ -86,7 +85,7 @@ export const getTheme = (mode: PaletteMode) => ({
         MuiDrawer: {
             styleOverrides: {
                 paper: {
-                    transition: 'width .2s',
+                    transition: `width ${sideBarConst.transitionDuration}ms ease`,
                     [`@media (min-width:${breakpoints.md}px)`]: {
                         position: 'static',
                     },
@@ -153,6 +152,16 @@ export const getTheme = (mode: PaletteMode) => ({
                             mode === 'dark' ? '#8796A5' : '#aab4be',
                         borderRadius: 20 / 2,
                     },
+                },
+            },
+        },
+        MuiToolbar: {
+            styleOverrides: {
+                root: {
+                    minHeight: TOOLBAR_HEIGTH + 'rem',
+                    [`@media (min-width:${breakpoints.xs}px)`]: {
+                        minHeight: TOOLBAR_HEIGTH + 'rem',
+                    }
                 },
             },
         },

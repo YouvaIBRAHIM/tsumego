@@ -20,8 +20,8 @@ const ArrowTooltips = ({
                 disableHoverListener == false
                     ? false
                     : title.length > labelMaxLength
-                      ? false
-                      : true
+                        ? false
+                        : true
             }
             title={title}
             arrow

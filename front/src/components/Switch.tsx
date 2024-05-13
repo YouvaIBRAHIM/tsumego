@@ -57,13 +57,13 @@ const Switch = ({
                                                 backgroundColor:
                                                     mode === 'dark'
                                                         ? background
-                                                              .backgroundColor
-                                                              .track.checked
-                                                              .dark
+                                                            .backgroundColor
+                                                            .track.checked
+                                                            .dark
                                                         : background
-                                                              .backgroundColor
-                                                              .track.checked
-                                                              .light,
+                                                            .backgroundColor
+                                                            .track.checked
+                                                            .light,
                                             }),
                                     },
                                 },

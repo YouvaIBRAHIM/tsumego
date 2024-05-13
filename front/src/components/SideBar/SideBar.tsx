@@ -3,7 +3,7 @@ import MuiDrawer from '@mui/material/Drawer'
 import { breakpoints, sideBarConst } from '@services/constants.service'
 import OpenButtonSideBar from '@components/SideBar/OpenButtonSideBar'
 import DrawerContent from '@components/SideBar/SideBarContent/SideBarContent'
-import { ClockCounterClockwise, HouseSimple, Plus } from '@phosphor-icons/react'
+import { HouseSimple, Plus, PuzzlePiece } from '@phosphor-icons/react'
 import { useSideBar } from '@src/reducers/sidebar.reducer'
 
 const sideBarList = [
@@ -14,10 +14,10 @@ const sideBarList = [
         link: '/'
     },
     {
-        id: 'history',
-        label: 'Historique',
-        icon: <ClockCounterClockwise size={24} />,
-        link: '/history'
+        id: 'problems',
+        label: 'Problèmes',
+        icon: <PuzzlePiece size={24} />,
+        link: '/problems'
     },
 ]
 
@@ -58,21 +58,9 @@ const SideBar = () => {
                     sideBarHeader={sideBarHeader}
                 />
             </Drawer>
-            <Box
-                sx={(theme) => ({
-                    width: '40px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    [theme.breakpoints.down('md')]: {
-                        position: 'absolute',
-                        minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
-                    },
-                })}
-            >
+            <OpenButtonSideBarContainer open={isOpen}>
                 <OpenButtonSideBar />
-            </Box>
+            </OpenButtonSideBarContainer>
         </>
     )
 }
@@ -112,5 +100,24 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({
         '& .MuiDrawer-paper': closedMixin(theme),
     }),
 }))
+
+
+const OpenButtonSideBarContainer = styled(Box)<{open: boolean}>(({ theme, open }) => ({
+    width: '40px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`,
+    transition: `left ${sideBarConst.transitionDuration}ms ease`,    
+    left: open
+        ? sideBarConst.openedWidth + 'px'
+        : sideBarConst.closedWidth + 'px',
+    [theme.breakpoints.down('md')]: {
+        left: "0px"
+    },
+}))
+
 
 export default SideBar

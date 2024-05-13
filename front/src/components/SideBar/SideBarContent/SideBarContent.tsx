@@ -41,7 +41,7 @@ const DrawerContent = ({
 
                 <Switch
                     label={`Mode ${colorMode === 'dark' ? 'sombre' : 'clair'}`}
-                    checked
+                    checked={colorMode === 'dark' ? true : false}
                     action={toggleColorMode}
                     background={{
                         backgroundImage: {

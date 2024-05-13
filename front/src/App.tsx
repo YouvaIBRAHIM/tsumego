@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { getTheme } from '@services/theme.service';
 import { useColorMode } from '@reducers/theme.reducer';
 import { RouterProvider } from 'react-router-dom';
-import { router } from '@services/router.service';
+import { router } from '@routers/router';
 
 function App() {
   const { colorMode } = useColorMode();

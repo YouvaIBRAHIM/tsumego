@@ -1,6 +1,7 @@
-import { Box } from "@mui/system"
+import { Box, Container } from "@mui/system"
 import Header from "@src/components/Header/Header"
 import SideBar from "@src/components/SideBar/SideBar"
+import { TOOLBAR_HEIGTH } from "@src/services/constants.service"
 import { Outlet } from "react-router-dom"
 
 function Layout() {
@@ -21,17 +22,22 @@ function Layout() {
                     flex: 1,
                 }}
             >
-            <SideBar />
-            <main
-                style={{
-                    width: '100%'
-                }}
-            >  
-                <Outlet />
-            </main>
+                <SideBar />
+                <main
+                    style={{
+                        width: '100%'
+                    }}
+                >  
+                    <Container sx={{my: 2, maxHeight: {
+                        xs: "100%",
+                        sm: `calc(100vh - ${TOOLBAR_HEIGTH}rem)`
+                    }}} maxWidth="xxl">
+                        <Outlet />
+                    </Container>
+                </main>
             </Box>
         </Box>
-  )
+    )
 }
 
 export default Layout

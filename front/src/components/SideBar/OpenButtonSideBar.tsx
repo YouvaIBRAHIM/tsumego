@@ -19,6 +19,7 @@ const OpenButtonSideBar = () => {
 const ArrowButton = styled(Button)(
     ({ theme }) => `
     padding: 0;
+    position: fixed;
     min-width: 40px;
     .arrowIcon {
         height: 40px;
