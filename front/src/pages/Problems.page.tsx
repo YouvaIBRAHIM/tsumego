@@ -81,7 +81,7 @@ const data: IProblem[] = [
     },
 ]
 export default function Problems() {
-  const isLoading = true
+  const isLoading = false
 
   return (
     <Grid container spacing={4} >
