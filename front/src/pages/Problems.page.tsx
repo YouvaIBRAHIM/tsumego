@@ -1,6 +1,8 @@
 import { Grid, Paper, styled } from "@mui/material";
 import AsideList from "@src/components/AsideList/AsideList";
 import AsideListSkeleton from "@src/components/AsideList/AsideListSkeleton";
+import Plateau from "@src/components/Plateau/Plateau";
+import PlateauSkeleton from "@src/components/Plateau/PlateauSkeleton";
 import { problemListDataToAsideListData } from "@src/services/utils.service";
 import { IProblem } from "@src/types/problem.type";
 
@@ -79,15 +81,18 @@ const data: IProblem[] = [
     },
 ]
 export default function Problems() {
-  const isLoading = false
+  const isLoading = true
 
   return (
     <Grid container spacing={4} >
       <Grid item xs={12} sm={8} md={8} lg={8}>
-        <Item></Item>
-        <Item></Item>
-        <Item></Item>
-        <Item></Item>
+        {
+          (!isLoading && data)  
+          ?
+          <Plateau />
+          :
+          <PlateauSkeleton />
+        }
       </Grid>
       <Grid item xs={12} sm={4} md={4} lg={4}>
         {
