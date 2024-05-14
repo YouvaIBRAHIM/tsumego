@@ -107,7 +107,7 @@ export const shapeBackground = (noMargin: boolean): Array<any> => {
         offset = 0;
         sz = SV_GRID_SIZE + 2 * SV_MARGIN;
     }
-    ret.push({ type: "rect", class: cls, x: offset, y: offset, width: sz, height: sz });
+    ret.push({ type: "rect", className: cls, x: offset, y: offset, width: sz, height: sz });
     return ret;
 };
 
@@ -290,7 +290,7 @@ export const shapeStones = (size: number, positions: { [key: string]: string }):
 
             cy = SV_MARGIN + j * step;
             r = step / 2.1;
-            ret.push({ type: "circle", key: coordA1, cx: cx, cy: cy, r: r, class: cls });
+            ret.push({ type: "circle", key: coordA1, cx: cx, cy: cy, r: r, className: cls });
         }
     }
     return ret;
@@ -317,7 +317,7 @@ export const shapeStone = (size: number, intersection: string, color: string): A
     cx = SV_MARGIN + rowcol.i * step;
     cy = SV_MARGIN + rowcol.j * step;
     r = step / 2.1;
-    ret.push({ type: "circle", key: intersection, cx: cx, cy: cy, r: r, class: cls });
+    ret.push({ type: "circle", key: intersection, cx: cx, cy: cy, r: r, className: cls });
     return ret;
 };
 
@@ -349,17 +349,17 @@ export const shapeMarkers = (size: number, markers: { [key: string]: string }, p
             x2 = x + step / SV_MARKER;
             y2 = y;
             const rot = "rotate(45," + x + "," + y + ")";
-            ret.push({ type: "line", x1: x1, y1: y1, x2: x2, y2: y2, class: cls, transform: rot });
+            ret.push({ type: "line", x1: x1, y1: y1, x2: x2, y2: y2, className: cls, transform: rot });
             y1 = y - step / SV_MARKER;
             x1 = x;
             y2 = y + step / SV_MARKER;
             x2 = x;
-            ret.push({ type: "line", x1: x1, y1: y1, x2: x2, y2: y2, class: cls, transform: rot });
+            ret.push({ type: "line", x1: x1, y1: y1, x2: x2, y2: y2, className: cls, transform: rot });
 
         } else if ("circle" == markers[k]) {
             cls = markers[k] + " on" + (positions[k] || positions[other(k, size)] || "white");
             const r: number = step / 3.5;
-            ret.push({ type: "circle", cx: x, cy: y, r: r, class: cls });
+            ret.push({ type: "circle", cx: x, cy: y, r: r, className: cls });
 
         } else if ("square" == markers[k]) {
             cls = markers[k] + " on" + (positions[k] || "white");
@@ -367,7 +367,7 @@ export const shapeMarkers = (size: number, markers: { [key: string]: string }, p
             const side: number = 2 * delta;
             x1 = x - delta;
             y1 = y - delta;
-            ret.push({ type: "rect", x: x1, y: y1, width: side, height: side, class: cls });
+            ret.push({ type: "rect", x: x1, y: y1, width: side, height: side, className: cls });
 
         } else if ("triangle" == markers[k]) {
             cls = markers[k] + " on" + (positions[k] || "white");
@@ -378,11 +378,11 @@ export const shapeMarkers = (size: number, markers: { [key: string]: string }, p
             const x3: number = x + step / SV_MARKER * Math.cos(Math.PI / 2 + 4 * Math.PI / 3);
             const y3: number = y - step / SV_MARKER * Math.sin(Math.PI / 2 + 4 * Math.PI / 3);
             points = x1 + "," + y1 + " " + x2 + "," + y2 + " " + x3 + "," + y3;
-            ret.push({ type: "polygon", points: points, class: cls });
+            ret.push({ type: "polygon", points: points, className: cls });
         } else {
             cls = "wood";
             const r: number = step / 3;
-            ret.push({ type: "circle", cx: x, cy: y, r: r, class: cls });
+            ret.push({ type: "circle", cx: x, cy: y, r: r, className: cls });
             cls = "on" + (positions[k] || "white");
             const txt: string = markers[k];
             const s = {
