@@ -1,5 +1,5 @@
 .ONESHELL:
-.PHONY: django compose server export_env help kill stop
+.PHONY: web compose server help kill stop migrate migrations init superuser
 .DEFAULT_GOAL = help
 
 # Variables:
@@ -18,20 +18,20 @@ help:
 	@grep -E '(^[a-zA-Z_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-10s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
 # DOCKER:
-compose: ## Lance docker
+build: ## Construit le projet en mode detache
+	docker compose up -d --build
+
+compose: ## Up docker en mode detache
 	docker compose up -d
 
-django: compose ## Lance docker et active le terminal de django
-	docker exec -it go_project_web bash
+web: compose ## Lance docker et active le terminal de django
+	docker exec -it go-project-web bash
 
 stop: ## Stop les services go_project
-	docker stop go_project_web go_project_db_express go_project_db
+	docker stop go-project-web go-project-adminer go-project-db
 
 kill: ## Stop docker et supprime le volume
 	docker compose down -v
-
-server: export_env ## Lance le serveur Django sur le port 8000
-	./manage.py runserver 0.0.0.0:8000
 
 
 venv/bin/activate: requirements.txt
@@ -58,3 +58,17 @@ ifdef p
 else
 	@echo "$(ERROR_COLOR) You need to specified a package to install $(NO_COLOR)"
 endif
+
+
+superuser:
+	docker exec -it go-project-web python manage.py createsuperuser
+
+migrate: ## Mise à jour de la base
+	docker exec -it go-project-web python manage.py migrate --noinput
+
+migrations: ## Creer les migrations - optionnel -> table=<nom de la table>
+	docker exec -it go-project-web python manage.py makemigrations --noinput $(table)
+
+init: update build migrations migrate superuser ## Initialise le projet la première fois.
+	@echo "  🎉 $(OK_COLOR) Success $(NO_COLOR)"
+	@echo "  ⚠️ $(WARN_COLOR) Don't forget to run .venv $(NO_COLOR)"

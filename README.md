@@ -37,31 +37,41 @@ conteneurisation.
 
 ⚠️ l'image est basée sur python3.11.9
 
-Dans le terminal :
+Dans le terminal : POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB
 
 1. `cp .env.example .env` . (étape 1 à ne faire qu'à la 1ère installation) vous pouvez changer :
-   - `MONGO_DB_USERNAME=admin`
-   - `MONGO_DB_PWD=admin`
-2. `make update` - cette commande va créer/mettre à jour un .venv pour isoler les dépendances
-3. `make compose` - va construire les différents containers et set la configuration
-4. Sur votre navigateur :
-   - `localhost:8000`--> accès à l'interface Django
-   - `localhost:8081`--> accès à la bdd via mongoExpress
+   - `POSTGRES_USER=postgres`
+   - `POSTGRES_PASSWORD=postgres`
+   - `POSTGRES_DB=go-project`
+2. `make init` - cette commande va:
+   - créer le .venv et installer les dépendances
+   - build le projet avec docker
+   - créer et faire une migration
+   - lancer la commande pour créer un super user dans django.
+3. Sur votre navigateur:
+
+   - `localhost:8000/admin/`--> accès à l'interface admin Django (avec les credentials du super user)
+   - `localhost:8000/api`--> accès à l'interface api
+   - `localhost:8080`--> accès à la bdd via adminer (credential du .env)
 
 #### Arrêter les conteneurs Docker
 
 Dans le terminal:
 
-1. `make stop` --> arrête les conteuneurs mais persiste la donnée
-2. `make kill`--> arrête ET supprime la donnée
+- `make stop` --> arrête les conteuneurs mais persiste la donnée
+- `make kill`--> arrête ET supprime la donnée
+- `make build` --> build le projet en mode détaché
+- `make compose` --> lance docker en mode détaché
 
 #### Commandes divers
 
 Dans le terminal:
 
-1. `make` --> vous donnes la liste des commandes disponible
-2. `make add p=<nom_du_package>`--> permet d'ajouter une librairi et mets à jour le fichier <u>requirements.txt</u>
-   - ⚠️ <b>ATTENTION D'AVOIR ACTIVER LE VIRTUALENV</b> --> ex: `source .venv/bin/activate`
+- `make` --> vous donnes la liste des commandes disponible
+- `make add p=<nom_du_package>`--> permet d'ajouter une librairi et mets à jour le fichier <u>requirements.txt</u>
+  - ⚠️ <b>ATTENTION D'AVOIR ACTIVER LE VIRTUALENV</b> --> ex: `source .venv/bin/activate`
+- `make update` - cette commande va créer/mettre à jour un .venv pour isoler les dépendances
+- `make web` - lance docker en mode -d et active le terminal docker de django
 
 ## Installer les dépendances frontend
 
