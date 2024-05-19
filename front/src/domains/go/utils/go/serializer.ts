@@ -4,8 +4,8 @@
  *
  */
 
-import * as Geo from '@services/go/geometry';
-import * as Css from '@services/go/styles';
+import * as Geo from './geometry';
+import * as Css from './styles';
 
 /** @todo Replace all string concatenations with ES6 templates? */
 

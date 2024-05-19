@@ -1,6 +1,6 @@
 import Layout from "@src/components/Layout";
 import Home from "@src/pages/Home.page";
-import Problems from "@src/pages/Problems.page";
+import Problems from "@src/domains/go/pages/Problems.page";
 import {
   createBrowserRouter,
 } from "react-router-dom";

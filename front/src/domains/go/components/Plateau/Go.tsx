@@ -9,7 +9,7 @@ import {
     shapeArea, 
     defineRadialColors, 
     Themes 
-} from '@services/go/index';
+} from '../../utils/go/index';
 
 interface StoneProps {
     size: number;
@@ -50,7 +50,7 @@ function toElem(shapes: ElementProps[], callback?: (key: string ) => void): Reac
 
         if (typeofShape === "text") {
             if (shape.txt) {
-              txt = shape.txt
+                txt = shape.txt
             }
             delete shape.txt;
         }

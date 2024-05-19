@@ -7,14 +7,14 @@ import {
     shapeStone, 
     shapeMarkers, 
     shapeArea 
-} from '@src/services/go/geometry';
+} from './geometry';
 
 import { 
     defineRadialColors, 
     Themes 
-} from '@src/services/go/styles';
+} from './styles';
 
-import { serializeSVG } from '@src/services/go/serializer';
+import { serializeSVG } from './serializer';
 
 export {
     shapeGrid,

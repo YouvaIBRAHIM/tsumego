@@ -1,6 +1,6 @@
-import { Grid, List, ListItem, ListItemButton, ListItemText, Paper } from "@mui/material"
-import Search from "@src/components/Search"
-import SelectFilter from "@src/components/SelectFilter"
+import { Grid, List, Paper } from "@mui/material"
+import Search from "../Search"
+import SelectFilter from "../SelectFilter"
 
 export interface IAsideListData{
     id: string
@@ -8,12 +8,12 @@ export interface IAsideListData{
     value: unknown
 }
 
-interface IAsideList{
-    data: IAsideListData[]
+export interface IAsideList{
+    list: JSX.Element
 }
 
-const AsideList = ({data}: IAsideList) => {
-
+const AsideList = ({ list }: IAsideList) => {
+    
     return (
         <Paper sx={{
             minHeight: "50vh",
@@ -29,7 +29,7 @@ const AsideList = ({data}: IAsideList) => {
                 </Grid>
                 <Grid item xs={4}>
                     <Grid container>
-                        <Grid xs>
+                        <Grid>
                             <SelectFilter />
                         </Grid>
                     </Grid>
@@ -44,15 +44,7 @@ const AsideList = ({data}: IAsideList) => {
                 },
                 marginTop: 2
             }}>
-                {
-                    data.map(el => (
-                        <ListItem key={el.id} disablePadding>
-                            <ListItemButton >
-                                <ListItemText primary={el.label} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))
-                }
+                {list}
             </List>
         </Paper>
     )

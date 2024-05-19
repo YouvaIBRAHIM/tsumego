@@ -1,6 +1,4 @@
 import { PaletteMode } from "@mui/material"
-import { IAsideListData } from "@src/components/AsideList/AsideList"
-import { IProblem } from "@src/types/problem.type"
 
 export const truncateString = (string: string, maxLength: number) => {
     return string.length > maxLength
@@ -32,12 +30,4 @@ export const getDefaultThemeMode = (): PaletteMode => {
         return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     }
     return themeModeFromLocalStorage
-}
-
-export const problemListDataToAsideListData = (data: IProblem[]): IAsideListData[] => {
-    return data.map(el => ({
-        id: el.id,
-        label: el.label,
-        value: el.problem
-    }))
 }
