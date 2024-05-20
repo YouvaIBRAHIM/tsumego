@@ -14,14 +14,16 @@ export interface IGo {
 export interface IProblem {
     id: string;
     label: string;
-    level?: string;
-    won?: boolean;
-    problem: {
-        AB: string[];
-        AW: string[];
-        SZ: string;
-        C: string;
-        SOL: [string, string, string, string][];
-        nextToPlay: "black" | "white"
-    };
+    level: string;
+    won: boolean;
+    AB: string[];
+    AW: string[];
+    SZ: string;
+    C: string;
+    SOL: string[][];
+    nextToPlay: "black" | "white";
+}
+
+export interface AutoCompleteGoBoardPoint {
+    label: string;
 }

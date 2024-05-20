@@ -2,6 +2,8 @@ import { Paper } from "@mui/material"
 import { useEffect, useRef, useState } from "react"
 import Go from "@src/domains/go/components/Plateau/Go"
 import { IGo } from "../../types/go.types";
+import AutoCompleteGoPoint from "../AutocompleteGoPoint";
+import { filterExcludedPoints, generateGoBoardPoints } from "../../utils/global";
 
 export interface IPlateau{
   currentChoice: string | null
@@ -14,6 +16,7 @@ export interface IPlateau{
 }
 
 const Plateau = ({currentChoice, defaultState, onPointChange}: IPlateau) => {
+  console.log("🚀 ~ Plateau ~ defaultState:", defaultState?.position)
   
   const [state, setState] = useState<IGo>({
     position: {},
@@ -100,6 +103,8 @@ const Plateau = ({currentChoice, defaultState, onPointChange}: IPlateau) => {
           coordSystem={state.coordSystem}
           size={state.size}
         />
+
+        <AutoCompleteGoPoint data={filterExcludedPoints(state.position, generateGoBoardPoints(state.size))} />
       </Paper>
   )
 }

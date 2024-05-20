@@ -1,85 +1,136 @@
 import { Grid } from "@mui/material";
-import AsideList, { IAsideListData } from "../components/AsideList/AsideList";
+import AsideList from "../components/AsideList/AsideList";
 import AsideListSkeleton from "../components/AsideList/AsideListSkeleton";
 import Plateau from "../components/Plateau/Plateau";
 import PlateauSkeleton from "../components/Plateau/PlateauSkeleton";
 import { problemListDataToAsideListData, transformProblemToGoState } from "../utils/global";
 import { IGo, IProblem } from "../types/go.types";
 import { useEffect, useState } from "react";
-import ProblemsAsideList, { IProblemAsideListData } from "../components/AsideList/ProblemsAsideList";
+import ProblemsAsideList from "../components/AsideList/ProblemsAsideList";
 
 const data: IProblem[] = [
-  { 
+  {
     id: "sdmffkds",
     label: "Problem0001",
     level: "easy",
     won: true,
-    problem: {"AB": ["ea", "fb", "bc", "cc", "dc", "bf"], "AW": ["da", "ab", "bb", "cb", "db"], "SZ": "9", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "black"}
+    AB: ["E1", "F2", "B2", "C3", "D3", "B6"],
+    AW: ["D1", "A1", "B2", "C3", "D3"],
+    SZ: "9",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "black"
   },
-  { 
+  {
     id: "sdmflhds",
     label: "Problem0002",
     level: "easy",
     won: true,
-    problem: {"AB": ["ba", "fa", "bc", "cc", "dc", "ef"], "AW": ["da", "bb", "bb", "cb", "db"], "SZ": "19", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "white"}
+    AB: ["B1", "F2", "B2", "C3", "D3", "E6"],
+    AW: ["D1", "B2", "B2", "C3", "D3"],
+    SZ: "19",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "white"
   },
-  { 
+  {
     id: "ghjv",
     label: "Problem0003",
     level: "easy",
     won: false,
-    problem: {"AB": ["ca", "fb", "bc", "cc", "dc", "bf"], "AW": ["da", "cb", "bb", "cb", "db"], "SZ": "12", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "black"}
+    AB: ["C1", "F2", "B2", "C3", "D3", "B6"],
+    AW: ["D1", "C3", "B2", "C3", "D3"],
+    SZ: "12",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "black"
   },
-  { 
+  {
     id: "vcbjh",
     label: "Problem0004",
     level: "easy",
     won: false,
-    problem: {"AB": ["da", "fb", "bc", "cc", "dc", "bf"], "AW": ["da", "ab", "db", "cb", "db"], "SZ": "19", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "white"}
+    AB: ["D1", "F2", "B2", "C3", "D3", "B6"],
+    AW: ["D1", "A1", "D2", "C3", "D3"],
+    SZ: "19",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "white"
   },
-  { 
+  {
     id: "asdfh",
     label: "Problem0005",
     level: "easy",
     won: false,
-    problem: {"AB": ["ea", "fb", "bc", "cc", "dc", "bf"], "AW": ["da", "ab", "bb", "cb", "db"], "SZ": "19", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "black"}
+    AB: ["E1", "F2", "B2", "C3", "D3", "B6"],
+    AW: ["D1", "A1", "B2", "C3", "D3"],
+    SZ: "19",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "black"
   },
-  { 
+  {
     id: "fdghtr",
     label: "Problem0006",
     level: "easy",
     won: true,
-    problem: {"AB": ["ac", "bc", "cc", "dc", "df", "bf"], "AW": ["da", "cb", "db", "cb", "db"], "SZ": "19", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "white"}
+    AB: ["A3", "B2", "C3", "D3", "D6", "B6"],
+    AW: ["D1", "C3", "D2", "C3", "D3"],
+    SZ: "19",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "white"
   },
-  { 
+  {
     id: "dfgsda",
     label: "Problem0007",
     level: "easy",
     won: false,
-    problem: {"AB": ["ac", "fc", "bc", "cc", "dc", "bf"], "AW": ["da", "ab", "db", "cb", "db"], "SZ": "19", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "black"}
+    AB: ["A3", "F3", "B2", "C3", "D3", "B6"],
+    AW: ["D1", "A1", "D2", "C3", "D3"],
+    SZ: "19",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "black"
   },
-  { 
+  {
     id: "dfgasd",
     label: "Problem0008",
     level: "easy",
     won: true,
-    problem: {"AB": ["ad", "fb", "bc", "cc", "dc", "bf"], "AW": ["da", "ab", "db", "cb", "db"], "SZ": "19", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "white"}
+    AB: ["A4", "F2", "B2", "C3", "D3", "B6"],
+    AW: ["D1", "A1", "D2", "C3", "D3"],
+    SZ: "19",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "white"
   },
-  { 
+  {
     id: "fdgasd",
     label: "Problem0009",
     level: "easy",
     won: false,
-    problem: {"AB": ["ba", "fc", "bc", "cc", "dc", "bf"], "AW": ["da", "ab", "db", "cb", "db"], "SZ": "19", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "black"}
+    AB: ["B1", "F3", "B2", "C3", "D3", "B6"],
+    AW: ["D1", "A1", "D2", "C3", "D3"],
+    SZ: "19",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "black"
   },
-  { 
+  {
     id: "fdgas",
     label: "Problem0010",
     level: "easy",
     won: false,
-    problem: {"AB": ["bc", "fb", "bc", "cc", "dc", "bf"], "AW": ["da", "ab", "db", "cb", "db"], "SZ": "19", "C": "Black to play: Elementary", "SOL": [["B", "ba", "Correct.", ""]], nextToPlay: "white"}
+    AB: ["B3", "F2", "B2", "C3", "D3", "B6"],
+    AW: ["D1", "A1", "D2", "C3", "D3"],
+    SZ: "19",
+    C: "Black to play: Elementary",
+    SOL: [["B", "ba", "Correct.", ""]],
+    nextToPlay: "white"
   }
-]
+];
+
 export default function Problems() {
   const isLoading = false
   const [ currentProblem, setCurrentProblem ] = useState<IProblem | null>(null)
@@ -90,20 +141,16 @@ export default function Problems() {
     setCurrentChoice(value)
   }
 
-  const onSetCurrentProblem = (asideData: IProblemAsideListData) => {
-    const problem: IProblem = {
-      id: asideData.id,
-      label: asideData.label,
-      problem: asideData.value as IProblem['problem']
-    }
+  const onSetCurrentProblem = (asideData: IProblem) => {
+    const problem: IProblem = asideData as IProblem
     
     setCurrentProblem(problem)
-    setCanPlay(asideData.meta ? !asideData.meta.won : false)
+    setCanPlay(!asideData.won)
   }
 
   const onConfirmChoice = () => {
     console.log(currentChoice);
-    setCanPlay(false)
+    stopPlaying()
   }
 
   useEffect(() => {
@@ -113,6 +160,9 @@ export default function Problems() {
     }
   }, [data])
 
+  const stopPlaying = () => {
+    setTimeout(() => setCanPlay(false), 0)
+  }
 
   const handleIntersectionClick = (intersection: string, setState: React.Dispatch<React.SetStateAction<IGo>>) => {
     if (canPlay) {
