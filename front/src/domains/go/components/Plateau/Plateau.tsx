@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material"
+import { Button, Paper, Stack } from "@mui/material"
 import { useEffect, useRef, useState } from "react"
 import Go from "@src/domains/go/components/Plateau/Go"
 import { IGo } from "../../types/go.types";
@@ -13,11 +13,12 @@ export interface IPlateau{
     nextToPlay: "black" | "white"
   } | null,
   onPointChange: (intersection: string, setState: React.Dispatch<React.SetStateAction<IGo>>) => void
+  setCurrentChoice: (value: string) => void
+  canPlay: boolean;
+  onConfirmChoice: () => void
 }
 
-const Plateau = ({currentChoice, defaultState, onPointChange}: IPlateau) => {
-  console.log("🚀 ~ Plateau ~ defaultState:", defaultState?.position)
-  
+const Plateau = ({currentChoice, defaultState, onPointChange, setCurrentChoice, canPlay, onConfirmChoice}: IPlateau) => {
   const [state, setState] = useState<IGo>({
     position: {},
     markers: {},
@@ -32,13 +33,33 @@ const Plateau = ({currentChoice, defaultState, onPointChange}: IPlateau) => {
   });
   
   const isDefaultStateLoaded = useRef(false);
-
+  
   useEffect(() => {
     if (defaultState && !isDefaultStateLoaded.current) {
       setState({ ...state, ...defaultState});
     }
+    
     isDefaultStateLoaded.current = false;
   }, [defaultState])
+
+
+  const onSetChoiceWithAutoComplete = (choice: string) => {
+    if(choice && choice !== "") {
+      setState((state) => {
+        const tmpState = state
+        const markerKeys= Object.keys(tmpState.markers)
+        tmpState.position[choice] = state.nextToPlay
+        if (markerKeys) {
+          delete tmpState.position[markerKeys[0]]
+        }
+        tmpState.markers = {}
+        tmpState.markers[choice] = "circle"
+        return tmpState
+      })
+      isDefaultStateLoaded.current = true;
+      setCurrentChoice(choice)
+    }
+  }
 
   const handleIntersectionClick = (intersection: string, ) => {
     onPointChange(intersection, setState)
@@ -85,26 +106,50 @@ const Plateau = ({currentChoice, defaultState, onPointChange}: IPlateau) => {
   //   setState({ ...state, nextToPlay: newColor });
   // }
   
+  const onSubmitButton = () => {
+    onConfirmChoice()
+
+    setState((state) => {
+      const tmpState = state
+      tmpState.markers = {}
+      return tmpState
+    })
+
+    isDefaultStateLoaded.current = true;
+  }
   return (
       <Paper sx={{
           minHeight: "50vh",
           padding: 2
       }}>
-        {currentChoice}
-        <Go
-          theme={state.theme}
-          stones={state.position}
-          markers={state.markers}
-          nextToPlay={state.nextToPlay}
-          onIntersectionClick={handleIntersectionClick}
-          hideBorder={state.hideBorder}
-          zoom={state.zoom}
-          noMargin={state.noMargin}
-          coordSystem={state.coordSystem}
-          size={state.size}
-        />
-
-        <AutoCompleteGoPoint data={filterExcludedPoints(state.position, generateGoBoardPoints(state.size))} />
+        <Stack
+          gap={2}
+        >
+          {currentChoice}
+          <Go
+            theme={state.theme}
+            position={state.position}
+            markers={state.markers}
+            nextToPlay={state.nextToPlay}
+            onIntersectionClick={handleIntersectionClick}
+            hideBorder={state.hideBorder}
+            zoom={state.zoom}
+            noMargin={state.noMargin}
+            coordSystem={state.coordSystem}
+            size={state.size}
+          />
+          <Stack direction="row" spacing={2} justifyContent={"center"}>
+            <AutoCompleteGoPoint canPlay={canPlay} setCurrentChoice={onSetChoiceWithAutoComplete} currentPoint={state.intersection ?? ""} data={filterExcludedPoints(state.position, generateGoBoardPoints(state.size), [state.intersection ?? ""])} />
+            <Button 
+              sx={{
+                px: 4
+              }} 
+              variant="contained"
+              disabled={!canPlay || currentChoice == null || currentChoice === ""}
+              onClick={onSubmitButton}
+            >Soumettre</Button>
+          </Stack>
+        </Stack>
       </Paper>
   )
 }

@@ -10,35 +10,8 @@ import {
     defineRadialColors, 
     Themes 
 } from '../../utils/go/index';
+import { ElementProps, GobanProps, IGo, StoneProps } from '../../types/go.types';
 
-interface StoneProps {
-    size: number;
-    intersection: string;
-    color: string;
-    onIntersectionClick?: (key: string) => void;
-}
-
-interface GobanProps {
-    size: number;
-    theme: keyof typeof Themes;
-    hideBorder?: boolean;
-    zoom?: any; // Replace any with appropriate type
-    coordSystem?: string;
-    noMargin?: boolean;
-    stones: { [key: string]: string };
-    nextToPlay: string;
-    onIntersectionClick: (intersection: string) => void;
-    markers: { [key: string]: string };
-}
-
-interface ElementProps {
-    type?: string;
-    key?: string | number;
-    txt?: string;
-    style?: { [key: string]: string };
-    className: string; 
-    onClick?: () => void;
-}
 
 function toElem(shapes: ElementProps[], callback?: (key: string ) => void): ReactElement[] {
     let typeofShape: string;
@@ -63,9 +36,7 @@ function toElem(shapes: ElementProps[], callback?: (key: string ) => void): Reac
 }
 
 function LabelsLayer(props: { size: number; coordSystem: string }): ReactElement {
-    // const shouldComponentUpdate = (nextProps: typeof props) => {
-    //     return nextProps.size !== props.size || nextProps.coordSystem !== props.coordSystem;
-    // };
+
     const pseudoLabels = shapeLabels(props.size, props.coordSystem);
     return (
         <g className="labels_layer">{toElem(pseudoLabels)}</g>
@@ -80,9 +51,7 @@ function BackgroundLayer(props: { noMargin: boolean }): ReactElement {
 }
 
 function GridLayer(props: { size: number }): ReactElement {
-    // const shouldComponentUpdate = (nextProps: typeof props) => {
-    //     return nextProps.size !== props.size;
-    // };
+
     const pseudoLines = shapeGrid(props.size);
     return (
         <g className="grid_layer">{toElem(pseudoLines)}</g>
@@ -90,9 +59,7 @@ function GridLayer(props: { size: number }): ReactElement {
 }
 
 function StarPointsLayer(props: { size: number }): ReactElement {
-    // const shouldComponentUpdate = (nextProps: typeof props) => {
-    //     return nextProps.size !== props.size;
-    // };
+
     const pseudoStarPoints = shapeStarPoints(props.size);
     return (
         <g className="starpoints_layer">{toElem(pseudoStarPoints)}</g>
@@ -132,12 +99,6 @@ function CompositeStonesLayer(props: { size: number; set: { [key: string]: strin
 }
 
 function Stone(props: StoneProps): ReactElement {
-    // const shouldComponentUpdate = (nextProps: typeof props) => {
-    //     const idem = nextProps.size === props.size &&
-    //         nextProps.intersection === props.intersection &&
-    //         nextProps.color === props.color;
-    //     return !idem;
-    // };
     const pseudoStone = shapeStone(props.size, props.intersection, props.color);
     return (
         toElem(pseudoStone, props.onIntersectionClick)[0]
@@ -145,18 +106,13 @@ function Stone(props: StoneProps): ReactElement {
 }
 
 function Style(props: { theme: keyof typeof Themes }): ReactElement {
-    // const shouldComponentUpdate = (nextProps: typeof props) => {
-    //     return nextProps.theme !== props.theme;
-    // };
     return (
         <style>{Themes[props.theme]()}</style>
     );
 }
 
 function Definitions(): ReactElement {
-    // const shouldComponentUpdate = (nextProps: unknown) => {
-    //     return false;
-    // };
+
     const b = defineRadialColors("black");
     const w = defineRadialColors("white");
     return (
@@ -177,18 +133,16 @@ export function Go(props: GobanProps): ReactElement {
 
     const viewBox = shapeArea(props.hideBorder || false, props.zoom || {}, props.size).join(" ");
     return (
-        <div className="react-goban">
-            <svg className="svgoban" viewBox={viewBox} xmlns="http://www.w3.org/2000/svg" version="1.1" height="100%">
-                <Style theme={props.theme} />
-                <Definitions />
-                <BackgroundLayer noMargin={props.noMargin || false} />
-                <GridLayer size={props.size} />
-                <StarPointsLayer size={props.size} />
-                <LabelsLayer size={props.size} coordSystem={props.coordSystem || ""} />
-                <CompositeStonesLayer size={props.size} set={props.stones} nextToPlay={props.nextToPlay} onIntersectionClick={props.onIntersectionClick} />
-                <MarkersLayer size={props.size} markers={props.markers} positions={props.stones} />
-            </svg>
-        </div>
+        <svg viewBox={viewBox} xmlns="http://www.w3.org/2000/svg" version="1.1" style={{maxHeight: "60vh"}}>
+            <Style theme={props.theme} />
+            <Definitions />
+            <BackgroundLayer noMargin={props.noMargin || false} />
+            <GridLayer size={props.size} />
+            <StarPointsLayer size={props.size} />
+            <LabelsLayer size={props.size} coordSystem={props.coordSystem || ""} />
+            <CompositeStonesLayer size={props.size} set={props.position} nextToPlay={props.nextToPlay} onIntersectionClick={props.onIntersectionClick} />
+            <MarkersLayer size={props.size} markers={props.markers} positions={props.position} />
+        </svg>
     );
 }
 

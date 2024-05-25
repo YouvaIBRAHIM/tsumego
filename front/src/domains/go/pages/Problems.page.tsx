@@ -13,7 +13,7 @@ const data: IProblem[] = [
     id: "sdmffkds",
     label: "Problem0001",
     level: "easy",
-    won: true,
+    won: false,
     AB: ["E1", "F2", "B2", "C3", "D3", "B6"],
     AW: ["D1", "A1", "B2", "C3", "D3"],
     SZ: "9",
@@ -183,7 +183,7 @@ export default function Problems() {
           marker[intersection] = "circle"
           const newPosition: IGo['position'] = state.position
   
-          Object.keys(state.position).map(pos => {
+          Object.keys(newPosition).forEach(pos => {
             if (state.markers.hasOwnProperty(pos)) {
               delete newPosition[pos]
             }
@@ -206,7 +206,14 @@ export default function Problems() {
         {
           (!isLoading && data)  
           ?
-          <Plateau defaultState={transformProblemToGoState(currentProblem)} onPointChange={handleIntersectionClick} currentChoice={currentChoice} />
+          <Plateau 
+            onConfirmChoice={onConfirmChoice} 
+            canPlay={canPlay} 
+            setCurrentChoice={onSetCurrentChoice} 
+            defaultState={transformProblemToGoState(currentProblem)} 
+            onPointChange={handleIntersectionClick} 
+            currentChoice={currentChoice} 
+          />
           :
           <PlateauSkeleton />
         }

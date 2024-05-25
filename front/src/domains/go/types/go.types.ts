@@ -27,3 +27,23 @@ export interface IProblem {
 export interface AutoCompleteGoBoardPoint {
     label: string;
 }
+
+
+export interface StoneProps {
+    size: number;
+    intersection: string;
+    color: string;
+    onIntersectionClick?: (key: string) => void;
+}
+export interface GobanProps extends IGo {
+    onIntersectionClick: (intersection: string) => void;
+}
+
+export interface ElementProps {
+    type?: string;
+    key?: string | number;
+    txt?: string;
+    style?: { [key: string]: string };
+    className: string; 
+    onClick?: () => void;
+}

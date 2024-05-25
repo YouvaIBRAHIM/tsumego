@@ -53,6 +53,6 @@ export const generateGoBoardPoints = (size: number): AutoCompleteGoBoardPoint[] 
     return points.sort((a, b) => a.label.localeCompare(b.label));
 }
 
-export function filterExcludedPoints(excludedPoints: IGo['position'], points: AutoCompleteGoBoardPoint[]): AutoCompleteGoBoardPoint[] {
-    return points.filter(point => !(point.label in excludedPoints));
+export function filterExcludedPoints(excludedPoints: IGo['position'], points: AutoCompleteGoBoardPoint[], exceptions: string[]): AutoCompleteGoBoardPoint[] {
+    return points.filter(point => !(point.label in excludedPoints) || exceptions.includes(point.label));
 }
