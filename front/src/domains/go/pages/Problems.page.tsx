@@ -41,9 +41,9 @@ const data: IProblem[] = [
     AB: ["C1", "F2", "B2", "C3", "D3", "B6"],
     AW: ["D1", "C3", "B2", "C3", "D3"],
     SZ: "12",
-    C: "Black to play: Elementary",
+    C: "White to play: Elementary",
     SOL: [["B", "ba", "Correct.", ""]],
-    nextToPlay: "black"
+    nextToPlay: "white"
   },
   {
     id: "vcbjh",
@@ -146,6 +146,7 @@ export default function Problems() {
     
     setCurrentProblem(problem)
     setCanPlay(!asideData.won)
+    setCurrentChoice(null)
   }
 
   const onConfirmChoice = () => {
@@ -167,10 +168,13 @@ export default function Problems() {
   const handleIntersectionClick = (intersection: string, setState: React.Dispatch<React.SetStateAction<IGo>>) => {
     if (canPlay) {
       setState((state) => {
+        if(intersection in state.position && !(intersection in state.markers)) return state
+        
         const position: IGo['position'] = {};
         position[intersection] = state.nextToPlay;
         if (state.markers.hasOwnProperty(intersection)) {
           onConfirmChoice()
+          onSetCurrentChoice(intersection)
           return {
             ...state,
             intersection: intersection,
@@ -188,6 +192,7 @@ export default function Problems() {
               delete newPosition[pos]
             }
           })
+          onSetCurrentChoice(intersection)
           return {
             ...state,
             intersection: intersection,
@@ -195,8 +200,8 @@ export default function Problems() {
             markers: marker
           };
         }
+        
       });
-      onSetCurrentChoice(intersection)
     }
   }
 
@@ -213,6 +218,7 @@ export default function Problems() {
             defaultState={transformProblemToGoState(currentProblem)} 
             onPointChange={handleIntersectionClick} 
             currentChoice={currentChoice} 
+            title={currentProblem?.won ? "Problème résolu" : currentProblem?.C ?? `Posez une pierre ${currentProblem?.nextToPlay === "black" ? "noire" : "blanche"}` }
           />
           :
           <PlateauSkeleton />

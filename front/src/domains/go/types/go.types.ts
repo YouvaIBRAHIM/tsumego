@@ -47,3 +47,9 @@ export interface ElementProps {
     className: string; 
     onClick?: () => void;
 }
+
+export interface ITheme {
+    classic: string,
+    paper: string,
+    night: string
+}

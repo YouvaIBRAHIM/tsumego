@@ -1,28 +1,31 @@
-import { Button, Paper, Stack } from "@mui/material"
+import { Button, Paper, Stack, Typography } from "@mui/material"
 import { useEffect, useRef, useState } from "react"
 import Go from "@src/domains/go/components/Plateau/Go"
-import { IGo } from "../../types/go.types";
+import { IGo, ITheme } from "../../types/go.types";
 import AutoCompleteGoPoint from "../AutocompleteGoPoint";
 import { filterExcludedPoints, generateGoBoardPoints } from "../../utils/global";
+import GoTheme from "./GoTheme";
 
 export interface IPlateau{
   currentChoice: string | null
   defaultState: {
     position: IGo['position']
     size: number
-    nextToPlay: "black" | "white"
+    nextToPlay: "black" | "white",
+    markers: IGo['markers']
   } | null,
   onPointChange: (intersection: string, setState: React.Dispatch<React.SetStateAction<IGo>>) => void
   setCurrentChoice: (value: string) => void
   canPlay: boolean;
   onConfirmChoice: () => void
+  title: string
 }
 
-const Plateau = ({currentChoice, defaultState, onPointChange, setCurrentChoice, canPlay, onConfirmChoice}: IPlateau) => {
+const Plateau = ({currentChoice, defaultState, onPointChange, setCurrentChoice, canPlay, onConfirmChoice, title}: IPlateau) => {
   const [state, setState] = useState<IGo>({
     position: {},
     markers: {},
-    theme: "paper",
+    theme: localStorage.getItem("goTheme") as keyof ITheme ?? "paper",
     coordSystem: "A1",
     hideBorder: false,
     zoom: null,
@@ -31,12 +34,12 @@ const Plateau = ({currentChoice, defaultState, onPointChange, setCurrentChoice, 
     nextToPlay: "black", 
     size : 9
   });
-  
+    
   const isDefaultStateLoaded = useRef(false);
   
   useEffect(() => {
     if (defaultState && !isDefaultStateLoaded.current) {
-      setState({ ...state, ...defaultState});
+      setState({ ...state, intersection: "", ...defaultState});
     }
     
     isDefaultStateLoaded.current = false;
@@ -66,10 +69,10 @@ const Plateau = ({currentChoice, defaultState, onPointChange, setCurrentChoice, 
     isDefaultStateLoaded.current = true;
   }
 
-  // const handleClickTheme = () => {
-  //   const newTheme = (state.theme === "classic") ? "paper" : "classic";
-  //   setState({ ...state, theme: newTheme });
-  // }
+  const handleClickTheme = (newTheme : keyof ITheme) => {
+    setState({ ...state, theme: newTheme });
+    localStorage.setItem("goTheme", newTheme)
+  }
 
   // const handleClickCoordSystem = () => {
   //   const newCoordSystem = (state.coordSystem === "A1") ? "aa" : "A1";
@@ -125,7 +128,7 @@ const Plateau = ({currentChoice, defaultState, onPointChange, setCurrentChoice, 
         <Stack
           gap={2}
         >
-          {currentChoice}
+          <Typography variant="body1">{title}</Typography>
           <Go
             theme={state.theme}
             position={state.position}
@@ -138,8 +141,9 @@ const Plateau = ({currentChoice, defaultState, onPointChange, setCurrentChoice, 
             coordSystem={state.coordSystem}
             size={state.size}
           />
+          <GoTheme onChangeTheme={handleClickTheme} currentTheme={state.theme}/>
           <Stack direction="row" spacing={2} justifyContent={"center"}>
-            <AutoCompleteGoPoint canPlay={canPlay} setCurrentChoice={onSetChoiceWithAutoComplete} currentPoint={state.intersection ?? ""} data={filterExcludedPoints(state.position, generateGoBoardPoints(state.size), [state.intersection ?? ""])} />
+            <AutoCompleteGoPoint canPlay={canPlay} setCurrentChoice={onSetChoiceWithAutoComplete} currentChoice={state.intersection ?? ""} data={filterExcludedPoints(state.position, generateGoBoardPoints(state.size), [state.intersection ?? ""])} />
             <Button 
               sx={{
                 px: 4

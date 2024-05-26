@@ -10,7 +10,7 @@ import {
     defineRadialColors, 
     Themes 
 } from '../../utils/go/index';
-import { ElementProps, GobanProps, IGo, StoneProps } from '../../types/go.types';
+import { ElementProps, GobanProps, StoneProps } from '../../types/go.types';
 
 
 function toElem(shapes: ElementProps[], callback?: (key: string ) => void): ReactElement[] {
@@ -107,7 +107,7 @@ function Stone(props: StoneProps): ReactElement {
 
 function Style(props: { theme: keyof typeof Themes }): ReactElement {
     return (
-        <style>{Themes[props.theme]()}</style>
+        <style>{Themes[props.theme]}</style>
     );
 }
 

@@ -5,18 +5,20 @@ import { IPlateau } from './Plateau/Plateau';
 
 interface IAutoCompleteGoPoint {
     data: AutoCompleteGoBoardPoint[];
-    currentPoint:string;
+    currentChoice:string;
     setCurrentChoice: IPlateau['setCurrentChoice']
     canPlay: IPlateau['canPlay']
 }
-export default function AutoCompleteGoPoint({data, currentPoint, setCurrentChoice, canPlay} : IAutoCompleteGoPoint) {
+export default function AutoCompleteGoPoint({data, currentChoice, setCurrentChoice, canPlay} : IAutoCompleteGoPoint) {
     const [value, setValue] = useState<AutoCompleteGoBoardPoint | null>(null)
 
     useEffect(() => {
-        if (currentPoint !== "") {
-            setValue(() => data.filter((el) => el.label ===  currentPoint)[0])
+        if (currentChoice !== "") {
+            setValue(() => data.filter((el) => el.label ===  currentChoice)[0])
+        }else{
+            setValue(null)
         }
-    }, [currentPoint])
+    }, [currentChoice])
 
     const onChange = (value: AutoCompleteGoBoardPoint) => {
         setValue(value)

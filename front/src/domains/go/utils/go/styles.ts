@@ -4,6 +4,8 @@
  *
  */
 
+import { ITheme } from "../../types/go.types";
+
 /**
  * Chosen constants for a top left radial gradient
  */
@@ -31,14 +33,19 @@ export const defineRadialColors = (color: string): { id: string; a: string; z: s
     return { id: color + "grad", a: SV_BW[color]["start"], z: SV_BW[color]["stop"], gradient: gradient };
 };
 
+export const themesColor: ITheme = {
+    classic: "#b4916c",
+    paper: "white",
+    night: "#425b5b"
+}
+
 /**
  * Themes are just CSS rules
  */
-export const Themes: { [key: string]: () => string } = {
-    "classic": () => {
-        return `
+export const Themes: ITheme = {
+    "classic": `
             .wood { 
-                fill: #b4916c; 
+                fill: ${themesColor.classic}; 
             }
             .placeholder { 
                 stroke: black;
@@ -75,12 +82,10 @@ export const Themes: { [key: string]: () => string } = {
             font-family: "Ubuntu Light", sans-serif; 
             font-size: 1.1em; 
         }
-        `;
-    },
-    "night": () => {
-        return `
+    `,
+    "night": `
             .wood { 
-                fill: #425b5b; 
+                fill: ${themesColor.night}; 
             }
             .placeholder { 
                 fill: black;
@@ -118,12 +123,10 @@ export const Themes: { [key: string]: () => string } = {
             font-family: sans-serif; 
             font-size: 1.1em; 
         }
-        `;
-    },
-    "paper": () => {
-        return `
+    `,
+    "paper": `
             .wood { 
-                fill: white; 
+                fill: ${themesColor.paper}; 
             }
             .placeholder { 
                 fill: black;
@@ -163,6 +166,6 @@ export const Themes: { [key: string]: () => string } = {
             font-family: sans-serif; 
             font-size: 1.1em; 
         }
-        `;
-    }
+    `
 };
+

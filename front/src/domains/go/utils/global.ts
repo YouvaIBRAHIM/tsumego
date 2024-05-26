@@ -35,7 +35,8 @@ export const transformProblemToGoState = (obj: IProblem | null) : IPlateau['defa
     return {
         position: result,
         size: Number(SZ),
-        nextToPlay: nextToPlay
+        nextToPlay: nextToPlay,
+        markers: {}
     };
 }
 
