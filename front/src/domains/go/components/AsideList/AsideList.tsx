@@ -1,6 +1,7 @@
-import { Grid, List, Paper } from "@mui/material"
+import { List, Paper, Stack } from "@mui/material"
 import Search from "../Search"
 import SelectFilter from "../SelectFilter"
+import { ISearchState, ISelectDifficulty } from "../../types/go.types"
 
 export interface IAsideListData{
     id: string
@@ -9,39 +10,48 @@ export interface IAsideListData{
 }
 
 export interface IAsideList{
-    list: JSX.Element
+    list: JSX.Element,
+    onChangeFilter: (value: string) => void,
+    onChangeSearchValue: (value: string) => void,
+    search: ISearchState
 }
 
-const AsideList = ({ list }: IAsideList) => {
+export const difficulties: ISelectDifficulty[] = [
+    {
+        label: "Toutes les difficultés",
+        value: "all"
+    },
+    {
+        label: "Facile",
+        value: "beginner"
+    },
+    {
+        label: "Intermediaire",
+        value: "intermediate"
+    },
+    {
+        label: "Difficile",
+        value: "advanced"
+    }
+]
+
+const AsideList = ({ list, onChangeFilter, onChangeSearchValue, search }: IAsideList) => {
     
     return (
         <Paper sx={{
             minHeight: "50vh",
             padding: 2
         }}>
-            <Grid container spacing={2}>
-                <Grid item xs={8}>
-                    <Grid container>
-                        <Grid item xs>
-                            <Search />
-                        </Grid>
-                    </Grid>
-                </Grid>
-                <Grid item xs={4}>
-                    <Grid container>
-                        <Grid>
-                            <SelectFilter />
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Grid>
+            <Stack gap={2} px={1}>
+                <Stack direction="row" gap={2}>
+                    <Search onChange={onChangeSearchValue} />
+                    <SelectFilter currentValue={search.difficulty} onChange={onChangeFilter} values={difficulties} />
+                </Stack>       
+            </Stack>
 
             <List sx={{
                 overflow: "auto",
-                maxHeight: {
-                    xs: "70vh",
-                    sm: "80vh",
-                },
+                maxHeight: "75vh",
                 marginTop: 2
             }}>
                 {list}

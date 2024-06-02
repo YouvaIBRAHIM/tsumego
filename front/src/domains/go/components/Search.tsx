@@ -33,8 +33,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function Search() {
-
+interface ISearch{
+    onChange: (value: string) => void
+}
+export default function Search({onChange}: ISearch) {
+    
+    const onHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        onChange(event.target.value)
+    }
+    
     return (
         <SearchInput>
             <SearchIconWrapper>
@@ -43,6 +50,7 @@ export default function Search() {
             <StyledInputBase
                 placeholder="Rechercher"
                 inputProps={{ 'aria-label': 'search' }}
+                onChange={onHandleChange}
             />
         </SearchInput>
     )

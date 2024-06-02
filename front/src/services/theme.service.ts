@@ -74,7 +74,7 @@ export const getTheme = (mode: PaletteMode) => ({
                         padding: '0 6rem',
                     },
                     [`@media (min-width:${breakpoints.xxl}px)`]: {
-                        padding: '0',
+                        padding: '0 12rem',
                     },
                     '&.mainPageContainer': {
                         height: '100%',

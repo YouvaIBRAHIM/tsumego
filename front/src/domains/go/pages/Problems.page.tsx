@@ -1,10 +1,10 @@
-import { Grid } from "@mui/material";
+import { Button, Grid, Modal, Stack, Theme, useMediaQuery } from "@mui/material";
 import AsideList from "../components/AsideList/AsideList";
 import AsideListSkeleton from "../components/AsideList/AsideListSkeleton";
 import Plateau from "../components/Plateau/Plateau";
 import PlateauSkeleton from "../components/Plateau/PlateauSkeleton";
 import { problemListDataToAsideListData, transformProblemToGoState } from "../utils/global";
-import { IGo, IProblem } from "../types/go.types";
+import { IGo, IProblem, ISearchState, ISelectDifficulty } from "../types/go.types";
 import { useEffect, useState } from "react";
 import ProblemsAsideList from "../components/AsideList/ProblemsAsideList";
 
@@ -136,6 +136,12 @@ export default function Problems() {
   const [ currentProblem, setCurrentProblem ] = useState<IProblem | null>(null)
   const [ currentChoice, setCurrentChoice ] = useState<string | null>(null)
   const [ canPlay, setCanPlay ] = useState<boolean>(true)
+  const [ search, setSearch ] = useState<ISearchState>({
+    value: "",
+    difficulty: "all"
+  })
+  const [openModal, setOpenModal] = useState(false);
+
 
   const onSetCurrentChoice = (value: string) => {
     setCurrentChoice(value)
@@ -147,6 +153,7 @@ export default function Problems() {
     setCurrentProblem(problem)
     setCanPlay(!asideData.won)
     setCurrentChoice(null)
+    setOpenModal(false)
   }
 
   const onConfirmChoice = () => {
@@ -160,6 +167,10 @@ export default function Problems() {
       setCanPlay(!data[0].won)
     }
   }, [data])
+
+  useEffect(() => {
+    console.log(search)
+  }, [search])
 
   const stopPlaying = () => {
     setTimeout(() => setCanPlay(false), 0)
@@ -205,8 +216,33 @@ export default function Problems() {
     }
   }
 
+  const onChangeFilter = (value: string) => {
+    setSearch(prev => ({
+      ...prev,
+      difficulty: value as ISelectDifficulty["value"]
+    }))
+  }
+
+  const onChangeSearchValue = (value: string) => {
+    setSearch(prev => ({
+      ...prev,
+      value: value
+    }))
+  }
+
+  const isMobileScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+
+  const renderAsideList = () => {
+    return (
+      (!isLoading && data)  
+      ?
+      <AsideList onChangeSearchValue={onChangeSearchValue} onChangeFilter={onChangeFilter} search={search} list={<ProblemsAsideList currentItemId={currentProblem?.id} onSetCurrentItem={onSetCurrentProblem} data={problemListDataToAsideListData(data)} />} />
+      :
+      <AsideListSkeleton />
+    )
+  }
   return (
-    <Grid container spacing={4} >
+    <Grid container spacing={4} direction={isMobileScreen ? "column-reverse" : "row"}>
       <Grid item xs={12} sm={8}>
         {
           (!isLoading && data)  
@@ -226,11 +262,37 @@ export default function Problems() {
       </Grid>
       <Grid item xs={12} sm={4} md={4} lg={4}>
         {
-          (!isLoading && data)  
+          isMobileScreen 
           ?
-          <AsideList list={<ProblemsAsideList currentItemId={currentProblem?.id} onSetCurrentItem={onSetCurrentProblem} data={problemListDataToAsideListData(data)} />} />
+          <>
+            <Button variant="contained" onClick={() => setOpenModal(true)}>Sélectionner un problème</Button>
+            <Modal
+              open={openModal}
+              onClose={() => setOpenModal(false)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Stack
+                sx={{
+                  width: "90%",
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              >
+                {renderAsideList()}
+                <Stack 
+                  alignItems={"flex-end"}
+                >
+                  <Button onClick={() => setOpenModal(false)}>Fermer</Button>
+                </Stack>
+              </Stack>
+              
+            </Modal>
+          </>
           :
-          <AsideListSkeleton />
+          renderAsideList()
         }
       </Grid>
     </Grid>

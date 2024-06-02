@@ -44,7 +44,7 @@ export const generateGoBoardPoints = (size: number): AutoCompleteGoBoardPoint[] 
     const points: AutoCompleteGoBoardPoint[] = [];
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-    for (let col = 0; col < size; col++) {
+    for (let col = 0; col <= size; col++) {
         for (let row = 1; row <= size; row++) {
             const label = `${letters[col]}${row}`;
             points.push({ label });

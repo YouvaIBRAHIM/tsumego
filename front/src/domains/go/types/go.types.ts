@@ -53,3 +53,17 @@ export interface ITheme {
     paper: string,
     night: string
 }
+
+export interface ISelectValue{
+    label: string
+    value: string
+}
+
+export interface ISelectDifficulty extends ISelectValue{
+    value: "all" | "beginner" | "intermediate" | "advanced"
+}
+
+export interface ISearchState {
+    value: string
+    difficulty: ISelectDifficulty["value"]
+}
