@@ -3,7 +3,7 @@ import MuiDrawer from '@mui/material/Drawer'
 import { breakpoints, sideBarConst } from '@services/constants.service'
 import OpenButtonSideBar from '@components/SideBar/OpenButtonSideBar'
 import DrawerContent from '@components/SideBar/SideBarContent/SideBarContent'
-import { HouseSimple, Plus, PuzzlePiece } from '@phosphor-icons/react'
+import { HouseSimple, Kanban, Plus, PuzzlePiece } from '@phosphor-icons/react'
 import { useSideBar } from '@src/reducers/sidebar.reducer'
 
 const sideBarList = [
@@ -18,6 +18,12 @@ const sideBarList = [
         label: 'Problèmes',
         icon: <PuzzlePiece size={24} />,
         link: '/problems'
+    },
+    {
+        id: 'admin',
+        label: 'Administration',
+        icon: <Kanban size={24} />,
+        link: '/admin'
     },
 ]
 
