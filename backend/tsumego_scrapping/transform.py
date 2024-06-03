@@ -4,9 +4,9 @@ from enum import Enum
 from .extract import scrap_data
 
 class Level(Enum):
-  BEGINNER = "1"
-  INTERMEDIATE = "2"
-  ADVANCED = "3"
+  BEGINNER = "beginner"
+  INTERMEDIATE = "intermediate"
+  ADVANCED = "advanced"
 
 class Player(Enum):
   B = "black"
