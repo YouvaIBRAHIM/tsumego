@@ -6,42 +6,42 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import UserListTableHead from "@src/components/UserListView/UserListTableHead"
-import TableToolbar from "@src/components/UserListView/TableToolbar"
-import { getComparator, stableSort } from '@services/utils.service';
+import TsumegoListTableHead from "@src/components/TsumegoListView/TsumegoListTableHead"
+import TableToolbar from "@src/components/TsumegoListView/TableToolbar"
 import { useDebounce } from '@services/hooks.services';
 import { IconButton, Pagination, Tooltip, alpha, styled } from '@mui/material';
 import TableSkeleton from '@components/Skeletons/TableSkeletons';
 import { PencilSimpleLine, Trash } from '@phosphor-icons/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteUser, getUsers } from '@services/apis/user.api'
-import ListNotFound from '@components/TableListNotFound';
-import { IUser, IUserSearch } from '@src/types/user.type';
-import Confirmation from '@components/Confirmation';
-import UpdateUserRoleModal from '@src/components/UserListView/UpdateUserRoleModal';
+import { deleteUser } from '@services/apis/user.api';
 import ErrorView from '@components/Views/ErrorView';
+import ListNotFound from '@components/TableListNotFound';
+import Confirmation from '@components/Confirmation';
+import { getProblems } from '@src/services/apis/tsumego.api';
+import { ITsumegoProblem, ITsumegoProblemSearch } from '@src/types/tsumego.type';
+import TsumegoModal from '@src/components/TsumegoListView/TsumegoModal';
 
 
-const UserListView = () => {
+const TsumegoListView = () => {
     const queryClient = useQueryClient()
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
-    const [search, setSearch] = useState<IUserSearch>({
+    const [search, setSearch] = useState<ITsumegoProblemSearch>({
         value: "", 
-        searchBy: "name",
-        role: "all",
+        searchBy: "title",
+        level: "all",
         order: "asc",
-        orderBy: "name"
+        orderBy: "title"
     });
 
-    const [ userToUpdateRole, setUserToUpdateRole ] =useState<IUser | null>(null)
-    const [ userToDelete, setUserToDelete ] =useState<IUser | null>(null)
+    const [ tsumegoToModerate, setTsumegoToModerate ] =useState<ITsumegoProblem | null>(null)
+    const [ tsumegoToDelete, setTsumegoToDelete ] =useState<ITsumegoProblem | null>(null)
 
     const debouncedSearch = useDebounce(search.value, 500);
 
-    const { data: users, isFetching, refetch, isError, error } = useQuery({ 
-        queryKey: ['users'], 
-        queryFn: () =>  getUsers(page, perPage, search),
+    const { data: problems, isFetching, refetch, isError, error } = useQuery({ 
+        queryKey: ['problems'], 
+        queryFn: () =>  getProblems(page, perPage, search),
         retry: 3,
     });
 
@@ -49,9 +49,9 @@ const UserListView = () => {
         mutationFn: (id: string) => deleteUser(id),
         onSuccess: () => {
             queryClient.invalidateQueries(  {
-                queryKey: ['users'],
+                queryKey: ['problems'],
             })
-            setUserToDelete(null)
+            setTsumegoToDelete(null)
         },
         onError: error => {
             console.log(error)
@@ -64,7 +64,7 @@ const UserListView = () => {
         }
     }, [page, perPage, debouncedSearch])
 
-    const handleRequestSort = (property: IUserSearch["orderBy"]) => {
+    const handleRequestSort = (property: ITsumegoProblemSearch["orderBy"]) => {
         const isAsc = search.orderBy === property && search.order === 'asc';
         setSearch((prev) => ({
             ...prev,
@@ -79,14 +79,15 @@ const UserListView = () => {
 
     
     const renderTableBody = useCallback(() => {
-        const visibleRows = (users) ? stableSort(users.data, getComparator(search.order, search.orderBy)): []
+        // const visibleRows = (problems) ? stableSort(problems.data, getComparator(search.order, search.orderBy)): []
+        const visibleRows = problems?.data 
         
         if (isFetching) {
             return <TableSkeleton rows={10} cells={5}/>
         }else if (visibleRows) {
             return (
                 <TableBody>
-                    {visibleRows.map((row: IUser, index: number) => {
+                    {visibleRows.map((row: ITsumegoProblem, index: number) => {
                         const labelId = `enhanced-table-checkbox-${index}`;
                         return (
                             <StyledTableRow
@@ -99,13 +100,13 @@ const UserListView = () => {
                                     id={labelId}
                                     scope="row"
                                 >
-                                    {row.firstname} {row.lastname?.toUpperCase()}
+                                    {row.label}
                                 </TableCell>
-                                <TableCell align="left">{row.email}</TableCell>
-                                <TableCell align="left">{row.role}</TableCell>
+                                <TableCell align="left">{row.level}</TableCell>
+                                <TableCell align="left">{'user'}</TableCell>
                                 <TableCell align="left">
                                     <Box>
-                                        <Tooltip title='Éditer' onClick={()=> setUserToUpdateRole(row)}>
+                                        <Tooltip title='Éditer' onClick={()=> setTsumegoToModerate(row)}>
                                         <IconButton aria-label="action" size="small">
                                             <PencilSimpleLine fontSize="inherit" weight="duotone" />
                                         </IconButton>
@@ -114,7 +115,7 @@ const UserListView = () => {
                                         <IconButton 
                                             aria-label="action" 
                                             size="small"
-                                            onClick={() => setUserToDelete(row)}
+                                            onClick={() => setTsumegoToDelete(row)}
                                         >
                                             <Trash fontSize="inherit" weight="duotone" />
                                         </IconButton>
@@ -128,14 +129,14 @@ const UserListView = () => {
                 </TableBody>
             )
         }
-    }, [isFetching, users, search.order, search.orderBy]);
+    }, [isFetching, problems, search.order, search.orderBy]);
 
     
     if (isError) {
         return <ErrorView message={error.message} refetch={refetch}/>
     }
 
-    const updateSearch = (key: keyof IUserSearch, value: unknown) => {
+    const updateSearch = (key: keyof ITsumegoProblemSearch, value: unknown) => {
         setSearch(prev => ({
             ...prev, 
             [key]: value
@@ -152,8 +153,8 @@ const UserListView = () => {
                 <TableToolbar 
                     perPage={perPage} 
                     setPerPage={(value: number) => setPerPage(value)} 
-                    role={search.role} 
-                    setRole={(val: IUserSearch["role"]) => updateSearch("role", val)} 
+                    level={search.level} 
+                    setLevel={(val: ITsumegoProblemSearch["level"]) => updateSearch("level", val)} 
                     search={search} 
                     updateSearch={updateSearch}
                 />
@@ -163,11 +164,11 @@ const UserListView = () => {
                     }}
                 >
                     <Table
-                        aria-labelledby="usersTable"
+                        aria-labelledby="problemsTable"
                         size={'medium'}
                         stickyHeader
                     >
-                        <UserListTableHead
+                        <TsumegoListTableHead
                             order={search.order}
                             orderBy={search.orderBy}
                             onRequestSort={handleRequestSort}
@@ -176,36 +177,35 @@ const UserListView = () => {
                     </Table>
                 </TableContainer>
                 {
-                    users?.data.length === 0 &&
+                    problems?.data.length === 0 &&
                     <ListNotFound  message="Aucun utilisateur trouvé."/>
                 }
             </Paper>
             <Pagination 
                 color='primary' 
-                count={users?.total ? Math.ceil(users.total / perPage) : 0} 
+                count={problems?.total ? Math.ceil(problems.total / perPage) : 0} 
                 page={Number(page)} 
                 siblingCount={5} 
                 onChange={handleChangePage}
             />
             {
-                userToDelete && (
+                tsumegoToDelete && (
                     <Confirmation 
-                        open={Boolean(userToDelete)} 
-                        title="Voulez-vous vraiment supprimer cet utilisateur ?"
-                        message={`${userToDelete.firstname} ${userToDelete.lastname} (${userToDelete.email})`}
-                        onConfirmation={() => deleteUserMutation.mutate(userToDelete.id)}
-                        onCancelation={() => setUserToDelete(null)}
+                        open={Boolean(tsumegoToDelete)} 
+                        title="Voulez-vous vraiment supprimer ce problème ?"
+                        onConfirmation={() => deleteUserMutation.mutate(tsumegoToDelete.id)}
+                        onCancelation={() => setTsumegoToDelete(null)}
                     />
                 )
             }
             {
-                userToUpdateRole && (
-                    <UpdateUserRoleModal 
-                        open={Boolean(userToUpdateRole)}
-                        title={`Modifier les rôles de l'utilisateur : ${userToUpdateRole.firstname} ${userToUpdateRole.lastname}`}
-                        roles={[userToUpdateRole.role]}
+                tsumegoToModerate && (
+                    <TsumegoModal 
+                        open={Boolean(tsumegoToModerate)}
+                        title={tsumegoToModerate.label}
+                        roles={[tsumegoToModerate.level]}
                         onConfirmation={onUpdateUserRole}
-                        onCancelation={() => setUserToUpdateRole(null)}
+                        onCancelation={() => setTsumegoToModerate(null)}
                     />
                 )
             }
@@ -225,4 +225,4 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-export default UserListView;
+export default TsumegoListView;

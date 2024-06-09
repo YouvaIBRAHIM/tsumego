@@ -247,7 +247,7 @@ export default function Problems() {
         {
           (!isLoading && data)  
           ?
-          <Plateau 
+          <Plateau
             onConfirmChoice={onConfirmChoice} 
             canPlay={canPlay} 
             setCurrentChoice={onSetCurrentChoice} 

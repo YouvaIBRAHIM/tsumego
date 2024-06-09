@@ -67,3 +67,15 @@ export interface ISearchState {
     value: string
     difficulty: ISelectDifficulty["value"]
 }
+
+export interface IProblemList{
+    data: IProblem[]
+    total: number
+}
+
+export interface IProblemSearch{
+    value: string, 
+    searchBy: "name" | "email",
+    orderBy: "name" | "email",
+    order: "asc" | "desc"
+}

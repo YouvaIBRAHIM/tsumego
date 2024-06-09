@@ -5,6 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import UsersListView from '@src/components/UserListView/UserListView';
+import TsumegoListView from '@src/components/TsumegoListView/TsumegoListView';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -64,10 +65,10 @@ export default function Admin() {
         </Tabs>
       </AppBar>
         <TabPanel value={value} index={0} dir={theme.direction}>
-            <UsersListView />
+          <UsersListView />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          Item Two
+          <TsumegoListView />
         </TabPanel>
     </Box>
   );
