@@ -39,12 +39,15 @@ venv/bin/activate: requirements.txt
 	chmod +x .venv/bin/activate
 	. ./.venv/bin/activate
 	$(PIP) install -r requirements.txt
+	$(PIP) freeze > requirements.txt
+
 
 venv: venv/bin/activate
 	. ./.venv/bin/activate
 
 update: venv ## Mise à jour des packages
-	$(PIP) freeze > requirements.txt
+	docker cp requirements.txt go-project-web:/home/project/
+	docker exec go-project-web pip install -r /home/project/requirements.txt
 
 deactivate:
 	@rm -rf __pycache__
@@ -54,14 +57,30 @@ add: venv ## p=<nom du package> - Installe le package et mets a jour requirement
 ifdef p
 	$(PIP) install $(p)
 	$(PIP) freeze > requirements.txt
+	docker cp requirements.txt go-project-web:/home/project/
+	docker exec go-project-web pip install -r /home/project/requirements.txt
 	echo "$(OK_COLOR) Package $(COM_COLOR) $(p) $(OK_COLOR) installed $(NO_COLOR)"
 else
 	@echo "$(ERROR_COLOR) You need to specified a package to install $(NO_COLOR)"
 endif
 
+del: venv ## p=<nom du package> - Supprime le package et mets a jour requirements.txt
+ifdef p
+	$(PIP) uninstall $(p)
+	$(PIP) freeze > requirements.txt
+	docker cp requirements.txt go-project-web:/home/project/
+	docker exec go-project-web pip uninstall --yes $(p)
+	echo "$(OK_COLOR) Package $(COM_COLOR) $(p) $(OK_COLOR) deleted $(NO_COLOR)"
+else
+	@echo "$(ERROR_COLOR) You need to specified a package to delete $(NO_COLOR)"
+endif
+
 
 superuser:
 	docker exec -it go-project-web python manage.py createsuperuser
+
+seed:
+	docker exec -it go-project-web python manage.py insert_problems
 
 migrate: ## Mise à jour de la base
 	docker exec -it go-project-web python manage.py migrate --noinput
@@ -69,6 +88,6 @@ migrate: ## Mise à jour de la base
 migrations: ## Creer les migrations - optionnel -> table=<nom de la table>
 	docker exec -it go-project-web python manage.py makemigrations --noinput $(table)
 
-init: update build migrations migrate superuser ## Initialise le projet la première fois.
+init: venv build migrations migrate superuser seed ## Initialise le projet la première fois.
 	@echo "  🎉 $(OK_COLOR) Success $(NO_COLOR)"
 	@echo "  ⚠️ $(WARN_COLOR) Don't forget to run .venv $(NO_COLOR)"

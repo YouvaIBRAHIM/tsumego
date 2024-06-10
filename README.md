@@ -48,6 +48,8 @@ Dans le terminal : POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB
    - build le projet avec docker
    - créer et faire une migration
    - lancer la commande pour créer un super user dans django.
+   - lancer le scrapping des 10 premiers problèmes (Beginner/Intermediate/Advanced) de Tsumego:
+     https://github.com/sanderland/tsumego/tree/master/problems (Attention le processus peut-être un peu long)
 3. Sur votre navigateur:
 
    - `localhost:8000/admin/`--> accès à l'interface admin Django (avec les credentials du super user)
@@ -68,9 +70,9 @@ Dans le terminal:
 Dans le terminal:
 
 - `make` --> vous donnes la liste des commandes disponible
-- `make add p=<nom_du_package>`--> permet d'ajouter une librairi et mets à jour le fichier <u>requirements.txt</u>
-  - ⚠️ <b>ATTENTION D'AVOIR ACTIVER LE VIRTUALENV</b> --> ex: `source .venv/bin/activate`
-- `make update` - cette commande va créer/mettre à jour un .venv pour isoler les dépendances
+- `make add p=<nom_du_package>`--> permet d'ajouter une librairie et mets à jour le fichier <u>requirements.txt</u>
+  - ⚠️ <b>ATTENTION D'AVOIR LE VIRTUALENV D'ACTIVER</b>
+- `make update` - cette commande va créer/mettre à jour les dépendances en local et dans le container
 - `make web` - lance docker en mode -d et active le terminal docker de django
 
 ## Installer les dépendances frontend
