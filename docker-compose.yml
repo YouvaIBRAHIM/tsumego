@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  web:
+    container_name: go-project-web
+    build: .
+    ports:
+      - "8000:8000"
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./backend/:/home/project
+    depends_on:
+      - db
+    networks:
+      - go-project
+
+  adminer:
+    container_name: go-project-adminer
+    image: adminer
+    ports:
+      - 8080:8080
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    depends_on:
+      - db
+    networks:
+      - go-project
+
+  db:
+    container_name: go-project-db
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - go-project
+
+volumes:
+  postgres_data:
+
+networks:
+  go-project:
