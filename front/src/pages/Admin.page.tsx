@@ -5,7 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import UsersListView from '@src/components/UserListView/UserListView';
-import TsumegoListView from '@src/components/TsumegoListView/TsumegoListView';
+import TsumegoListView from '@src/domains/go/components/TsumegoListView/TsumegoListView';
 
 interface TabPanelProps {
   children?: React.ReactNode;

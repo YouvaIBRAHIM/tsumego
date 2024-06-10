@@ -1,25 +1,26 @@
-import { useCallback, useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import TsumegoListTableHead from "@src/components/TsumegoListView/TsumegoListTableHead"
-import TableToolbar from "@src/components/TsumegoListView/TableToolbar"
-import { useDebounce } from '@services/hooks.services';
-import { IconButton, Pagination, Tooltip, alpha, styled } from '@mui/material';
-import TableSkeleton from '@components/Skeletons/TableSkeletons';
-import { PencilSimpleLine, Trash } from '@phosphor-icons/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteUser } from '@services/apis/user.api';
-import ErrorView from '@components/Views/ErrorView';
-import ListNotFound from '@components/TableListNotFound';
-import Confirmation from '@components/Confirmation';
-import { getProblems } from '@src/services/apis/tsumego.api';
-import { ITsumegoProblem, ITsumegoProblemSearch } from '@src/types/tsumego.type';
-import TsumegoModal from '@src/components/TsumegoListView/TsumegoModal';
+import { useCallback, useEffect, useState } from "react";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { Chip, IconButton, Pagination, Tooltip, alpha, styled } from "@mui/material";
+import { Check, Eye, Trash, X } from "@phosphor-icons/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteUser } from "@services/apis/user.api";
+import ErrorView from "../Views/ErrorView";
+import ListNotFound from "../TableListNotFound";
+import Confirmation from "../Confirmation";
+import { useDebounce } from "../../services/hooks.services";
+import { getProblems } from "../../services/api.services";
+import { IProblem, ITsumegoProblemSearch } from "../../types/go.types";
+import TsumegoModal from "./TsumegoModal";
+import TsumegoListTableHead from "./TsumegoListTableHead"
+import TableToolbar from "./TableToolbar"
+import TableSkeleton from "./TableSkeletons";
+import { getComparator, stableSort } from "../../services/utils.service";
 
 
 const TsumegoListView = () => {
@@ -28,19 +29,20 @@ const TsumegoListView = () => {
     const [perPage, setPerPage] = useState(10);
     const [search, setSearch] = useState<ITsumegoProblemSearch>({
         value: "", 
-        searchBy: "title",
+        searchBy: "label",
         level: "all",
+        status: "all",
         order: "asc",
-        orderBy: "title"
+        orderBy: "label"
     });
 
-    const [ tsumegoToModerate, setTsumegoToModerate ] =useState<ITsumegoProblem | null>(null)
-    const [ tsumegoToDelete, setTsumegoToDelete ] =useState<ITsumegoProblem | null>(null)
+    const [ tsumegoToModerate, setTsumegoToModerate ] =useState<IProblem | null>(null)
+    const [ tsumegoToDelete, setTsumegoToDelete ] =useState<IProblem | null>(null)
 
     const debouncedSearch = useDebounce(search.value, 500);
 
     const { data: problems, isFetching, refetch, isError, error } = useQuery({ 
-        queryKey: ['problems'], 
+        queryKey: ["problems"], 
         queryFn: () =>  getProblems(page, perPage, search),
         retry: 3,
     });
@@ -49,7 +51,7 @@ const TsumegoListView = () => {
         mutationFn: (id: string) => deleteUser(id),
         onSuccess: () => {
             queryClient.invalidateQueries(  {
-                queryKey: ['problems'],
+                queryKey: ["problems"],
             })
             setTsumegoToDelete(null)
         },
@@ -65,10 +67,10 @@ const TsumegoListView = () => {
     }, [page, perPage, debouncedSearch])
 
     const handleRequestSort = (property: ITsumegoProblemSearch["orderBy"]) => {
-        const isAsc = search.orderBy === property && search.order === 'asc';
+        const isAsc = search.orderBy === property && search.order === "asc";
         setSearch((prev) => ({
             ...prev,
-            order: isAsc ? 'desc' : 'asc',
+            order: isAsc ? "desc" : "asc",
             orderBy: property
         }))
     };
@@ -79,15 +81,14 @@ const TsumegoListView = () => {
 
     
     const renderTableBody = useCallback(() => {
-        // const visibleRows = (problems) ? stableSort(problems.data, getComparator(search.order, search.orderBy)): []
-        const visibleRows = problems?.data 
+        const visibleRows = (problems) ? stableSort(problems.data, getComparator(search.order, search.orderBy)): []
         
         if (isFetching) {
             return <TableSkeleton rows={10} cells={5}/>
         }else if (visibleRows) {
             return (
                 <TableBody>
-                    {visibleRows.map((row: ITsumegoProblem, index: number) => {
+                    {visibleRows.map((row: IProblem, index: number) => {
                         const labelId = `enhanced-table-checkbox-${index}`;
                         return (
                             <StyledTableRow
@@ -102,23 +103,24 @@ const TsumegoListView = () => {
                                 >
                                     {row.label}
                                 </TableCell>
+                                <TableCell align="left">{row.author}</TableCell>
                                 <TableCell align="left">{row.level}</TableCell>
-                                <TableCell align="left">{'user'}</TableCell>
+                                <TableCell align="left"><Chip  color={row.active ? "success" : "warning"} icon={row.active ? <Check size={16} /> : <X size={16} />} label={row.active ? "Visible" : "Inactif"} /></TableCell>
                                 <TableCell align="left">
                                     <Box>
-                                        <Tooltip title='Éditer' onClick={()=> setTsumegoToModerate(row)}>
-                                        <IconButton aria-label="action" size="small">
-                                            <PencilSimpleLine fontSize="inherit" weight="duotone" />
-                                        </IconButton>
+                                        <Tooltip title="Voir" onClick={()=> setTsumegoToModerate(row)}>
+                                            <IconButton aria-label="action" size="small">
+                                                <Eye fontSize="inherit" weight="duotone" />
+                                            </IconButton>
                                         </Tooltip>
-                                        <Tooltip title='Supprimer'>
-                                        <IconButton 
-                                            aria-label="action" 
-                                            size="small"
-                                            onClick={() => setTsumegoToDelete(row)}
-                                        >
-                                            <Trash fontSize="inherit" weight="duotone" />
-                                        </IconButton>
+                                        <Tooltip title="Supprimer">
+                                            <IconButton 
+                                                aria-label="action" 
+                                                size="small"
+                                                onClick={() => setTsumegoToDelete(row)}
+                                            >
+                                                <Trash fontSize="inherit" weight="duotone" />
+                                            </IconButton>
                                         </Tooltip>
                                     </Box>
                                 </TableCell>
@@ -148,13 +150,15 @@ const TsumegoListView = () => {
     }
     
     return (
-        <Box sx={{ width: '100%' }}>
-            <Paper sx={{ width: '100%', mb: 2 }}>
+        <Box sx={{ width: "100%" }}>
+            <Paper sx={{ width: "100%", mb: 2 }}>
                 <TableToolbar 
                     perPage={perPage} 
                     setPerPage={(value: number) => setPerPage(value)} 
                     level={search.level} 
                     setLevel={(val: ITsumegoProblemSearch["level"]) => updateSearch("level", val)} 
+                    status={search.status} 
+                    setStatus={(val: ITsumegoProblemSearch["status"]) => updateSearch("status", val)} 
                     search={search} 
                     updateSearch={updateSearch}
                 />
@@ -165,7 +169,7 @@ const TsumegoListView = () => {
                 >
                     <Table
                         aria-labelledby="problemsTable"
-                        size={'medium'}
+                        size={"medium"}
                         stickyHeader
                     >
                         <TsumegoListTableHead
@@ -182,7 +186,7 @@ const TsumegoListView = () => {
                 }
             </Paper>
             <Pagination 
-                color='primary' 
+                color="primary" 
                 count={problems?.total ? Math.ceil(problems.total / perPage) : 0} 
                 page={Number(page)} 
                 siblingCount={5} 
@@ -203,7 +207,7 @@ const TsumegoListView = () => {
                     <TsumegoModal 
                         open={Boolean(tsumegoToModerate)}
                         title={tsumegoToModerate.label}
-                        roles={[tsumegoToModerate.level]}
+                        problem={tsumegoToModerate}
                         onConfirmation={onUpdateUserRole}
                         onCancelation={() => setTsumegoToModerate(null)}
                     />
@@ -214,13 +218,13 @@ const TsumegoListView = () => {
 }
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
+    "&:nth-of-type(odd)": {
         backgroundColor: theme.palette.action.hover,
     },
-    '&:last-child td, &:last-child th': {
+    "&:last-child td, &:last-child th": {
         border: 0,
     },
-    '&:hover': {
+    "&:hover": {
         backgroundColor: theme.palette.mode === "dark" ? alpha(theme.palette.primary.main, 0.35) : alpha(theme.palette.primary.main, 0.75),
     },
 }));

@@ -2,22 +2,15 @@ import { Box, TableCell, TableRow } from '@mui/material';
 import TableHead from '@mui/material/TableHead';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { visuallyHidden } from '@mui/utils';
-import { IUserSearch } from '@src/types/user.type';
+import { ITsumegoProblemSearch } from '../../types/go.types';
 
 const headCells = [
     {
-      id: 'title',
+      id: 'label',
       numeric: false,
       disablePadding: false,
       disableSort: false,
       label: 'Titre',
-    },
-    {
-      id: 'level',
-      numeric: false,
-      disablePadding: false,
-      disableSort: false,
-      label: 'Niveau',
     },
     {
       id: 'author',
@@ -25,6 +18,20 @@ const headCells = [
       disablePadding: false,
       disableSort: false,
       label: 'Auteur',
+    },
+    {
+      id: 'level',
+      numeric: false,
+      disablePadding: false,
+      disableSort: true,
+      label: 'Niveau',
+    },
+    {
+      id: 'status',
+      numeric: false,
+      disablePadding: false,
+      disableSort: true,
+      label: 'Status',
     },
     {
       id: 'actions',
@@ -38,11 +45,11 @@ const headCells = [
 interface ITsumegoListTableHead{
   order: "asc" | "desc", 
   orderBy: string, 
-  onRequestSort: (property: IUserSearch["orderBy"]) => void
+  onRequestSort: (property: ITsumegoProblemSearch["orderBy"]) => void
 }
 const TsumegoListTableHead = ({ order, orderBy, onRequestSort }: ITsumegoListTableHead) => {
 
-  const createSortHandler = (property: IUserSearch["orderBy"], disableSort: boolean) => {    
+  const createSortHandler = (property: ITsumegoProblemSearch["orderBy"], disableSort: boolean) => {    
     if (!disableSort) {
         onRequestSort(property);
       }
@@ -62,7 +69,7 @@ const TsumegoListTableHead = ({ order, orderBy, onRequestSort }: ITsumegoListTab
                 hideSortIcon={headCell.disableSort}
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={() => createSortHandler(headCell.id as IUserSearch["orderBy"], headCell.disableSort)}
+                onClick={() => createSortHandler(headCell.id as ITsumegoProblemSearch["orderBy"], headCell.disableSort)}
               >
                 {headCell.label}
                 {orderBy === headCell.id ? (

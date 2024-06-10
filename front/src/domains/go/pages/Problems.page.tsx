@@ -3,7 +3,7 @@ import AsideList from "../components/AsideList/AsideList";
 import AsideListSkeleton from "../components/AsideList/AsideListSkeleton";
 import Plateau from "../components/Plateau/Plateau";
 import PlateauSkeleton from "../components/Plateau/PlateauSkeleton";
-import { problemListDataToAsideListData, transformProblemToGoState } from "../utils/global";
+import { problemListDataToAsideListData, transformProblemToGoState } from "../services/global.service";
 import { IGo, IProblem, ISearchState, ISelectDifficulty } from "../types/go.types";
 import { useEffect, useState } from "react";
 import ProblemsAsideList from "../components/AsideList/ProblemsAsideList";
@@ -12,7 +12,7 @@ const data: IProblem[] = [
   {
     id: "sdmffkds",
     label: "Problem0001",
-    level: "easy",
+    level: "beginner",
     won: false,
     AB: ["E1", "F2", "B2", "C3", "D3", "B6"],
     AW: ["D1", "A1", "B2", "C3", "D3"],
@@ -24,7 +24,7 @@ const data: IProblem[] = [
   {
     id: "sdmflhds",
     label: "Problem0002",
-    level: "easy",
+    level: "beginner",
     won: true,
     AB: ["B1", "F2", "B2", "C3", "D3", "E6"],
     AW: ["D1", "B2", "B2", "C3", "D3"],
@@ -36,7 +36,7 @@ const data: IProblem[] = [
   {
     id: "ghjv",
     label: "Problem0003",
-    level: "easy",
+    level: "beginner",
     won: false,
     AB: ["C1", "F2", "B2", "C3", "D3", "B6"],
     AW: ["D1", "C3", "B2", "C3", "D3"],
@@ -48,7 +48,7 @@ const data: IProblem[] = [
   {
     id: "vcbjh",
     label: "Problem0004",
-    level: "easy",
+    level: "beginner",
     won: false,
     AB: ["D1", "F2", "B2", "C3", "D3", "B6"],
     AW: ["D1", "A1", "D2", "C3", "D3"],
@@ -60,7 +60,7 @@ const data: IProblem[] = [
   {
     id: "asdfh",
     label: "Problem0005",
-    level: "easy",
+    level: "beginner",
     won: false,
     AB: ["E1", "F2", "B2", "C3", "D3", "B6"],
     AW: ["D1", "A1", "B2", "C3", "D3"],
@@ -72,7 +72,7 @@ const data: IProblem[] = [
   {
     id: "fdghtr",
     label: "Problem0006",
-    level: "easy",
+    level: "beginner",
     won: true,
     AB: ["A3", "B2", "C3", "D3", "D6", "B6"],
     AW: ["D1", "C3", "D2", "C3", "D3"],
@@ -84,7 +84,7 @@ const data: IProblem[] = [
   {
     id: "dfgsda",
     label: "Problem0007",
-    level: "easy",
+    level: "beginner",
     won: false,
     AB: ["A3", "F3", "B2", "C3", "D3", "B6"],
     AW: ["D1", "A1", "D2", "C3", "D3"],
@@ -96,7 +96,7 @@ const data: IProblem[] = [
   {
     id: "dfgasd",
     label: "Problem0008",
-    level: "easy",
+    level: "beginner",
     won: true,
     AB: ["A4", "F2", "B2", "C3", "D3", "B6"],
     AW: ["D1", "A1", "D2", "C3", "D3"],
@@ -108,7 +108,7 @@ const data: IProblem[] = [
   {
     id: "fdgasd",
     label: "Problem0009",
-    level: "easy",
+    level: "beginner",
     won: false,
     AB: ["B1", "F3", "B2", "C3", "D3", "B6"],
     AW: ["D1", "A1", "D2", "C3", "D3"],
@@ -120,7 +120,7 @@ const data: IProblem[] = [
   {
     id: "fdgas",
     label: "Problem0010",
-    level: "easy",
+    level: "beginner",
     won: false,
     AB: ["B3", "F2", "B2", "C3", "D3", "B6"],
     AW: ["D1", "A1", "D2", "C3", "D3"],

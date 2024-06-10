@@ -4,8 +4,9 @@
  *
  */
 
+import { ITheme } from '../../types/go.types';
 import * as Geo from './geometry';
-import * as Css from './styles';
+import { defineRadialColors, Themes } from './styles';
 
 /** @todo Replace all string concatenations with ES6 templates? */
 
@@ -84,7 +85,7 @@ const _addLettersLayer = (str: string, size: number, coordSystem: string): strin
 }
 
 const _addGradient = (str: string, color: string): string => {
-    const rad = Css.defineRadialColors(color);
+    const rad = defineRadialColors(color);
     let attr = '';
     attr += 'id="' + rad.id + '" ';
     for (const i in rad.gradient) {
@@ -98,9 +99,9 @@ const _addGradient = (str: string, color: string): string => {
     return str;
 }
 
-const _addStyles = (str: string, theme: string): string => {
+const _addStyles = (str: string, theme: keyof ITheme): string => {
     str += '<style type="text/css"><![CDATA['
-    str +=   Css.Themes[theme]();
+    str +=   Themes[theme];
     str += ']]></style>'
     return str;
 }
@@ -112,7 +113,7 @@ const _addStyles = (str: string, theme: string): string => {
  * @param {object} pos object containing locations of stones
  * @returns {string} 
  */
-export const serializeSVG = (config: { size?: number; theme?: string; coordSystem?: string; noMargin?: boolean; hideMargin?: boolean; zoom?: any }, pos: any, markers: any): string => {
+export const serializeSVG = (config: { size?: number; theme?: keyof ITheme; coordSystem?: string; noMargin?: boolean; hideMargin?: boolean; zoom?: any }, pos: any, markers: any): string => {
     const size = config.size || 19;
     const theme = config.theme || "classic";
     const coordSystem = config.coordSystem || "A1";

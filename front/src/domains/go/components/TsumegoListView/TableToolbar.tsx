@@ -1,6 +1,6 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, Toolbar } from "@mui/material";
-import SearchField from "@src/components/TsumegoListView/SearchField";
-import { ITsumegoProblemSearch } from "@src/types/tsumego.type";
+import { FormControl, InputLabel, MenuItem, Select, Stack, Toolbar } from "@mui/material";
+import SearchField from "./SearchField";
+import { ITsumegoProblemSearch } from "../../types/go.types";
 
 const filterOptions:{
   label: string,
@@ -8,7 +8,7 @@ const filterOptions:{
 }[] = [
   {
     label: "Titre",
-    value: "title"
+    value: "label"
   },
   {
     label: "Auteur",
@@ -19,27 +19,23 @@ const filterOptions:{
 interface ITableToolbar{
   setPerPage: (value: number) => void,
   setLevel: (value: ITsumegoProblemSearch["level"]) => void,
+  setStatus: (value: ITsumegoProblemSearch["status"]) => void,
   perPage: number,
   level: string,
+  status: string,
   search: ITsumegoProblemSearch,
   updateSearch: (key: keyof ITsumegoProblemSearch, value: unknown) => void
 }
 const TableToolbar = ({ 
   setPerPage,
   setLevel,
+  setStatus,
   perPage,
   level,
+  status,
   search,
   updateSearch
 }: ITableToolbar) => {
-  
-    const handleChangePerPage = (e: SelectChangeEvent) => {
-      setPerPage(Number(e.target.value))
-    }
-    const handleChangeLevel = (e: SelectChangeEvent) => {
-      setLevel(e.target.value as ITsumegoProblemSearch["level"])
-    }
-
 
     return (
       <Toolbar
@@ -53,7 +49,7 @@ const TableToolbar = ({
           direction="row"
           alignItems="center"
           flexWrap="wrap"
-          gap={4}
+          gap={2}
         >
             <SearchField 
               filterOptions={filterOptions}
@@ -67,7 +63,7 @@ const TableToolbar = ({
                 id="perPageId"
                 value={String(perPage)}
                 label="Par page"
-                onChange={handleChangePerPage}
+                onChange={(e) => setPerPage(Number(e.target.value))}
               >
                 <MenuItem value={5}>5</MenuItem>
                 <MenuItem value={10}>10</MenuItem>
@@ -82,12 +78,26 @@ const TableToolbar = ({
                 id="LevelId"
                 value={level}
                 label="Niveau"
-                onChange={handleChangeLevel}
+                onChange={(e) => setLevel(e.target.value as ITsumegoProblemSearch["level"])}
               >
                 <MenuItem value={"all"}>Tous les niveaux</MenuItem>
                 <MenuItem value={"beginner"}>Débutant</MenuItem>
                 <MenuItem value={"intermediate"}>Intermédiaire</MenuItem>
                 <MenuItem value={"advanced"}>Avancé</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl sx={{ minWidth: 125 }} size="small">
+              <InputLabel id="statusId">Status</InputLabel>
+              <Select
+                labelId="statusId"
+                id="statusId"
+                value={status}
+                label="Niveau"
+                onChange={(e) => setStatus(e.target.value as ITsumegoProblemSearch["status"])}
+              >
+                <MenuItem value={"all"}>Tous les status</MenuItem>
+                <MenuItem value={"active"}>Visibles</MenuItem>
+                <MenuItem value={"inactive"}>Inactifs</MenuItem>
               </Select>
             </FormControl>
           </Stack>

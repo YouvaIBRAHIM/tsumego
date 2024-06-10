@@ -53,7 +53,7 @@ const TableToolbar = ({
           direction="row"
           alignItems="center"
           flexWrap="wrap"
-          gap={4}
+          gap={2}
         >
             <SearchField 
               filterOptions={filterOptions}

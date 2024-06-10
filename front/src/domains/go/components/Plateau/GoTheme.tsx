@@ -1,5 +1,5 @@
 import { Box, Button, Stack, alpha, styled } from "@mui/material"
-import { themesColor } from "../../utils/go/styles"
+import { themesColor } from "../../services/go/styles"
 import { ITheme } from "../../types/go.types"
 
 interface IGoTheme{

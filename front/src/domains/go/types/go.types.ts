@@ -14,7 +14,7 @@ export interface IGo {
 export interface IProblem {
     id: string;
     label: string;
-    level: string;
+    level: "all" | "beginner" | "intermediate" | "advanced";
     won: boolean;
     AB: string[];
     AW: string[];
@@ -22,6 +22,8 @@ export interface IProblem {
     C: string;
     SOL: string[][];
     nextToPlay: "black" | "white";
+    author?: string;
+    active?: boolean
 }
 
 export interface AutoCompleteGoBoardPoint {
@@ -73,9 +75,18 @@ export interface IProblemList{
     total: number
 }
 
-export interface IProblemSearch{
+
+export interface ITsumegoProblemList{
+    data: IProblem[]
+    total: number
+}
+
+export interface ITsumegoProblemSearch{
     value: string, 
-    searchBy: "name" | "email",
-    orderBy: "name" | "email",
-    order: "asc" | "desc"
+    searchBy: "label" | "author",
+    orderBy: "label" | "author",
+    order: "asc" | "desc",
+    level: IProblem["level"],
+    status: "all" | "active" | "inactive",
+
 }

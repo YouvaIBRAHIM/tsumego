@@ -334,7 +334,6 @@ export const shapeMarkers = (size: number, markers: { [key: string]: string }, p
     const step: number = SV_GRID_SIZE / (size + 1);
     let x: number, y: number, x1: number, y1: number, x2: number, y2: number, cls: string, points: string;
     const ret: Array<any> = [];
-    let coord: any;
 
     for (let k in markers) {
 

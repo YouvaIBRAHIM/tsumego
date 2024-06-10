@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from "react"
 import Go from "@src/domains/go/components/Plateau/Go"
 import { IGo, ITheme } from "../../types/go.types";
 import AutoCompleteGoPoint from "../AutocompleteGoPoint";
-import { filterExcludedPoints, generateGoBoardPoints } from "../../utils/global";
+import { filterExcludedPoints, generateGoBoardPoints } from "../../services/global.service";
 import GoTheme from "./GoTheme";
 
 export interface IPlateau{
-  currentChoice: string | null
+  currentChoice?: string | null
   defaultState: {
     position: IGo['position']
     size: number

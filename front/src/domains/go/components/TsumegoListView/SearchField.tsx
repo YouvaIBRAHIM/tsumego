@@ -2,7 +2,7 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import { FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material';
-import { ITsumegoProblemSearch } from '@src/types/tsumego.type';
+import { ITsumegoProblemSearch } from '../../types/go.types';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

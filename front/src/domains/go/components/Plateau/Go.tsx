@@ -9,7 +9,7 @@ import {
     shapeArea, 
     defineRadialColors, 
     Themes 
-} from '../../utils/go/index';
+} from '../../services/go/index';
 import { ElementProps, GobanProps, StoneProps } from '../../types/go.types';
 
 
