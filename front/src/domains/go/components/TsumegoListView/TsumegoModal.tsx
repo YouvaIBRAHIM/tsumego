@@ -28,7 +28,7 @@ const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITs
     }, [])
 
     const isMobileScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-
+    
     return (
 
         <Dialog
@@ -57,7 +57,7 @@ const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITs
                             >
                                 <Go
                                     theme={localStorage.getItem("goTheme") as keyof ITheme ?? "paper"}
-                                    position={defaultGoState.position}
+                                    position={{...defaultGoState.position, ...{[problem.SOL[0][1]]: defaultGoState.nextToPlay}}}
                                     markers={{[problem.SOL[0][1]]: "circle"}}
                                     nextToPlay={defaultGoState.nextToPlay}
                                     onIntersectionClick={() => {}}
