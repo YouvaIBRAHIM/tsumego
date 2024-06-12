@@ -1,6 +1,5 @@
 import { PaletteMode } from "@mui/material"
-import { IAsideListData } from "@src/components/AsideList/AsideList"
-import { IProblem } from "@src/types/problem.type"
+import { IUser, IUserSearch } from "@src/types/user.type"
 
 export const truncateString = (string: string, maxLength: number) => {
     return string.length > maxLength
@@ -34,10 +33,37 @@ export const getDefaultThemeMode = (): PaletteMode => {
     return themeModeFromLocalStorage
 }
 
-export const problemListDataToAsideListData = (data: IProblem[]): IAsideListData[] => {
-    return data.map(el => ({
-        id: el.id,
-        label: el.label,
-        value: el.problem
-    }))
+export const descendingComparator = (a: IUser, b: IUser, orderBy: IUserSearch['searchBy']): number => {
+    const from = orderBy !== "name" ? a[orderBy] : `${a["firstname"]} ${a["lastname"]}` 
+    const to = orderBy !== "name" ? b[orderBy] : `${b["firstname"]} ${b["lastname"]}` 
+
+    if (to < from) {
+        return -1;
+    }
+    if (to > from) {
+        return 1;
+    }
+    return 0;
+}
+    
+export const getComparator = (order: IUserSearch['order'], orderBy: IUserSearch['searchBy']) => {
+    return order === 'desc'
+        ? (a: IUser, b: IUser) => descendingComparator(a, b, orderBy)
+        : (a: IUser, b: IUser) => -descendingComparator(a, b, orderBy);
+}
+    
+export const stableSort = (array: IUser[], comparator: (a: IUser, b: IUser) => number) => {
+        const stabilizedThis: [
+            IUser,
+            number
+        ][] = array.map((el, index) => [el, index]);
+        stabilizedThis.sort((a, b) => {
+            const order = comparator(a[0], b[0]);
+            if (order !== 0) {
+                return order;
+            }
+            return a[1] - b[1];
+        });
+        
+        return stabilizedThis.map((el) => el[0]);
 }

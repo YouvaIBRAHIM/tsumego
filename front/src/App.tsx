@@ -5,6 +5,9 @@ import { getTheme } from '@services/theme.service';
 import { useColorMode } from '@reducers/theme.reducer';
 import { RouterProvider } from 'react-router-dom';
 import { router } from '@routers/router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient()
 
 function App() {
   const { colorMode } = useColorMode();
@@ -12,7 +15,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </ThemeProvider>
   )
 }
