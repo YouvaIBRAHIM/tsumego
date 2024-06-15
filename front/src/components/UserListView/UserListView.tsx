@@ -20,6 +20,7 @@ import { IUser, IUserSearch } from '@src/types/user.type';
 import Confirmation from '@components/Confirmation';
 import UpdateUserRoleModal from '@src/components/UserListView/UpdateUserRoleModal';
 import ErrorView from '@components/Views/ErrorView';
+import { formatRoles } from '@src/services/roles.mapper.service';
 
 
 const UserListView = () => {
@@ -59,10 +60,8 @@ const UserListView = () => {
     })
 
     useEffect(() => {
-        if (debouncedSearch) {
-            console.log("🚀 ~ useEffect ~ debouncedSearch:", debouncedSearch)
-        }
-    }, [page, perPage, debouncedSearch])
+        refetch()
+    }, [page, perPage, debouncedSearch, search.role, search.searchBy])
 
     const handleRequestSort = (property: IUserSearch["orderBy"]) => {
         const isAsc = search.orderBy === property && search.order === 'asc';
@@ -99,10 +98,10 @@ const UserListView = () => {
                                     id={labelId}
                                     scope="row"
                                 >
-                                    {row.firstname} {row.lastname?.toUpperCase()}
+                                    {row.first_name} {row.last_name?.toUpperCase()}
                                 </TableCell>
                                 <TableCell align="left">{row.email}</TableCell>
-                                <TableCell align="left">{row.role}</TableCell>
+                                <TableCell align="left">{formatRoles(row.roles)}</TableCell>
                                 <TableCell align="left">
                                     <Box>
                                         <Tooltip title='Éditer' onClick={()=> setUserToUpdateRole(row)}>
@@ -182,9 +181,8 @@ const UserListView = () => {
             </Paper>
             <Pagination 
                 color='primary' 
-                count={users?.total ? Math.ceil(users.total / perPage) : 0} 
-                page={Number(page)} 
-                siblingCount={5} 
+                count={users?.count ? Math.ceil(users.count / perPage) : 0} 
+                page={Number(page)}
                 onChange={handleChangePage}
             />
             {
@@ -192,7 +190,7 @@ const UserListView = () => {
                     <Confirmation 
                         open={Boolean(userToDelete)} 
                         title="Voulez-vous vraiment supprimer cet utilisateur ?"
-                        message={`${userToDelete.firstname} ${userToDelete.lastname} (${userToDelete.email})`}
+                        message={`${userToDelete.first_name} ${userToDelete.last_name} (${userToDelete.email})`}
                         onConfirmation={() => deleteUserMutation.mutate(userToDelete.id)}
                         onCancelation={() => setUserToDelete(null)}
                     />
@@ -202,8 +200,8 @@ const UserListView = () => {
                 userToUpdateRole && (
                     <UpdateUserRoleModal 
                         open={Boolean(userToUpdateRole)}
-                        title={`Modifier les rôles de l'utilisateur : ${userToUpdateRole.firstname} ${userToUpdateRole.lastname}`}
-                        roles={[userToUpdateRole.role]}
+                        title={`Modifier les rôles de l'utilisateur : ${userToUpdateRole.first_name} ${userToUpdateRole.last_name}`}
+                        roles={userToUpdateRole.roles}
                         onConfirmation={onUpdateUserRole}
                         onCancelation={() => setUserToUpdateRole(null)}
                     />
