@@ -1,27 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import UserListTableHead from "@src/components/UserListView/UserListTableHead"
 import TableToolbar from "@src/components/UserListView/TableToolbar"
 import { getComparator, stableSort } from '@services/utils.service';
 import { useDebounce } from '@services/hooks.services';
-import { IconButton, Pagination, Tooltip, alpha, styled } from '@mui/material';
-import TableSkeleton from '@components/Skeletons/TableSkeletons';
-import { PencilSimpleLine, Trash } from '@phosphor-icons/react';
+import { Pagination } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteUser, getUsers } from '@services/apis/user.api'
 import ListNotFound from '@components/TableListNotFound';
 import { IUser, IUserSearch } from '@src/types/user.type';
 import Confirmation from '@components/Confirmation';
 import UpdateUserRoleModal from '@src/components/UserListView/UpdateUserRoleModal';
+import UserListBody from '@src/components/UserListView/UserListBody';
 import ErrorView from '@components/Views/ErrorView';
-import { formatRoles } from '@src/services/roles.mapper.service';
-
 
 const UserListView = () => {
     const queryClient = useQueryClient()
@@ -78,55 +72,9 @@ const UserListView = () => {
 
     
     const renderTableBody = useCallback(() => {
-        const visibleRows = (users) ? stableSort(users.data, getComparator(search.order, search.orderBy)): []
+        const sortedUsers = (users) ? stableSort(users.data, getComparator(search.order, search.orderBy)): []
         
-        if (isFetching) {
-            return <TableSkeleton rows={10} cells={5}/>
-        }else if (visibleRows) {
-            return (
-                <TableBody>
-                    {visibleRows.map((row: IUser, index: number) => {
-                        const labelId = `enhanced-table-checkbox-${index}`;
-                        return (
-                            <StyledTableRow
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={row.id}
-                            >
-                                <TableCell
-                                    component="th"
-                                    id={labelId}
-                                    scope="row"
-                                >
-                                    {row.first_name} {row.last_name?.toUpperCase()}
-                                </TableCell>
-                                <TableCell align="left">{row.email}</TableCell>
-                                <TableCell align="left">{formatRoles(row.roles)}</TableCell>
-                                <TableCell align="left">
-                                    <Box>
-                                        <Tooltip title='Éditer' onClick={()=> setUserToUpdateRole(row)}>
-                                        <IconButton aria-label="action" size="small">
-                                            <PencilSimpleLine fontSize="inherit" weight="duotone" />
-                                        </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title='Supprimer'>
-                                        <IconButton 
-                                            aria-label="action" 
-                                            size="small"
-                                            onClick={() => setUserToDelete(row)}
-                                        >
-                                            <Trash fontSize="inherit" weight="duotone" />
-                                        </IconButton>
-                                        </Tooltip>
-                                    </Box>
-                                </TableCell>
-                            </StyledTableRow>
-                        );
-                    })}
-
-                </TableBody>
-            )
-        }
+        return <UserListBody users={sortedUsers} isFetching={isFetching} setUserToDelete={setUserToDelete} setUserToUpdateRole={setUserToUpdateRole} />
     }, [isFetching, users, search.order, search.orderBy]);
 
     
@@ -211,16 +159,5 @@ const UserListView = () => {
     );
 }
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    '&:last-child td, &:last-child th': {
-        border: 0,
-    },
-    '&:hover': {
-        backgroundColor: theme.palette.mode === "dark" ? alpha(theme.palette.primary.main, 0.35) : alpha(theme.palette.primary.main, 0.75),
-    },
-}));
 
 export default UserListView;
