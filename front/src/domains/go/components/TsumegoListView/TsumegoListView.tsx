@@ -61,10 +61,8 @@ const TsumegoListView = () => {
     })
 
     useEffect(() => {
-        if (debouncedSearch) {
-            console.log("🚀 ~ useEffect ~ debouncedSearch:", debouncedSearch)
-        }
-    }, [page, perPage, debouncedSearch])
+        refetch()
+    }, [page, perPage, debouncedSearch, search.searchBy, search.level, search.status])
 
     const handleRequestSort = (property: ITsumegoProblemSearch["orderBy"]) => {
         const isAsc = search.orderBy === property && search.order === "asc";
@@ -82,13 +80,13 @@ const TsumegoListView = () => {
     
     const renderTableBody = useCallback(() => {
         const visibleRows = (problems) ? stableSort(problems.data, getComparator(search.order, search.orderBy)): []
-        
+
         if (isFetching) {
             return <TableSkeleton rows={10} cells={5}/>
         }else if (visibleRows) {
             return (
                 <TableBody>
-                    {visibleRows.map((row: IProblem, index: number) => {
+                    {visibleRows?.map((row: IProblem, index: number) => {
                         const labelId = `enhanced-table-checkbox-${index}`;
                         return (
                             <StyledTableRow

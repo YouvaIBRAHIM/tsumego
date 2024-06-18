@@ -23,6 +23,7 @@ class Problem(models.Model):
     choices=[(tag.value, tag.name.capitalize()) for tag in NextToPlay],
     default=NextToPlay.BLACK.value,
   )
+  active = models.BooleanField(default=False, verbose_name='active')
 
   def clean(self):
     if self.nextToPlay not in NextToPlay._value2member_map_:
@@ -34,3 +35,7 @@ class Problem(models.Model):
 
   def __str__(self):
     return self.label
+  
+  @property
+  def author(self):
+      return f"{self.pk_user.first_name} {self.pk_user.last_name}"

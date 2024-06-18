@@ -26,7 +26,7 @@ def get_pb_number(url):
   return level
 
 def convert_letter_to_ascii_num(strs):
-  return f'{strs[0]}{ord(strs[1]) - 96}'
+  return f'{strs[0].upper()}{ord(strs[1]) - 96}'
 
 def transorm_coords_for_front(arr):
   res = []

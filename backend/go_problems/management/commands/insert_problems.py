@@ -38,7 +38,8 @@ class Command(BaseCommand):
           SZ         = data['SZ'],
           SOL        = json.dumps(data['SOL']),
           C          = data['C'],
-          nextToPlay  = data['nextToPlay']
+          nextToPlay  = data['nextToPlay'],
+          active      = True
         )
         problem.save()
 
