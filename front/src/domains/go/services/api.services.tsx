@@ -18,10 +18,11 @@ export const getProblems = async (page: number, perPage: number, search: ITsumeg
 
 export async function deleteProblem(id: string) {
     try {
-        const response = await fetch(`${BACKEND_BASE_URL}/api/problems/${id}`, {
+        const response = await fetch(`${BACKEND_BASE_URL}/api/problems/${id}/`, {
             method: "DELETE",
+            headers: new Headers({'content-type': 'application/json'}),            
         })
-        return await response.json();
+        return response;
     } catch {
         throw new Error("Une erreur est survenue lors de la suppression du problème. Veuillez réessayer.");
     }

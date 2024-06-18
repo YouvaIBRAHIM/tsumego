@@ -5,14 +5,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-interface IConfirmation{
+interface IConfirmationModal{
     open: boolean
     title: string
     message?: string
     onConfirmation: () => void
     onCancelation: () => void
 }
-const Confirmation = ({open, title, message, onCancelation, onConfirmation}: IConfirmation) => {
+const ConfirmationModal = ({open, title, message, onCancelation, onConfirmation}: IConfirmationModal) => {
 
     return (
 
@@ -45,4 +45,4 @@ const Confirmation = ({open, title, message, onCancelation, onConfirmation}: ICo
 }
 
 
-export default Confirmation
+export default ConfirmationModal

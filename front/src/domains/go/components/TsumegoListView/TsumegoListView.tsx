@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import { Pagination } from "@mui/material";
 import ErrorView from "../Views/ErrorView";
 import ListNotFound from "../TableListNotFound";
-import Confirmation from "../Confirmation";
+import ConfirmationModal from "../ConfirmationModal";
 import TsumegoModal from "./TsumegoModal";
 import TsumegoListTableHead from "./TsumegoListTableHead";
 import TableToolbar from "./TableToolbar";
@@ -79,9 +79,10 @@ const TsumegoListView = () => {
                 onChange={handleChangePage}
             />
             {tsumegoToDelete && (
-                <Confirmation
+                <ConfirmationModal
                     open={Boolean(tsumegoToDelete)}
                     title="Voulez-vous vraiment supprimer ce problème ?"
+                    message={`${tsumegoToDelete.label} (${tsumegoToDelete.author})`}
                     onConfirmation={() => deleteTsumegoMutation.mutate(tsumegoToDelete.id)}
                     onCancelation={() => setTsumegoToDelete(null)}
                 />
