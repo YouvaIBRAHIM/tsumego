@@ -34,8 +34,8 @@ export const getDefaultThemeMode = (): PaletteMode => {
 }
 
 export const descendingComparator = (a: IUser, b: IUser, orderBy: IUserSearch['searchBy']): number => {
-    const from = orderBy !== "name" ? a[orderBy] : `${a["firstname"]} ${a["lastname"]}` 
-    const to = orderBy !== "name" ? b[orderBy] : `${b["firstname"]} ${b["lastname"]}` 
+    const from = orderBy !== "name" ? a[orderBy] : `${a["first_name"]} ${a["last_name"]}` 
+    const to = orderBy !== "name" ? b[orderBy] : `${b["first_name"]} ${b["last_name"]}` 
 
     if (to < from) {
         return -1;

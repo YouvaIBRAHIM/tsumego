@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from go_problems.models import Problem
 from tsumego_scrapping.transform import transorm_scrapping_data
 from django.contrib.auth import get_user_model
+from users.models import Role, UserRole
 
 User = get_user_model()
 
@@ -11,6 +12,7 @@ class Command(BaseCommand):
 
   def handle(self, *args, **kwargs):
     problems_data = transorm_scrapping_data()
+    editor_role, created = Role.objects.get_or_create(name='editor')
 
     for data in problems_data:
 
@@ -25,6 +27,7 @@ class Command(BaseCommand):
         if created:
           user.set_password("password")
           user.save()
+          UserRole.objects.create(user=user, role=editor_role)
 
         problem = Problem(
           pk_user_id = user.id,
