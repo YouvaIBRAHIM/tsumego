@@ -9,17 +9,18 @@ import { ITheme, IProblem } from '../../types/go.types';
 import { transformProblemToGoState } from '../../services/global.service';
 import { IPlateau } from '../Plateau/Plateau';
 import Go from '../Plateau/Go';
+import CustomSwitch from '../Switch';
 
 
 interface ITsumegoModal{
     open: boolean
     title: string
-    onConfirmation: (roles: string[]) => void
+    onChangeStatus: (problemId: string) => void
     onCancelation: () => void
     problem: IProblem
 }
 
-const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITsumegoModal) => {
+const TsumegoModal = ({open, title, onCancelation, onChangeStatus, problem}: ITsumegoModal) => {
 
     const [defaultGoState, setDefaultGoState] = useState<IPlateau['defaultState']>()
 
@@ -36,7 +37,6 @@ const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITs
             onClose={() => onCancelation()}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
-
         >
             <DialogTitle id="alert-dialog-title">
                 {title}
@@ -47,7 +47,7 @@ const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITs
                 }}
             >
                 <Grid container spacing={4} direction={isMobileScreen ? "column-reverse" : "row"}>
-                    <Grid item xs={12} sm={8}>
+                    <Grid item xs={12} sm={7}>
                         {
                             defaultGoState &&
                             <Box
@@ -57,8 +57,8 @@ const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITs
                             >
                                 <Go
                                     theme={localStorage.getItem("goTheme") as keyof ITheme ?? "paper"}
-                                    position={{...defaultGoState.position, ...{[problem.SOL[0][1]]: defaultGoState.nextToPlay}}}
-                                    markers={{[problem.SOL[0][1]]: "circle"}}
+                                    position={{...defaultGoState.position, ...{[problem.SOL[1]]: defaultGoState.nextToPlay}}}
+                                    markers={{[problem.SOL[1]]: "circle"}}
                                     nextToPlay={defaultGoState.nextToPlay}
                                     onIntersectionClick={() => {}}
                                     hideBorder={false}
@@ -68,7 +68,7 @@ const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITs
                             </Box>
                         }
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <Grid item xs={12} sm={5}>
                         <Stack>
                             <Typography variant="h4" component="div">
                                 {problem.label}
@@ -76,7 +76,7 @@ const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITs
                             <Typography sx={{fontSize: 14}}>
                                 {problem.level}
                             </Typography>
-                            <Stack direction="row">
+                            <Stack direction="row" alignItems="center">
                                 <Typography sx={{fontSize: 14}} color="text.secondary">
                                     Status : 
                                 </Typography>
@@ -84,6 +84,8 @@ const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITs
                                 <Typography sx={{fontSize: 14}}>
                                     {problem.active ? "visible" : "inactif"}
                                 </Typography>
+                                &nbsp;
+                                <CustomSwitch checked={Boolean(problem.active)} handleChange={() => onChangeStatus(problem.id)} />
                             </Stack>
 
                             <Typography sx={{ mt: 1.5 }} color="text.secondary">
@@ -106,11 +108,9 @@ const TsumegoModal = ({open, title, onCancelation, onConfirmation, problem}: ITs
                 </Grid>
 
             </DialogContent>
+            
             <DialogActions>
-                <Button variant='contained' onClick={() => onCancelation()}>Annuler</Button>
-                <Button variant='contained' onClick={() => onConfirmation([])} autoFocus>
-                    Confirmer
-                </Button>
+                <Button variant='contained' onClick={() => onCancelation()}>Fermer</Button>
             </DialogActions>
         </Dialog>
     );

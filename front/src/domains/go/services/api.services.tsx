@@ -16,7 +16,6 @@ export const getProblems = async (page: number, perPage: number, search: ITsumeg
 }
 
 
-
 export async function deleteProblem(id: string) {
     try {
         const response = await fetch(`${BACKEND_BASE_URL}/api/problems/${id}`, {
@@ -26,4 +25,16 @@ export async function deleteProblem(id: string) {
     } catch {
         throw new Error("Une erreur est survenue lors de la suppression du problème. Veuillez réessayer.");
     }
+}
+
+
+export async function updateProblemStatus(id: string) {
+  try {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/problems/update/status/${id}/`, {
+          method: "PUT",
+      })
+      return await response.json();
+  } catch {
+      throw new Error("Une erreur est survenue lors de la suppression du problème. Veuillez réessayer.");
+  }
 }

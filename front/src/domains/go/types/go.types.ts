@@ -20,7 +20,7 @@ export interface IProblem {
     AW: string[];
     SZ: string;
     C: string;
-    SOL: string[][];
+    SOL: string[];
     nextToPlay: "black" | "white";
     author?: string;
     active?: boolean
