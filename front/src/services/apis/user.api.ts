@@ -1,4 +1,4 @@
-import { IUser, IUserList, IUserSearch } from "@src/types/user.type";
+import { IRole, IUser, IUserList, IUserSearch } from "@src/types/user.type";
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
@@ -17,6 +17,22 @@ export const getUsers = async (page: number, perPage: number, search: IUserSearc
         throw new Error("Une erreur est survenue lors du chargement des utilisateurs. Veuillez réessayer.");
     }
 }
+
+
+export const updateUserRole = async (userId: string, roles: IRole['role'][]) => {
+    
+    try {
+        const response = await fetch(`${BACKEND_BASE_URL}/api/users/update/roles`, {
+            method: "PUT",
+            headers: new Headers({'content-type': 'application/json'}),            
+            body: JSON.stringify({user_id: userId, roles})
+        })
+        return await response.json();
+    } catch {
+        throw new Error("Une erreur est survenue lors de la modification de l'utilisateur. Veuillez réessayer.");
+    }
+}
+
 
 export const getUser = async (id: string) => {
     try {

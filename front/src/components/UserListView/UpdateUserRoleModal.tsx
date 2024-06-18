@@ -4,6 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { IRole } from '@src/types/user.type';
 import { useState } from 'react';
 
 interface IUserRole{
@@ -25,12 +26,13 @@ const userRoles: IUserRole[] = [
 interface IUpdateUserRoleModal{
     open: boolean
     title: string
-    onConfirmation: (roles: string[]) => void
+    onConfirmation: (userId: string, roles: IRole['role'][]) => void
     onCancelation: () => void
-    roles: string[]
+    roles: IRole['role'][]
+    userId: string
 }
 
-const UpdateUserRoleModal = ({open, title, onCancelation, onConfirmation, roles}: IUpdateUserRoleModal) => {
+const UpdateUserRoleModal = ({open, title, onCancelation, onConfirmation, roles, userId}: IUpdateUserRoleModal) => {
     const [selectRoles, setSelectedRoles] = useState(roles)
 
     return (
@@ -57,14 +59,14 @@ const UpdateUserRoleModal = ({open, title, onCancelation, onConfirmation, roles}
                     disablePortal
                     id="roles"
                     options={userRoles}
-                    value={userRoles.filter(el => selectRoles.includes(el.label))}
-                    onChange={(_, newValue) => newValue && setSelectedRoles(newValue.map(el => el.label))}
+                    value={userRoles.filter(el => selectRoles.includes(el.label as IRole['role']))}
+                    onChange={(_, newValue) => newValue && setSelectedRoles(newValue.map(el => el.label as IRole['role']))}
                     renderInput={(params) => <TextField {...params} label="Rôles" />}
                 />
             </DialogContent>
             <DialogActions>
                 <Button variant='contained' onClick={() => onCancelation()}>Annuler</Button>
-                <Button disabled={selectRoles.length === 0} variant='contained' onClick={() => onConfirmation(selectRoles)} autoFocus>
+                <Button disabled={selectRoles.length === 0} variant='contained' onClick={() => onConfirmation(userId, selectRoles)} autoFocus>
                     Confirmer
                 </Button>
             </DialogActions>

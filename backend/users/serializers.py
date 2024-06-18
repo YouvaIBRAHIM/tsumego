@@ -41,3 +41,25 @@ class UserSerializer(serializers.ModelSerializer):
             UserRole.objects.create(user=instance, role=role)
         return instance
 
+
+class UpdateUserRolesSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    roles = serializers.ListField(
+        child=serializers.ChoiceField(choices=['admin', 'editor', 'player'])
+    )
+
+    def update_roles(self, validated_data):
+        try:
+            user = User.objects.get(id=validated_data['user_id'])
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User not found")
+
+        roles = validated_data['roles']
+        role_objects = Role.objects.filter(name__in=roles)
+
+        if len(roles) != role_objects.count():
+            raise serializers.ValidationError("Invalid roles provided")
+
+        user.roles.set(role_objects)
+        user.save()
+        return user
