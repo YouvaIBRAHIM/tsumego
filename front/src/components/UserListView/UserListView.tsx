@@ -8,7 +8,7 @@ import TableToolbar from "@src/components/UserListView/TableToolbar";
 import { getComparator, stableSort } from '@services/utils.service';
 import { Pagination } from '@mui/material';
 import ListNotFound from '@components/TableListNotFound';
-import Confirmation from '@components/Confirmation';
+import ConfirmationModal from '@components/ConfirmationModal';
 import UpdateUserRoleModal from '@src/components/UserListView/UpdateUserRoleModal';
 import UserListBody from '@src/components/UserListView/UserListBody';
 import ErrorView from '@components/Views/ErrorView';
@@ -72,7 +72,7 @@ const UserListView = () => {
                 onChange={handleChangePage}
             />
             {userToDelete && (
-                <Confirmation
+                <ConfirmationModal
                     open={Boolean(userToDelete)}
                     title="Voulez-vous vraiment supprimer cet utilisateur ?"
                     message={`${userToDelete.first_name} ${userToDelete.last_name} (${userToDelete.email})`}

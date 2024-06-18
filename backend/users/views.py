@@ -17,8 +17,6 @@ class UserList(viewsets.ModelViewSet):
     filterset_class = UserFilter
     pagination_class = CustomLimitOffsetPagination
 
-
-
 class UserRoles(APIView):
     def put(self, request, *args, **kwargs):
         serializer = UpdateUserRolesSerializer(data=request.data)
@@ -26,3 +24,4 @@ class UserRoles(APIView):
             user = serializer.update_roles(serializer.validated_data)
             return Response({'status': 'roles updated', 'user_id': user.id})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    

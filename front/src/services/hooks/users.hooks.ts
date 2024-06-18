@@ -38,7 +38,7 @@ export const useUserList = () => {
         },
         onError: (error: Error) => {
             console.log(error);
-        }
+        },
     });
 
     const updateUserRoleMutation = useMutation({

@@ -8,5 +8,4 @@ router.register('', UserList, 'user')
 urlpatterns = [
     path('', include(router.urls)),
     path('update/roles', UserRoles.as_view(), name='update-user-roles'),
-
 ]

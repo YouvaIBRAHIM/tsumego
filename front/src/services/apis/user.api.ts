@@ -60,11 +60,12 @@ export async function updateUser(user: IUser) {
 
 export async function deleteUser(id: string) {
     try {
-        const response = await fetch(`${BACKEND_BASE_URL}/api/users/${id}`, {
+        const response = await fetch(`${BACKEND_BASE_URL}/api/users/${id}/`, {
             method: "DELETE",
+            headers: new Headers({'content-type': 'application/json'}),            
         })
-        return await response.json();
-    } catch {
+        return response;
+    } catch(e) {
         throw new Error("Une erreur est survenue lors de la suppression de l'utilisateur. Veuillez réessayer.");
     }
 }
