@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient, UseMutationResult } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { deleteProblem, getProblems, updateProblemStatus } from '../api.services';
 import { IProblem, ITsumegoProblemSearch } from '../../types/go.types';
@@ -22,7 +22,7 @@ export const useTsumegoList = () => {
     const debouncedSearch = useDebounce(search.value, 500);
 
     const { data: problems, isFetching, refetch, isError, error } = useQuery({
-        queryKey: ["problems", page, perPage, search],
+        queryKey: ["problems", page, perPage],
         queryFn: () => getProblems(page, perPage, search),
         retry: 3,
     });
@@ -37,7 +37,7 @@ export const useTsumegoList = () => {
         refetch();
     }, [page, perPage, debouncedSearch, search.searchBy, search.level, search.status]);
 
-    const deleteTsumegoMutation: UseMutationResult<void, Error, string> = useMutation({
+    const deleteTsumegoMutation = useMutation({
         mutationFn: (id: string) => deleteProblem(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["problems"] });
@@ -48,7 +48,7 @@ export const useTsumegoList = () => {
         }
     });
 
-    const updateTsumegoStatusMutation: UseMutationResult<void, Error, string> = useMutation({
+    const updateTsumegoStatusMutation = useMutation({
         mutationFn: (id: string) => updateProblemStatus(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["problems"] })

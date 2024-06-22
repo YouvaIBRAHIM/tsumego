@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from .models import User
 from .serializers import UserSerializer
 from .filters import UserFilter
-from .pagination import CustomLimitOffsetPagination
+from utils.pagination import StandardResultsSetPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 from rest_framework import status
@@ -15,8 +15,18 @@ class UserList(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = UserFilter
-    pagination_class = CustomLimitOffsetPagination
 
+    def get_queryset(self, request=None):
+        params = self.request.query_params
+        page = 0
+        if(params):
+            try:
+                page = int(params['page'])
+            except:
+                page = 0
+        self.pagination_class = page > 0 and StandardResultsSetPagination or None
+        return self.queryset
+    
 class UserRoles(APIView):
     def put(self, request, *args, **kwargs):
         serializer = UpdateUserRolesSerializer(data=request.data)

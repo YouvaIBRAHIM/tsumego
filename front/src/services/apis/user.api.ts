@@ -4,7 +4,7 @@ const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
 export const getUsers = async (page: number, perPage: number, search: IUserSearch): Promise<IUserList> => {
     try {        
-        const response = await fetch(`${BACKEND_BASE_URL}/api/users/?format=json&offset=${(page - 1) * perPage}&perPage=${perPage}&role=${search.role}&searchBy=${search.searchBy}&searchValue=${search.value}`);
+        const response = await fetch(`${BACKEND_BASE_URL}/api/users/?format=json&page=${page}&perPage=${perPage}&role=${search.role}&searchBy=${search.searchBy}&searchValue=${search.value}`);
         const data = await response.json()
 
         return {

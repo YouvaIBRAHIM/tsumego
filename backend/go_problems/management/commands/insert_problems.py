@@ -33,10 +33,10 @@ class Command(BaseCommand):
           pk_user_id = user.id,
           level      = data['level'],
           label      = data['label'],
-          AW         = json.dumps(data['AW']),
-          AB         = json.dumps(data['AB']),
+          AW         = data['AW'],
+          AB         = data['AB'],
           SZ         = data['SZ'],
-          SOL        = json.dumps(data['SOL']),
+          SOL        = data['SOL'],
           C          = data['C'],
           nextToPlay  = data['nextToPlay'],
           active      = True

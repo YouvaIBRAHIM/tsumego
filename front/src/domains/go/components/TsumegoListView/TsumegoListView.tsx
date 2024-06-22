@@ -69,7 +69,7 @@ const TsumegoListView = () => {
                         {renderTableBody()}
                     </Table>
                 </TableContainer>
-                {problems?.data.length === 0 && <ListNotFound message="Aucun utilisateur trouvé." />}
+                {problems?.data.length === 0 && <ListNotFound message="Aucun Tsumego trouvé." />}
             </Paper>
             <Pagination
                 color="primary"

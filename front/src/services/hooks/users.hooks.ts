@@ -21,7 +21,7 @@ export const useUserList = () => {
     const debouncedSearch = useDebounce(search.value, 500);
 
     const { data: users, isFetching, refetch, isError, error } = useQuery({
-        queryKey: ['users', page, perPage, search],
+        queryKey: ['users', page, perPage],
         queryFn: () => getUsers(page, perPage, search),
         retry: 3,
     });
