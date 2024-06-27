@@ -79,6 +79,9 @@ endif
 superuser:
 	docker exec -it go-project-web python manage.py createsuperuser
 
+seed_user:
+	docker exec -it go-project-web python manage.py create_fake_users
+
 seed:
 	docker exec -it go-project-web python manage.py insert_problems
 
@@ -88,6 +91,6 @@ migrate: ## Mise à jour de la base
 migrations: ## Creer les migrations - optionnel -> table=<nom de la table>
 	docker exec -it go-project-web python manage.py makemigrations --noinput $(table)
 
-init: venv build migrations migrate superuser seed ## Initialise le projet la première fois.
+init: venv build migrations migrate superuser seed_user seed ## Initialise le projet la première fois.
 	@echo "  🎉 $(OK_COLOR) Success $(NO_COLOR)"
 	@echo "  ⚠️ $(WARN_COLOR) Don't forget to run .venv $(NO_COLOR)"

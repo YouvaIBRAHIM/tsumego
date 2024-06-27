@@ -14,14 +14,18 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { BookBookmark } from "@phosphor-icons/react";
-import { MutableRefObject, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { createProblem } from "../../services/api.services";
 import getGoTheme from "../../services/go/getGoTheme";
-import { IGo, IProblemCreate, LevelsEnum } from "../../types/go.types";
+import { IGo, IProblemCreate, LevelsEnum, NexToPlayEnum } from "../../types/go.types";
 import Go from "../Plateau/Go";
 import { initProblemCreate, initialGoProps } from "../Plateau/constants/go";
 import { EBoardSize } from "./types/creation.type";
+import { useAuthStore } from "@src/reducers/auth.reducer";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import useStepValidation from "./hooks/useStepValidation";
 
 interface IProps {
   boardSize: EBoardSize;
@@ -30,33 +34,45 @@ interface IProps {
   closeModal: () => void;
 }
 
-const MIN_STONES = 5;
+const MIN_STONES = 4;
 const MODAL_INIT = { open: false, message: <></>, title: "Oups" };
 const GO_RULES = "https://artdugo.fr/regles-du-jeu-de-go/";
-// const schema = yup.object().shape({
-//   label: yup.string().required(),
-//   level: yup
-//     .string()
-//     .oneOf([...Levels])
-//     .required(),
-//   AB: yup.array().of(yup.string().required()).min(2).required("2 pierres minimum sont obligatoires"),
-//   AW: yup.array().of(yup.string().required()).min(2).required("2 pierres minimum sont obligatoires"),
-//   SZ: yup.string().required(),
-//   C: yup.string(),
-//   SOL: yup.array().of(yup.string().required()).required(),
-//   nextToPlay: yup.string().oneOf(["black", "white"]).required(),
-//   pk_user_id: yup.number().required(),
-//   active: yup.boolean(),
-// });
+
+const schema: yup.ObjectSchema<IProblemCreate> = yup.object({
+  C: yup.string().optional(),
+  label: yup.string().required(),
+  level: yup.mixed<IProblemCreate["level"]>().oneOf(Object.values(LevelsEnum)).required(),
+  AB: yup.array(yup.string().required()).required(),
+  AW: yup.array(yup.string().required()).required(),
+  SZ: yup.string().required(),
+  SOL: yup.array(yup.string().required()).required(),
+  nextToPlay: yup.mixed<IProblemCreate["nextToPlay"]>().oneOf(Object.values(NexToPlayEnum)).required(),
+  active: yup.boolean().required(),
+  pk_user: yup.number().required(),
+});
 
 const StepValidation = ({ boardSize, positions, movesListRef, closeModal }: IProps) => {
+  const { user } = useAuthStore();
   const [stateModal, setStateModal] = useState(MODAL_INIT);
+  const [markers, setMarkers] = useState<{
+    [key: string]: string;
+  } | null>(null);
   const theme = useTheme();
-  const { register, handleSubmit } = useForm({
+  const { setBlackAndWhite, setSOL, removeLastStone } = useStepValidation();
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm<IProblemCreate>({
     defaultValues: {
-      ...initProblemCreate,
+      SZ: boardSize,
+      pk_user: user?.id,
+      active: false,
+      level: LevelsEnum.beginner,
     },
-    // resolver: yupResolver(schema),
+    resolver: yupResolver(schema, { stripUnknown: true, abortEarly: false }),
   });
 
   const closeStateModal = () => setStateModal(() => MODAL_INIT);
@@ -73,21 +89,9 @@ const StepValidation = ({ boardSize, positions, movesListRef, closeModal }: IPro
       setStateModal((prev) => ({ ...prev, open: true, message: <Message /> }));
       return;
     }
+    removeLastStone({ data: getValues(), setValue });
 
-    const SOL = [positions[lastMove][0].toUpperCase(), lastMove, "", ""];
-    const { AB, AW } = getBlackAndWhite(positions);
-    const data: IProblemCreate = {
-      ...formData,
-      SOL,
-      AB,
-      AW,
-      SZ: boardSize,
-      nextToPlay: positions[lastMove],
-      pk_user: 8,
-      C: "Black to play: Elementary",
-    };
-
-    const [status, res] = await createProblem(data);
+    const [status, res] = await createProblem(formData);
     if (status !== 201) {
       setStateModal((prev) => ({ ...prev, open: true, message: <ErrorResponse error={res.label[0]} /> }));
       return;
@@ -95,17 +99,29 @@ const StepValidation = ({ boardSize, positions, movesListRef, closeModal }: IPro
     closeModal();
   };
 
-  function getBlackAndWhite(positions: IGo["position"]) {
-    const AB: IProblemCreate["AB"] = [];
-    const AW: IProblemCreate["AW"] = [];
-    return Object.entries(positions).reduce(
-      (acc, [key, value]) => {
-        value === "black" ? AB.push(key) : AW.push(key);
-        return acc;
-      },
-      { AB, AW }
-    );
-  }
+  useEffect(() => {
+    const { SOL, AB, AW, nextToPlay } = getValues();
+    if (SOL && !markers) {
+      setMarkers({ [SOL[1]]: "circle" });
+    }
+    if (!AB && !AW) {
+      setBlackAndWhite({ positions, setValue });
+    }
+    if (!SOL && !nextToPlay) {
+      setSOL({ movesListRef, positions, setValue });
+    }
+  }, [setBlackAndWhite, setSOL, getValues, markers, movesListRef, positions, setValue]);
+
+  useEffect(() => {
+    const { AB, AW } = getValues();
+    if (AB.length === 0 && AW.length === 0) {
+      setStateModal((prev) => ({ ...prev, open: true, message: <Message isEmpty /> }));
+      return;
+    }
+    if (errors.AB || errors.AW || AB.length + AW.length < MIN_STONES) {
+      setStateModal((prev) => ({ ...prev, open: true, message: <Message /> }));
+    }
+  }, [errors, getValues]);
 
   return (
     <Grid container spacing={4}>
@@ -113,7 +129,7 @@ const StepValidation = ({ boardSize, positions, movesListRef, closeModal }: IPro
         <Go
           theme={getGoTheme()}
           position={positions}
-          markers={initialGoProps.markers}
+          markers={markers ?? {}}
           nextToPlay={initialGoProps.nextToPlay}
           onIntersectionClick={() => {}}
           hideBorder={initialGoProps.hideBorder}
@@ -137,16 +153,22 @@ const StepValidation = ({ boardSize, positions, movesListRef, closeModal }: IPro
               {...register("level")}
               sx={{ ".MuiSelect-outlined": { borderColor: "red" }, ".MuiSelect-root": { color: "red" } }}
             >
-              {Object.entries(LevelsEnum).map(([key, value]) => (
-                <MenuItem value={value} key={key}>
-                  {key}
+              {Object.values(LevelsEnum).map((level) => (
+                <MenuItem value={level} key={level}>
+                  {level}
                 </MenuItem>
               ))}
             </Select>
 
             <TextField label="Non du Tsumego" {...register("label")} />
 
-            <TextField label="Commentaire" placeholder="Maximum 255 caractères" {...register("C")} rows={4} multiline />
+            <TextField
+              label="Commentaire (optionnel)"
+              placeholder="Maximum 255 caractères"
+              {...register("C")}
+              rows={4}
+              multiline
+            />
           </FormControl>
         </form>
       </Grid>
@@ -178,7 +200,7 @@ const Message = ({ isEmpty = false }: { isEmpty?: boolean }) => {
       )}
       <br />
       <Typography sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        Petit rappel simple des règles du jeu Go{" "}
+        Petit rappel simple des règles du jeu de Go{" "}
         <Typography component={"a"} href={GO_RULES} target="_blank" color="secondary">
           <BookBookmark size={24} />
         </Typography>

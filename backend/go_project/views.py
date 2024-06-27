@@ -35,7 +35,8 @@ def register_view(request):
                 'user': {
                     'username': user.username,
                     'email': user.email,
-                    'roles': [role.name]
+                    'roles': [role.name],
+                    'id': user.id
                 }
             })
         else:
@@ -52,7 +53,7 @@ def login_view(request):
     email = request.data.get('email')
     password = request.data.get('password')
     user = authenticate(request, username=email, password=password)
-    
+
     if user is not None:
         login(request, user)
         roles = user.roles.values_list('name', flat=True)
@@ -60,7 +61,8 @@ def login_view(request):
             'user': {
                 'username': user.username,
                 'email': user.email,
-                'roles': list(roles)
+                'roles': list(roles),
+                'id': user.id
             }
         })
     else:
@@ -85,7 +87,8 @@ def check_auth_view(request):
             'user': {
                 'username': user.username,
                 'email': user.email,
-                'roles': list(roles)
+                'roles': list(roles),
+                'id': user.id
             }
         }, status=200)
     return JsonResponse({'is_authenticated': False}, status=401)

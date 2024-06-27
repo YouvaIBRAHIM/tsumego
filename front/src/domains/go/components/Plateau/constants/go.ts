@@ -16,7 +16,7 @@ export const initialGoProps: IGo = {
 };
 
 export const initProblemCreate: IProblemCreate = {
-  level: "1",
+  level: "beginner",
   SZ: EBoardSize.small,
   nextToPlay: "black",
   AB: [],

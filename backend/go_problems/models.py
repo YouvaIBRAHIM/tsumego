@@ -17,7 +17,7 @@ class Problem(models.Model):
   AB         = models.JSONField()
   SZ         = models.CharField(max_length=10)
   SOL        = models.JSONField()
-  C          = models.CharField(max_length=255)
+  C          = models.CharField(max_length=255, null=True, blank=True)
   nextToPlay = models.CharField(
     max_length=5,
     choices=[(tag.value, tag.name.capitalize()) for tag in NextToPlay],
@@ -35,7 +35,7 @@ class Problem(models.Model):
 
   def __str__(self):
     return self.label
-  
+
   @property
   def author(self):
       return f"{self.pk_user.first_name} {self.pk_user.last_name}"

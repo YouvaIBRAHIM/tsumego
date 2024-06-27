@@ -14,25 +14,32 @@ export interface IGo {
 // export type LevelType = "beginner" | "intermediate" | "advanced";
 // export const Levels = ["beginner", "intermediate", "advanced"] as const;
 export enum LevelsEnum {
-  beginner = "1",
-  intermediate = "2",
-  advanced = "3",
+  beginner = "beginner",
+  intermediate = "intermediate",
+  advanced = "advanced",
 }
-type LevelType = LevelsEnum[keyof LevelsEnum];
+export type LevelType = LevelsEnum[keyof LevelsEnum];
+
+export enum NexToPlayEnum {
+  black = "black",
+  white = "white",
+}
+
+export type NexToPlayType = NexToPlayEnum[keyof NexToPlayEnum];
 
 export interface IProblem {
-    id: string;
-    label: string;
-    level: "all" | "beginner" | "intermediate" | "advanced";
-    won: boolean;
-    AB: string[];
-    AW: string[];
-    SZ: string;
-    C: string;
-    SOL: string[];
-    nextToPlay: "black" | "white";
-    author?: string;
-    active?: boolean;
+  id: string;
+  label: string;
+  level: "all" | LevelType;
+  won: boolean;
+  AB: string[];
+  AW: string[];
+  SZ: string;
+  C?: string;
+  SOL: string[];
+  nextToPlay: NexToPlayType;
+  author?: string;
+  active: boolean;
 }
 
 export interface IProblemCreate extends Omit<IProblem, "level" | "won" | "id" | "SOL" | "author"> {
