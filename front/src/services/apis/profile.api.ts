@@ -1,56 +1,64 @@
 import { IPasswords, IProfile } from "@src/types/profile.type";
+import { getCsrfToken } from "@services/apis/auth.api";
+import { checkResponse } from "@services/utils.service";
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
-export const updateProfile = async (profile: IProfile): Promise<IProfile> => {
+export const updateProfile = async (profile: IProfile): Promise<IProfile | void> => {
     try {
-        const response = await fetch(`${BACKEND_BASE_URL}/profile`, {
+        const csrfToken = await getCsrfToken();
+        const response = await fetch(`${BACKEND_BASE_URL}/api/profile/`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken || '',
             },
+            credentials: 'include',
             body: JSON.stringify(profile),
         });
-
-        if (!response.ok) {
-            throw new Error('Erreur lors de la mise à jour du profil');
-        }
-
-        return await response.json();
+        return await checkResponse(response) as IProfile
     } catch (error) {
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
     }
 };
 
 export const changePassword = async (passwordChange: IPasswords): Promise<void> => {
     try {
-        const response = await fetch(`${BACKEND_BASE_URL}/profile/change-password`, {
+        const csrfToken = await getCsrfToken();
+        const response = await fetch(`${BACKEND_BASE_URL}/api/profile/change-password/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken || '',
             },
+            credentials: 'include',
             body: JSON.stringify(passwordChange),
         });
-
-        if (!response.ok) {
-            throw new Error('Erreur lors du changement de mot de passe');
-        }
-
-        return await response.json();
+        await checkResponse(response);
     } catch (error) {
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }    
     }
 };
 
 export const deleteUserAccount = async (): Promise<void> => {
-    const response = await fetch(`${BACKEND_BASE_URL}/profile/delete`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-
-    if (!response.ok) {
-        throw new Error('Erreur lors de la suppression du compte');
+    try {
+        const csrfToken = await getCsrfToken();
+        await fetch(`${BACKEND_BASE_URL}/api/profile/delete/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken || '',
+            },
+            credentials: 'include',
+        }); 
+        
+    } catch (error) {
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
     }
 };

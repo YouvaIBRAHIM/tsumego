@@ -67,3 +67,12 @@ export const stableSort = (array: IUser[], comparator: (a: IUser, b: IUser) => n
         
         return stabilizedThis.map((el) => el[0]);
 }
+
+export const checkResponse = async (response: Response): Promise<unknown | void> => {
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Une erreur est survenue');
+    }
+
+    return data
+}

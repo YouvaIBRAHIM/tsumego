@@ -1,12 +1,12 @@
 export interface IProfile {
     username: string;
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     email: string;
 }
 
 export interface IPasswords {
-    currentPassword: string;
-    newPassword: string;
-    confirmPassword: string;
+    current_password: string,
+    new_password: string,
+    confirm_password: string,
 }

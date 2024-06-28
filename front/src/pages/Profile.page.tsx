@@ -1,11 +1,11 @@
 import {
-  Box,
-  Button,
-  Grid,
-  Typography,
-  Card,
-  Avatar,
-  CardContent
+    Box,
+    Button,
+    Grid,
+    Typography,
+    Card,
+    Avatar,
+    CardContent
 } from '@mui/material';
 import { useProfile } from '@services/hooks/profile.hook';
 import ConfirmationModal from '@components/ConfirmationModal';
@@ -15,19 +15,19 @@ import { UserProfileCardSkeleton, UserProfileFormSkeleton, UserProfilePasswordFo
 import CustomTextField from '@src/components/TextField';
 
 const Profile = () => {
-  const {
-      profile,
-      passwords,
-      handleProfileChange,
-      handlePasswordChange,
-      handleSubmitProfile,
-      handleSubmitPasswordChange,
-      handleDeleteUserAccount,
-      confirmationModal,
-      closeConfirmationModal
-  } = useProfile();
+    const {
+        profile,
+        passwords,
+        handleProfileChange,
+        handlePasswordChange,
+        handleSubmitProfile,
+        handleSubmitPasswordChange,
+        handleDeleteUserAccount,
+        confirmationModal,
+        closeConfirmationModal
+    } = useProfile();
 
-  const { user } = useAuthStore()
+    const { user } = useAuthStore()
 
   return (
       <Box>
@@ -75,14 +75,14 @@ const Profile = () => {
                               <CustomTextField
                                   label="Prénom"
                                   name="firstName"
-                                  value={profile.firstName}
-                                  onChange={(e) => handleProfileChange('firstName', e.target.value)}
+                                  value={profile.first_name}
+                                  onChange={(e) => handleProfileChange('first_name', e.target.value)}
                               />
                               <CustomTextField
                                   label="Nom"
                                   name="lastName"
-                                  value={profile.lastName}
-                                  onChange={(e) => handleProfileChange('lastName', e.target.value)}
+                                  value={profile.last_name}
+                                  onChange={(e) => handleProfileChange('last_name', e.target.value)}
                               />
                               <CustomTextField
                                   label="Email"
@@ -109,22 +109,22 @@ const Profile = () => {
                                 label="Mot de passe actuel"
                                 type="password"
                                 name="currentPassword"
-                                value={passwords.currentPassword}
-                                onChange={(e) => handlePasswordChange('currentPassword', e.target.value)}
+                                value={passwords.current_password}
+                                onChange={(e) => handlePasswordChange('current_password', e.target.value)}
                             />
                             <CustomTextField
                                 label="Nouveau mot de passe"
                                 type="password"
                                 name="newPassword"
-                                value={passwords.newPassword}
-                                onChange={(e) => handlePasswordChange('newPassword', e.target.value)}
+                                value={passwords.new_password}
+                                onChange={(e) => handlePasswordChange('new_password', e.target.value)}
                             />
                             <CustomTextField
                                 label="Confirmer le nouveau mot de passe"
                                 type="password"
                                 name="confirmPassword"
-                                value={passwords.confirmPassword}
-                                onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
+                                value={passwords.confirm_password}
+                                onChange={(e) => handlePasswordChange('confirm_password', e.target.value)}
                             />
                             <Button variant="contained" sx={{ marginTop: 2 }} onClick={handleSubmitPasswordChange}>
                                 Changer le mot de passe

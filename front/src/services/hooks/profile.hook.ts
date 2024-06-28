@@ -4,6 +4,7 @@ import { updateProfile, changePassword, deleteUserAccount } from '@services/apis
 import { IPasswords, IProfile } from '@src/types/profile.type';
 import { useAuthStore } from '@src/reducers/auth.reducer';
 import { useSnackBarStore } from '@src/reducers/snackbar.reducer';
+import { useNavigate } from 'react-router-dom';
 
 interface IConfirmationModal {
     title: string
@@ -11,31 +12,44 @@ interface IConfirmationModal {
 }
 export const useProfile = () => {
     const { showSnackBar } = useSnackBarStore();
-    
+    const navigate = useNavigate()
+
     const [profile, setProfile] = useState<IProfile>({
         username: '',
-        firstName: '',
-        lastName: '',
+        first_name: '',
+        last_name: '',
         email: '',
     });
 
     const [passwords, setPasswords] = useState<IPasswords>({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        current_password: '',
+        new_password: '',
+        confirm_password: '',
     });
 
     const [confirmationModal, setConfirmationModal] = useState<IConfirmationModal | null>(null);
 
-    const { logout, user } = useAuthStore()
+    const { user, setUser } = useAuthStore()
 
     const updateProfileMutation = useMutation({        
         mutationFn: (profile: IProfile) => updateProfile(profile), 
-        onSuccess: () => {
+        onSuccess: (data) => {
+            if (data) {
+                const {first_name, last_name, email, username} = data
+                setUser({
+                    id: user?.id as number,
+                    roles: user?.roles ?? [],
+                    firstName: first_name,
+                    lastName: last_name,
+                    username,
+                    email
+                })
+            }
             setConfirmationModal(null);
+            showSnackBar('Vos informations personnelles ont été mises à jour', 'success');
         },
         onError: (error) => {
-            console.error(error);
+            showSnackBar(error.message, 'error');
         },
     });
 
@@ -43,9 +57,10 @@ export const useProfile = () => {
         mutationFn: (passwordChange: IPasswords) => changePassword(passwordChange), 
         onSuccess: () => {
             setConfirmationModal(null);
+            showSnackBar('Votre mot de passe a été mis à jour', 'success');
         },
         onError: (error) => {
-            console.error(error);
+            showSnackBar(error.message, 'error');
         },
     });
 
@@ -53,10 +68,12 @@ export const useProfile = () => {
         mutationFn: () => deleteUserAccount(),
         onSuccess: () => {
             setConfirmationModal(null);
-            logout()
+            setUser(null)
+            showSnackBar('Votre compte a été supprimé', 'success');
+            navigate('/login')
         },
         onError: (error) => {
-            console.log(error);
+            showSnackBar(error.message, 'error');
         },
     });
 
@@ -82,7 +99,7 @@ export const useProfile = () => {
     };
 
     const handleSubmitPasswordChange = () => {
-        if (passwords.newPassword !== passwords.confirmPassword) {
+        if (passwords.new_password !== passwords.confirm_password) {
             showSnackBar('Les nouveaux mots de passe ne correspondent pas', 'warning');
             return;
         }
@@ -107,8 +124,8 @@ export const useProfile = () => {
         if (user) {
             setProfile({
                 username: user.username,
-                firstName: user.firstName,
-                lastName: user.lastName,
+                first_name: user.firstName,
+                last_name: user.lastName,
                 email: user.email,
             })
         }

@@ -38,7 +38,7 @@ const TsumegoListView = () => {
     } = useTsumegoList();
 
     const renderTableBody = useCallback(() => {
-        const visibleRows = problems ? stableSort(problems.data, getComparator(search.order, search.orderBy)) : [];
+        const visibleRows = problems?.data ? stableSort(problems.data, getComparator(search.order, search.orderBy)) : [];
         return <TsumegoListBody problems={visibleRows} isFetching={isFetching} setTsumegoToDelete={setTsumegoToDelete} setTsumegoToModerate={setTsumegoToModerate} />;
     }, [isFetching, problems, search.order, search.orderBy]);
 
@@ -69,7 +69,7 @@ const TsumegoListView = () => {
                         {renderTableBody()}
                     </Table>
                 </TableContainer>
-                {problems?.data.length === 0 && <ListNotFound message="Aucun Tsumego trouvé." />}
+                {(!problems?.data || problems?.data.length === 0) && <ListNotFound message="Aucun Tsumego trouvé." />}
             </Paper>
             <Pagination
                 color="primary"

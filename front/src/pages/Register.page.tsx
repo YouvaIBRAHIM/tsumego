@@ -23,6 +23,7 @@ const RegisterPage: React.FC = () => {
         setError(null);
         try {
             await register(user);
+            navigate('/')
         } catch (error) {
             setError("Registration failed. Please check your input.");
         } finally {

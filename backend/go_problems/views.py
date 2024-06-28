@@ -1,12 +1,12 @@
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Problem
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-#from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from .models import Problem
 from .serializers import ProblemSerializer
 from .filters import ProblemFilter
@@ -17,6 +17,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
     serializer_class = ProblemSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = ProblemFilter
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self, request=None):
         params = self.request.query_params
@@ -56,8 +57,8 @@ class ProblemViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
                 )
 
-
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_problem_status(request, pk):
     try:
         problem = Problem.objects.get(pk=pk)
@@ -67,3 +68,4 @@ def update_problem_status(request, pk):
     problem.active = not problem.active
     problem.save()
     return Response({'id': problem.id, 'active': problem.active}, status=status.HTTP_200_OK)
+

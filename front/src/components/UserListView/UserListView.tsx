@@ -38,7 +38,7 @@ const UserListView = () => {
     } = useUserList();
 
     const renderTableBody = useCallback(() => {
-        const sortedUsers = users ? stableSort(users.data, getComparator(search.order, search.orderBy)) : [];
+        const sortedUsers = users?.data ? stableSort(users.data, getComparator(search.order, search.orderBy)) : [];
         return <UserListBody users={sortedUsers} isFetching={isFetching} setUserToDelete={setUserToDelete} setUserToUpdateRole={setUserToUpdateRole} />;
     }, [isFetching, users, search.order, search.orderBy]);
 
@@ -63,7 +63,7 @@ const UserListView = () => {
                         {renderTableBody()}
                     </Table>
                 </TableContainer>
-                {users?.data.length === 0 && <ListNotFound message="Aucun utilisateur trouvé." />}
+                {(!users?.data || users?.data.length === 0) && <ListNotFound message="Aucun utilisateur trouvé." />}
             </Paper>
             <Pagination
                 color='primary'

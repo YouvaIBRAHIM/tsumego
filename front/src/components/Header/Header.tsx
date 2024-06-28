@@ -12,7 +12,7 @@ import { truncateString } from '@src/services/utils.service'
 const Header = () => {
     const isMobileScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
 
-    const { user } = useAuthStore()
+    const { user, logout } = useAuthStore()
     const navigate = useNavigate();
 
     const menu = useMemo(() => ({
@@ -34,11 +34,11 @@ const Header = () => {
                 {
                     label: "Se déconnecter",
                     icon: (
-                        <ListItemIcon>
+                        <ListItemIcon sx={(theme) => ({ color: theme.palette.error.main })}>
                             <SignOut size={24} />
                         </ListItemIcon>
                     ),
-                    action: () => console.log("logout")
+                    action: () => logout()
                 }
             ]
         ]

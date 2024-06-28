@@ -1,4 +1,3 @@
-import { getCsrfToken } from "@src/domains/go/services/auth.service";
 import { AuthCheckResponse, IUserRegister, IValideUserRoles } from "@src/types/user.type";
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
@@ -30,8 +29,19 @@ export const login = async (loginData: LoginData): Promise<AuthResponse> => {
   return await response.json();
 };
 
+
+export async function getCsrfToken(): Promise<string | null> {
+    try {
+        const csrfResponse = await fetch(`${BACKEND_BASE_URL}/api/csrf-token/`, { credentials: 'include' });
+        const csrfData = await csrfResponse.json();
+        return csrfData.csrfToken;
+    } catch (error) {
+        return null
+    }
+}
+
 export async function fetchAccess(email: string, password: string): Promise<AuthCheckResponse> {
-  const csrfToken = getCsrfToken();
+    const csrfToken = await getCsrfToken();
 
   const response = await fetch(`${BACKEND_BASE_URL}/api/login/`, {
     method: "POST",
@@ -52,7 +62,7 @@ export async function fetchAccess(email: string, password: string): Promise<Auth
 }
 
 export async function fetchRegister(user: IUserRegister): Promise<AuthCheckResponse> {
-  const csrfToken = getCsrfToken();
+    const csrfToken = await getCsrfToken();
 
   const response = await fetch(`${BACKEND_BASE_URL}/api/register/`, {
     method: "POST",
@@ -73,7 +83,7 @@ export async function fetchRegister(user: IUserRegister): Promise<AuthCheckRespo
 }
 
 export async function fetchLogout(): Promise<Response> {
-  const csrfToken = getCsrfToken();
+    const csrfToken = await getCsrfToken();
 
   const response = await fetch(`${BACKEND_BASE_URL}/api/logout/`, {
     method: "POST",

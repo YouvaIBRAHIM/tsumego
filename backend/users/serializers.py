@@ -63,3 +63,18 @@ class UpdateUserRolesSerializer(serializers.Serializer):
         user.roles.set(role_objects)
         user.save()
         return user
+
+class PasswordChangeSerializer(serializers.Serializer):
+    current_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['confirm_password']:
+            raise serializers.ValidationError("Les nouveaux mots de passe ne correspondent pas.")
+        return attrs
+    
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']

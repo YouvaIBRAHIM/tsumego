@@ -166,5 +166,14 @@ export const getTheme = (mode: PaletteMode) => ({
                 },
             },
         },
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    '&.Mui-focused': {
+                        color: colors[mode].text.secondary
+                    }
+                },
+            },
+        }
     },
 })

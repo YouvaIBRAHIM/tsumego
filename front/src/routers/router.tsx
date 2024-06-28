@@ -31,7 +31,7 @@ const router = createBrowserRouter([
             {
                 path: '/admin',
                 element: (
-                    <PrivateRoute roles={['admin']}>
+                    <PrivateRoute roles={['player']}>
                         <Admin />
                     </PrivateRoute>
                 ),
