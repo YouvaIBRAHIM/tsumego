@@ -47,10 +47,8 @@ export async function fetchAccess(email: string, password: string): Promise<Auth
     throw new Error("Network response was not ok");
   }
 
-  const { user: loggedUser } = await response.json();
-  return {
-    user: { username: loggedUser.username, email: loggedUser.email, roles: loggedUser.roles, id: loggedUser.id },
-  };
+    const { user: loggedUser} = await response.json();
+    return { user: loggedUser };
 }
 
 export async function fetchRegister(user: IUserRegister): Promise<AuthCheckResponse> {
@@ -70,15 +68,8 @@ export async function fetchRegister(user: IUserRegister): Promise<AuthCheckRespo
     throw new Error("Network response was not ok");
   }
 
-  const { user: registeredUser } = await response.json();
-  return {
-    user: {
-      username: registeredUser.username,
-      email: registeredUser.email,
-      roles: registeredUser.roles,
-      id: registeredUser.id,
-    },
-  };
+    const { user: registeredUser} = await response.json();
+    return { user: registeredUser };
 }
 
 export async function fetchLogout(): Promise<Response> {
@@ -109,8 +100,6 @@ export async function fetchCheckAuth(): Promise<AuthCheckResponse> {
     throw new Error("Network response was not ok");
   }
 
-  const { user: checkedUser } = await response.json();
-  return {
-    user: { username: checkedUser.username, email: checkedUser.email, roles: checkedUser.roles, id: checkedUser.id },
-  };
+    const { user: checkedUser} = await response.json();
+    return { user: checkedUser };
 }

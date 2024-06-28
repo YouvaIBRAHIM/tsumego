@@ -36,7 +36,9 @@ def register_view(request):
                     'username': user.username,
                     'email': user.email,
                     'roles': [role.name],
-                    'id': user.id
+                    'id': user.id,
+                    'firstName': user.first_name,
+                    'lastName': user.last_name
                 }
             })
         else:
@@ -62,7 +64,9 @@ def login_view(request):
                 'username': user.username,
                 'email': user.email,
                 'roles': list(roles),
-                'id': user.id
+                'id': user.id,
+                'firstName': user.first_name,
+                'lastName': user.last_name
             }
         })
     else:
@@ -88,7 +92,9 @@ def check_auth_view(request):
                 'username': user.username,
                 'email': user.email,
                 'roles': list(roles),
-                'id': user.id
+                'id': user.id,
+                'firstName': user.first_name,
+                'lastName': user.last_name
             }
         }, status=200)
     return JsonResponse({'is_authenticated': False}, status=401)

@@ -69,12 +69,13 @@ export const getTheme = (mode: PaletteMode) => ({
         MuiContainer: {
             styleOverrides: {
                 root: {
-                    padding: '0 2.5rem',
+                    padding: '1rem 2.5rem',
+                    overflow: 'overlay',
                     [`@media (min-width:${breakpoints.md}px)`]: {
-                        padding: '0 6rem',
+                        padding: '1rem 6rem',
                     },
                     [`@media (min-width:${breakpoints.xxl}px)`]: {
-                        padding: '0 12rem',
+                        padding: '1rem 12rem',
                     },
                     '&.mainPageContainer': {
                         height: '100%',

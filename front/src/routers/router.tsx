@@ -6,6 +6,7 @@ import Admin from '@src/pages/Admin.page';
 import LoginPage from '@src/pages/Login.page';
 import RegisterPage from '@src/pages/Register.page';
 import PrivateRoute from '@routers/PrivateRoute';
+import Profile from '@src/pages/Profile.page';
 
 const router = createBrowserRouter([
     {
@@ -35,6 +36,14 @@ const router = createBrowserRouter([
                     </PrivateRoute>
                 ),
             },
+            {
+              path: '/profile',
+              element: (
+                  <PrivateRoute roles={['admin', 'editor', 'player']}>
+                      <Profile />
+                  </PrivateRoute>
+              ),
+          },
         ],
     },
     {

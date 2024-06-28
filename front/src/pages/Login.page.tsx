@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Box, Typography, TextField, Button, Paper, Alert, Link } from '@mui/material';
+import { Container, Box, Typography, Button, Paper, Alert, Link } from '@mui/material';
 import { useAuthStore } from '@reducers/auth.reducer';
 import { useNavigate } from 'react-router-dom';
+import CustomTextField from '@src/components/TextField';
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -41,24 +42,18 @@ const LoginPage: React.FC = () => {
                         Connexion
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                        <TextField
+                        <CustomTextField
                             label="Email"
-                            variant="outlined"
                             type='email'
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            fullWidth
-                            margin="normal"
                             required
                         />
-                        <TextField
+                        <CustomTextField
                             label="Mot de passe"
                             type="password"
-                            variant="outlined"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            fullWidth
-                            margin="normal"
                             required
                         />
                         {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}

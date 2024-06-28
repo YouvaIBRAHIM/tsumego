@@ -26,18 +26,26 @@ export interface IUserList {
 }
 
 export interface AuthCheckResponse {
-  user: { username: string; email: string; roles: IValideUserRoles[]; id: number };
+    user: { 
+        username: string; 
+        email: string; 
+        roles: IValideUserRoles[]; 
+        firstName: string; 
+        lastName: string;
+        id: number
+      };
+        
 }
 
 export interface AuthState {
-  token: string | null;
-  user: { username: string; email: string; roles: IValideUserRoles[]; id: number } | null;
-  setToken: (token: string | null) => void;
-  setUser: (user: { username: string; email: string; roles: IValideUserRoles[]; id: number } | null) => void;
-  login: (username: string, password: string) => Promise<void>;
-  register: (user: IUserRegister) => Promise<void>;
-  logout: () => Promise<void>;
-  initializeAuth: () => Promise<void>;
+    token: string | null;
+    user: AuthCheckResponse['user'] | null;
+    setToken: (token: string | null) => void;
+    setUser: (user: AuthCheckResponse['user'] | null) => void;
+    login: (username: string, password: string) => Promise<void>;
+    register: (user: IUserRegister) => Promise<void>;
+    logout: () => Promise<void>;
+    initializeAuth: () => Promise<void>;
 }
 
 export interface IUserRegister {

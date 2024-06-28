@@ -30,7 +30,8 @@ function Layout() {
                 >  
                     <Container sx={{my: 2, maxHeight: {
                         xs: "100%",
-                        sm: `calc(100vh - ${TOOLBAR_HEIGTH}rem)`
+                        sm: `calc(100vh - ${TOOLBAR_HEIGTH}rem)`,
+                        margin: 0
                     }}} maxWidth="xxl">
                         <Outlet />
                     </Container>

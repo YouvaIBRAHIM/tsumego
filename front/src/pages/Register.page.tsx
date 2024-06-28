@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Box, Typography, TextField, Button, Paper, Alert, Link } from '@mui/material';
+import { Container, Box, Typography, Button, Paper, Alert, Link } from '@mui/material';
 import { useAuthStore } from '@reducers/auth.reducer';
 import { useNavigate } from 'react-router-dom';
 import { IUserRegister } from '@src/types/user.type';
+import CustomTextField from '@src/components/TextField';
 
 const RegisterPage: React.FC = () => {
     const [ user, setUser ] = useState<IUserRegister>({
@@ -44,42 +45,34 @@ const RegisterPage: React.FC = () => {
                         Inscription
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                        <TextField
+                        <CustomTextField
                             label="Nom"
-                            variant="outlined"
-                            value={user.firstName}
-                            onChange={(e) => onSetUser('firstName', e.target.value)}
-                            fullWidth
-                            margin="normal"
-                            required
-                        />
-                        <TextField
-                            label="Prénom"
                             variant="outlined"
                             value={user.lastName}
                             onChange={(e) => onSetUser('lastName', e.target.value)}
-                            fullWidth
-                            margin="normal"
                             required
                         />
-                        <TextField
-                            label="Mot de passe"
-                            type="password"
+                        <CustomTextField
+                            label="Prénom"
                             variant="outlined"
-                            value={user.password}
-                            onChange={(e) => onSetUser('password', e.target.value)}
-                            fullWidth
-                            margin="normal"
+                            value={user.firstName}
+                            onChange={(e) => onSetUser('firstName', e.target.value)}
                             required
                         />
-                        <TextField
+                        <CustomTextField
                             label="Email"
                             type="email"
                             variant="outlined"
                             value={user.email}
                             onChange={(e) => onSetUser('email', e.target.value)}
-                            fullWidth
-                            margin="normal"
+                            required
+                        />
+                        <CustomTextField
+                            label="Mot de passe"
+                            type="password"
+                            variant="outlined"
+                            value={user.password}
+                            onChange={(e) => onSetUser('password', e.target.value)}
                             required
                         />
                         {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
