@@ -1,8 +1,9 @@
-import { Button } from "@mui/material";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react"
+
+import { Button } from "@mui/material"
 
 interface IProps {
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  setOpen: Dispatch<SetStateAction<boolean>>
 }
 const ButtonOpenCreationModal = ({ setOpen }: IProps) => {
   return (
@@ -14,7 +15,7 @@ const ButtonOpenCreationModal = ({ setOpen }: IProps) => {
     >
       Créer un Tsumégo
     </Button>
-  );
-};
+  )
+}
 
-export default ButtonOpenCreationModal;
+export default ButtonOpenCreationModal

@@ -1,7 +1,6 @@
-import { ISideBarListItem } from '@components/SideBar/SideBarListItem/ISideBarListItem'
+import { ISideBarListItem } from "@components/SideBar/SideBarListItem/ISideBarListItem"
 
 export interface ISideBarContent {
-    sideBarHeader: null | ISideBarListItem
-    sideBarList: null | ISideBarListItem[]
+  sideBarHeader: null | ISideBarListItem
+  sideBarList: null | ISideBarListItem[]
 }
-

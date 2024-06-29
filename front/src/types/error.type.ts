@@ -1,3 +1,3 @@
 export interface IFetchError {
-    message: string
+  message: string
 }

@@ -1,23 +1,23 @@
-import { Robot } from '@phosphor-icons/react';
-import { Alert, Stack } from '@mui/material';
+import { Alert, Stack } from "@mui/material"
 
-const TableListNotFound = ({message}: {message: string}) => {
+import { Robot } from "@phosphor-icons/react"
 
-    return (
-        <Stack
-            direction="column"
-            gap={4}
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-                width: "100%",
-                minHeight: "50vh"
-            }}
-        >
-            <Robot size={96} weight="duotone" />
-            <Alert severity="warning">{message}</Alert>
-        </Stack>
-    );
+const TableListNotFound = ({ message }: { message: string }) => {
+  return (
+    <Stack
+      direction="column"
+      gap={4}
+      alignItems="center"
+      justifyContent="center"
+      sx={{
+        width: "100%",
+        minHeight: "50vh",
+      }}
+    >
+      <Robot size={96} weight="duotone" />
+      <Alert severity="warning">{message}</Alert>
+    </Stack>
+  )
 }
 
-export default TableListNotFound;
+export default TableListNotFound

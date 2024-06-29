@@ -1,3 +1,3 @@
-import { ITheme } from "../../types/go.types";
+import { ITheme } from "../../types/go.types"
 
-export default () => (localStorage.getItem("goTheme") as keyof ITheme) ?? "paper";
+export default () => (localStorage.getItem("goTheme") as keyof ITheme) ?? "paper"

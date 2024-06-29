@@ -1,4 +1,4 @@
-import type { IProblem } from "@src/domains/go/types/go.types";
+import type { IProblem } from "@src/domains/go/types/go.types"
 
 export const data: IProblem[] = [
   {
@@ -121,4 +121,4 @@ export const data: IProblem[] = [
     SOL: [["B", "ba", "Correct.", ""]],
     nextToPlay: "white",
   },
-];
+]

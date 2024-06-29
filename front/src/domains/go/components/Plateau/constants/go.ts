@@ -1,6 +1,7 @@
-import getGoTheme from "@src/domains/go/services/go/getGoTheme";
-import { IGo, IProblemCreate } from "@src/domains/go/types/go.types";
-import { EBoardSize } from "../../CreationTsumego/types/creation.type";
+import getGoTheme from "@src/domains/go/services/go/getGoTheme"
+import { IGo, IProblemCreate } from "@src/domains/go/types/go.types"
+
+import { EBoardSize } from "../../CreationTsumego/types/creation.type"
 
 export const initialGoProps: IGo = {
   position: {},
@@ -13,7 +14,7 @@ export const initialGoProps: IGo = {
   intersection: "",
   nextToPlay: "black",
   size: 9,
-};
+}
 
 export const initProblemCreate: IProblemCreate = {
   level: "beginner",
@@ -26,4 +27,4 @@ export const initProblemCreate: IProblemCreate = {
   label: "",
   active: false,
   pk_user: 0,
-};
+}

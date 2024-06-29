@@ -1,25 +1,33 @@
-import { Button, Paper, Stack, Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import Go from "./Go";
-import { IGo, ITheme } from "../../types/go.types";
-import AutoCompleteGoPoint from "../AutocompleteGoPoint";
-import { filterExcludedPoints, generateGoBoardPoints } from "../../services/global.service";
-import GoTheme from "./GoTheme";
-import { initialGoProps } from "./constants/go";
+import { useEffect, useRef, useState } from "react"
+
+import { Button, Paper, Stack, Typography } from "@mui/material"
+
+import {
+  filterExcludedPoints,
+  generateGoBoardPoints,
+} from "../../services/global.service"
+import { IGo, ITheme } from "../../types/go.types"
+import AutoCompleteGoPoint from "../AutocompleteGoPoint"
+import Go from "./Go"
+import GoTheme from "./GoTheme"
+import { initialGoProps } from "./constants/go"
 
 export interface IPlateau {
-  currentChoice?: string | null;
+  currentChoice?: string | null
   defaultState: {
-    position: IGo["position"];
-    size: number;
-    nextToPlay: "black" | "white";
-    markers: IGo["markers"];
-  } | null;
-  onPointChange: (intersection: string, setState: React.Dispatch<React.SetStateAction<IGo>>) => void;
-  setCurrentChoice: (value: string) => void;
-  canPlay: boolean;
-  onConfirmChoice: () => void;
-  title: string;
+    position: IGo["position"]
+    size: number
+    nextToPlay: "black" | "white"
+    markers: IGo["markers"]
+  } | null
+  onPointChange: (
+    intersection: string,
+    setState: React.Dispatch<React.SetStateAction<IGo>>,
+  ) => void
+  setCurrentChoice: (value: string) => void
+  canPlay: boolean
+  onConfirmChoice: () => void
+  title: string
 }
 
 const Plateau = ({
@@ -31,45 +39,45 @@ const Plateau = ({
   onConfirmChoice,
   title,
 }: IPlateau) => {
-  const [state, setState] = useState<IGo>(initialGoProps);
+  const [state, setState] = useState<IGo>(initialGoProps)
 
-  const isDefaultStateLoaded = useRef(false);
+  const isDefaultStateLoaded = useRef(false)
 
   useEffect(() => {
     if (defaultState && !isDefaultStateLoaded.current) {
-      setState({ ...state, intersection: "", ...defaultState });
+      setState({ ...state, intersection: "", ...defaultState })
     }
 
-    isDefaultStateLoaded.current = false;
-  }, [defaultState]);
+    isDefaultStateLoaded.current = false
+  }, [defaultState])
 
   const onSetChoiceWithAutoComplete = (choice: string) => {
     if (choice && choice !== "") {
       setState((state) => {
-        const tmpState = state;
-        const markerKeys = Object.keys(tmpState.markers);
-        tmpState.position[choice] = state.nextToPlay;
+        const tmpState = state
+        const markerKeys = Object.keys(tmpState.markers)
+        tmpState.position[choice] = state.nextToPlay
         if (markerKeys) {
-          delete tmpState.position[markerKeys[0]];
+          delete tmpState.position[markerKeys[0]]
         }
-        tmpState.markers = {};
-        tmpState.markers[choice] = "circle";
-        return tmpState;
-      });
-      isDefaultStateLoaded.current = true;
-      setCurrentChoice(choice);
+        tmpState.markers = {}
+        tmpState.markers[choice] = "circle"
+        return tmpState
+      })
+      isDefaultStateLoaded.current = true
+      setCurrentChoice(choice)
     }
-  };
+  }
 
   const handleIntersectionClick = (intersection: string) => {
-    onPointChange(intersection, setState);
-    isDefaultStateLoaded.current = true;
-  };
+    onPointChange(intersection, setState)
+    isDefaultStateLoaded.current = true
+  }
 
   const handleClickTheme = (newTheme: keyof ITheme) => {
-    setState({ ...state, theme: newTheme });
-    localStorage.setItem("goTheme", newTheme);
-  };
+    setState({ ...state, theme: newTheme })
+    localStorage.setItem("goTheme", newTheme)
+  }
 
   // const handleClickCoordSystem = () => {
   //   const newCoordSystem = (state.coordSystem === "A1") ? "aa" : "A1";
@@ -107,16 +115,16 @@ const Plateau = ({
   // }
 
   const onSubmitButton = () => {
-    onConfirmChoice();
+    onConfirmChoice()
 
     setState((state) => {
-      const tmpState = state;
-      tmpState.markers = {};
-      return tmpState;
-    });
+      const tmpState = state
+      tmpState.markers = {}
+      return tmpState
+    })
 
-    isDefaultStateLoaded.current = true;
-  };
+    isDefaultStateLoaded.current = true
+  }
   return (
     <Paper
       sx={{
@@ -144,7 +152,11 @@ const Plateau = ({
             canPlay={canPlay}
             setCurrentChoice={onSetChoiceWithAutoComplete}
             currentChoice={state.intersection ?? ""}
-            data={filterExcludedPoints(state.position, generateGoBoardPoints(state.size), [state.intersection ?? ""])}
+            data={filterExcludedPoints(
+              state.position,
+              generateGoBoardPoints(state.size),
+              [state.intersection ?? ""],
+            )}
           />
           <Button
             sx={{
@@ -159,7 +171,7 @@ const Plateau = ({
         </Stack>
       </Stack>
     </Paper>
-  );
-};
+  )
+}
 
-export default Plateau;
+export default Plateau

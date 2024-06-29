@@ -1,21 +1,25 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
-import UsersListView from '@src/components/UserListView/UserListView';
-import TsumegoListView from '@src/domains/go/components/TsumegoListView/TsumegoListView';
+import * as React from "react"
+
+import { useTheme } from "@mui/material/styles"
+
+import AppBar from "@mui/material/AppBar"
+import Box from "@mui/material/Box"
+import Tab from "@mui/material/Tab"
+import Tabs from "@mui/material/Tabs"
+
+import TsumegoListView from "@src/domains/go/components/TsumegoListView/TsumegoListView"
+
+import UsersListView from "@src/components/UserListView/UserListView"
 
 interface TabPanelProps {
-  children?: React.ReactNode;
-  dir?: string;
-  index: number;
-  value: number;
+  children?: React.ReactNode
+  dir?: string
+  index: number
+  value: number
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = props
 
   return (
     <div
@@ -25,33 +29,28 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 2, minHeight: "75vh" }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 2, minHeight: "75vh" }}>{children}</Box>}
     </div>
-  );
+  )
 }
 
 function a11yProps(index: number) {
   return {
     id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
+    "aria-controls": `full-width-tabpanel-${index}`,
+  }
 }
 
 export default function Admin() {
-  const theme = useTheme();
-  const [value, setValue] = React.useState(1);
+  const theme = useTheme()
+  const [value, setValue] = React.useState(1)
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
+    setValue(newValue)
+  }
 
   return (
-    <Box sx={{ bgcolor: 'background.paper'}}>
+    <Box sx={{ bgcolor: "background.paper" }}>
       <AppBar position="static">
         <Tabs
           value={value}
@@ -64,12 +63,12 @@ export default function Admin() {
           <Tab label="Tsumego" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          <UsersListView />
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <TsumegoListView />
-        </TabPanel>
+      <TabPanel value={value} index={0} dir={theme.direction}>
+        <UsersListView />
+      </TabPanel>
+      <TabPanel value={value} index={1} dir={theme.direction}>
+        <TsumegoListView />
+      </TabPanel>
     </Box>
-  );
+  )
 }

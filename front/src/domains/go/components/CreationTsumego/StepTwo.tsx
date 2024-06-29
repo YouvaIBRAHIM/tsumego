@@ -1,51 +1,55 @@
-import { Dispatch, MutableRefObject, SetStateAction, useRef, useState } from "react";
-import getGoTheme from "../../services/go/getGoTheme";
-import { IGo, IProblemCreate } from "../../types/go.types";
-import Go from "../Plateau/Go";
-import { initialGoProps } from "../Plateau/constants/go";
-import { EBoardSize } from "./types/creation.type";
-import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
-import { Stack } from "@mui/system";
+import { Dispatch, MutableRefObject, SetStateAction, useRef, useState } from "react"
+
+import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material"
+
+import { Stack } from "@mui/system"
+
+import getGoTheme from "../../services/go/getGoTheme"
+import { IGo, IProblemCreate } from "../../types/go.types"
+import Go from "../Plateau/Go"
+import { initialGoProps } from "../Plateau/constants/go"
+import { EBoardSize } from "./types/creation.type"
 
 interface IProps {
-  boardSize: EBoardSize;
-  positions: IGo["position"];
-  setPositions: Dispatch<SetStateAction<IGo["position"]>>;
-  movesListRef: MutableRefObject<Set<string>>;
+  boardSize: EBoardSize
+  positions: IGo["position"]
+  setPositions: Dispatch<SetStateAction<IGo["position"]>>
+  movesListRef: MutableRefObject<Set<string>>
 }
 const StepTwo = ({ boardSize, positions, setPositions, movesListRef }: IProps) => {
-  const [open, setOpen] = useState(false);
-  const stoneColorRef: MutableRefObject<IProblemCreate["nextToPlay"]> = useRef("white");
-  const intersectionRef: MutableRefObject<string> = useRef("");
+  const [open, setOpen] = useState(false)
+  const stoneColorRef: MutableRefObject<IProblemCreate["nextToPlay"]> =
+    useRef("white")
+  const intersectionRef: MutableRefObject<string> = useRef("")
 
   function toggleStoneColor() {
-    stoneColorRef.current = stoneColorRef.current === "black" ? "white" : "black";
+    stoneColorRef.current = stoneColorRef.current === "black" ? "white" : "black"
   }
 
   function handleIntersectionClick(intersection: string) {
-    intersectionRef.current = intersection;
-    intersection in positions ? setOpen(true) : dropStone(intersection);
+    intersectionRef.current = intersection
+    intersection in positions ? setOpen(true) : dropStone(intersection)
   }
 
   function dropStone(intersection: string) {
-    toggleStoneColor();
+    toggleStoneColor()
     setPositions((position) => ({
       ...position,
       [intersection]: stoneColorRef.current,
-    }));
-    movesListRef.current.add(intersection);
-    if (open) setOpen(false);
+    }))
+    movesListRef.current.add(intersection)
+    if (open) setOpen(false)
   }
 
   function removeStone(intersection: string) {
-    toggleStoneColor();
+    toggleStoneColor()
     setPositions((position) => {
-      const pos = { ...position };
-      delete pos[intersection];
-      return pos;
-    });
-    movesListRef.current.delete(intersection);
-    if (open) setOpen(false);
+      const pos = { ...position }
+      delete pos[intersection]
+      return pos
+    })
+    movesListRef.current.delete(intersection)
+    if (open) setOpen(false)
   }
 
   return (
@@ -68,16 +72,22 @@ const StepTwo = ({ boardSize, positions, setPositions, movesListRef }: IProps) =
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Une pierre est en conflit</DialogTitle>
         <DialogActions>
-          <Button variant="contained" onClick={() => removeStone(intersectionRef.current)}>
+          <Button
+            variant="contained"
+            onClick={() => removeStone(intersectionRef.current)}
+          >
             Supprimer la pierre
           </Button>
-          <Button variant="contained" onClick={() => dropStone(intersectionRef.current)}>
+          <Button
+            variant="contained"
+            onClick={() => dropStone(intersectionRef.current)}
+          >
             Changer de pierre
           </Button>
         </DialogActions>
       </Dialog>
     </>
-  );
-};
+  )
+}
 
-export default StepTwo;
+export default StepTwo

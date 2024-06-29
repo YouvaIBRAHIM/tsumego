@@ -1,14 +1,17 @@
-import { Button } from "@mui/material";
-import { Stack } from "@mui/system";
-import { Dispatch, SetStateAction } from "react";
-import Go from "../Plateau/Go";
-import { initialGoProps } from "../Plateau/constants/go";
-import { EBoardSize } from "./types/creation.type";
-import getGoTheme from "../../services/go/getGoTheme";
+import { Dispatch, SetStateAction } from "react"
+
+import { Button } from "@mui/material"
+
+import { Stack } from "@mui/system"
+
+import getGoTheme from "../../services/go/getGoTheme"
+import Go from "../Plateau/Go"
+import { initialGoProps } from "../Plateau/constants/go"
+import { EBoardSize } from "./types/creation.type"
 
 interface IProps {
-  boardSize: EBoardSize;
-  setBoardSize: Dispatch<SetStateAction<EBoardSize>>;
+  boardSize: EBoardSize
+  setBoardSize: Dispatch<SetStateAction<EBoardSize>>
 }
 
 export const StepOne = ({ boardSize, setBoardSize }: IProps) => {
@@ -32,7 +35,9 @@ export const StepOne = ({ boardSize, setBoardSize }: IProps) => {
         position={initialGoProps.position}
         markers={initialGoProps.markers}
         nextToPlay={initialGoProps.nextToPlay}
-        onIntersectionClick={(intersection) => (initialGoProps.intersection = intersection)}
+        onIntersectionClick={(intersection) =>
+          (initialGoProps.intersection = intersection)
+        }
         hideBorder={initialGoProps.hideBorder}
         zoom={initialGoProps.zoom}
         noMargin={initialGoProps.noMargin}
@@ -40,7 +45,7 @@ export const StepOne = ({ boardSize, setBoardSize }: IProps) => {
         size={+boardSize}
       />
     </Stack>
-  );
-};
+  )
+}
 
-export default StepOne;
+export default StepOne

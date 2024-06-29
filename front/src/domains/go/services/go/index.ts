@@ -1,33 +1,26 @@
-import { 
-    shapeGrid, 
-    shapeBackground, 
-    shapeStarPoints, 
-    shapeLabels, 
-    shapeStones, 
-    shapeStone, 
-    shapeMarkers, 
-    shapeArea 
-} from './geometry';
-
-import { 
-    defineRadialColors, 
-    Themes 
-} from './styles';
-
-import { serializeSVG } from './serializer';
+import {
+  shapeArea,
+  shapeBackground,
+  shapeGrid,
+  shapeLabels,
+  shapeMarkers,
+  shapeStarPoints,
+  shapeStone,
+  shapeStones,
+} from "./geometry"
+import { serializeSVG } from "./serializer"
+import { Themes, defineRadialColors } from "./styles"
 
 export {
-    shapeGrid,
-    shapeBackground,
-    shapeStarPoints,
-    shapeLabels,
-    shapeStones,
-    shapeStone,
-    shapeMarkers,
-    shapeArea,
-    defineRadialColors,
-    Themes,
-    serializeSVG as serialize
-};
-
-
+  defineRadialColors,
+  serializeSVG as serialize,
+  shapeArea,
+  shapeBackground,
+  shapeGrid,
+  shapeLabels,
+  shapeMarkers,
+  shapeStarPoints,
+  shapeStone,
+  shapeStones,
+  Themes,
+}

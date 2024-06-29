@@ -1,101 +1,112 @@
-import { Box, Button, Grid, Modal, Stack, Theme, useMediaQuery } from "@mui/material";
-import AsideList from "../components/AsideList/AsideList";
-import AsideListSkeleton from "../components/AsideList/AsideListSkeleton";
-import Plateau from "../components/Plateau/Plateau";
-import PlateauSkeleton from "../components/Plateau/PlateauSkeleton";
-import { problemListDataToAsideListData, transformProblemToGoState } from "../services/global.service";
-import { IGo, IProblem, ISearchState, ISelectDifficulty } from "../types/go.types";
-import { useEffect, useState } from "react";
-import ProblemsAsideList from "../components/AsideList/ProblemsAsideList";
-import CreationModal from "../components/CreationTsumego/CreationModal";
-import ButtonOpenCreationModal from "../components/CreationTsumego/ButtonOpenCreationModal";
-import { data } from "../components/mocks/tsumego.mock";
+import { useEffect, useState } from "react"
+
+import { Box, Button, Grid, Modal, Stack, Theme, useMediaQuery } from "@mui/material"
+
+import AsideList from "../components/AsideList/AsideList"
+import AsideListSkeleton from "../components/AsideList/AsideListSkeleton"
+import ProblemsAsideList from "../components/AsideList/ProblemsAsideList"
+import ButtonOpenCreationModal from "../components/CreationTsumego/ButtonOpenCreationModal"
+import CreationModal from "../components/CreationTsumego/CreationModal"
+import Plateau from "../components/Plateau/Plateau"
+import PlateauSkeleton from "../components/Plateau/PlateauSkeleton"
+import { data } from "../components/mocks/tsumego.mock"
+import {
+  problemListDataToAsideListData,
+  transformProblemToGoState,
+} from "../services/global.service"
+import { IGo, IProblem, ISearchState, ISelectDifficulty } from "../types/go.types"
 
 export default function Problems() {
-  const isLoading = false;
-  const [currentProblem, setCurrentProblem] = useState<IProblem | null>(null);
-  const [currentChoice, setCurrentChoice] = useState<string | null>(null);
-  const [canPlay, setCanPlay] = useState<boolean>(true);
+  const isLoading = false
+  const [currentProblem, setCurrentProblem] = useState<IProblem | null>(null)
+  const [currentChoice, setCurrentChoice] = useState<string | null>(null)
+  const [canPlay, setCanPlay] = useState<boolean>(true)
   const [search, setSearch] = useState<ISearchState>({
     value: "",
     difficulty: "all",
-  });
-  const [openModal, setOpenModal] = useState(false);
-  const [openCreationModal, setOpenCreationModal] = useState(false);
+  })
+  const [openModal, setOpenModal] = useState(false)
+  const [openCreationModal, setOpenCreationModal] = useState(false)
 
-  const onSetCurrentChoice = (value: string) => setCurrentChoice(value);
-  const onConfirmChoice = () => stopPlaying();
-  const stopPlaying = () => setTimeout(() => setCanPlay(false), 0);
+  const onSetCurrentChoice = (value: string) => setCurrentChoice(value)
+  const onConfirmChoice = () => stopPlaying()
+  const stopPlaying = () => setTimeout(() => setCanPlay(false), 0)
 
   const onSetCurrentProblem = (asideData: IProblem) => {
-    const problem: IProblem = asideData;
+    const problem: IProblem = asideData
 
-    setCurrentProblem(problem);
-    setCanPlay(!asideData.won);
-    setCurrentChoice(null);
-    setOpenModal(false);
-  };
+    setCurrentProblem(problem)
+    setCanPlay(!asideData.won)
+    setCurrentChoice(null)
+    setOpenModal(false)
+  }
 
   useEffect(() => {
     if (!currentProblem && data) {
-      setCurrentProblem(data[0]);
-      setCanPlay(!data[0].won);
+      setCurrentProblem(data[0])
+      setCanPlay(!data[0].won)
     }
-  }, [data]);
+  }, [data])
 
-  const handleIntersectionClick = (intersection: string, setState: React.Dispatch<React.SetStateAction<IGo>>) => {
+  const handleIntersectionClick = (
+    intersection: string,
+    setState: React.Dispatch<React.SetStateAction<IGo>>,
+  ) => {
     if (canPlay) {
       setState((state) => {
-        if (intersection in state.position && !(intersection in state.markers)) return state;
-        const position: IGo["position"] = {};
-        position[intersection] = state.nextToPlay;
+        if (intersection in state.position && !(intersection in state.markers))
+          return state
+        const position: IGo["position"] = {}
+        position[intersection] = state.nextToPlay
         if (Object.prototype.hasOwnProperty.call(state.markers, intersection)) {
-          onConfirmChoice();
-          onSetCurrentChoice(intersection);
+          onConfirmChoice()
+          onSetCurrentChoice(intersection)
           return {
             ...state,
             intersection: intersection,
             position: { ...state.position, ...position },
             markers: {},
             nextToPlay: state.nextToPlay === "black" ? "white" : "black",
-          };
+          }
         } else {
-          const marker: IGo["markers"] = {};
-          marker[intersection] = "circle";
-          const newPosition: IGo["position"] = state.position;
+          const marker: IGo["markers"] = {}
+          marker[intersection] = "circle"
+          const newPosition: IGo["position"] = state.position
 
           Object.keys(newPosition).forEach((pos) => {
             if (Object.prototype.hasOwnProperty.call(state.markers, pos)) {
-              delete newPosition[pos];
+              delete newPosition[pos]
             }
-          });
-          onSetCurrentChoice(intersection);
+          })
+          onSetCurrentChoice(intersection)
           return {
             ...state,
             intersection: intersection,
             position: { ...newPosition, ...position },
             markers: marker,
-          };
+          }
         }
-      });
+      })
     }
-  };
+  }
 
   const onChangeFilter = (value: string) => {
     setSearch((prev) => ({
       ...prev,
       difficulty: value as ISelectDifficulty["value"],
-    }));
-  };
+    }))
+  }
 
   const onChangeSearchValue = (value: string) => {
     setSearch((prev) => ({
       ...prev,
       value: value,
-    }));
-  };
+    }))
+  }
 
-  const isMobileScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+  const isMobileScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("sm"),
+  )
 
   const renderAsideList = () => {
     return !isLoading && data ? (
@@ -113,10 +124,14 @@ export default function Problems() {
       />
     ) : (
       <AsideListSkeleton />
-    );
-  };
+    )
+  }
   return (
-    <Grid container spacing={4} direction={isMobileScreen ? "column-reverse" : "row"}>
+    <Grid
+      container
+      spacing={4}
+      direction={isMobileScreen ? "column-reverse" : "row"}
+    >
       <Grid item xs={12} sm={8}>
         {!isLoading && data ? (
           <>
@@ -134,7 +149,9 @@ export default function Problems() {
                     `Posez une pierre ${currentProblem?.nextToPlay === "black" ? "noire" : "blanche"}`
               }
             />
-            {isMobileScreen && <ButtonOpenCreationModal setOpen={setOpenCreationModal} />}
+            {isMobileScreen && (
+              <ButtonOpenCreationModal setOpen={setOpenCreationModal} />
+            )}
           </>
         ) : (
           <PlateauSkeleton />
@@ -179,5 +196,5 @@ export default function Problems() {
       </Grid>
       <CreationModal open={openCreationModal} setOpen={setOpenCreationModal} />
     </Grid>
-  );
+  )
 }

@@ -1,23 +1,25 @@
-import { Button } from '@mui/material'
-import Box from '@mui/material/Box'
-import { styled } from '@mui/material/styles'
-import { useSideBar } from '@src/reducers/sidebar.reducer'
+import { styled } from "@mui/material/styles"
+
+import { Button } from "@mui/material"
+import Box from "@mui/material/Box"
+
+import { useSideBar } from "@src/reducers/sidebar.reducer"
 
 const OpenButtonSideBar = () => {
-    const { isOpen, toggleOpenSideBar } = useSideBar()
+  const { isOpen, toggleOpenSideBar } = useSideBar()
 
-    return (
-        <ArrowButton disableRipple onClick={toggleOpenSideBar}>
-            <Box className={`arrowIcon ${!isOpen && 'open'}`}>
-                <Box className="leftBar"></Box>
-                <Box className="rightBar"></Box>
-            </Box>
-        </ArrowButton>
-    )
+  return (
+    <ArrowButton disableRipple onClick={toggleOpenSideBar}>
+      <Box className={`arrowIcon ${!isOpen && "open"}`}>
+        <Box className="leftBar"></Box>
+        <Box className="rightBar"></Box>
+      </Box>
+    </ArrowButton>
+  )
 }
 
 const ArrowButton = styled(Button)(
-    ({ theme }) => `
+  ({ theme }) => `
     padding: 0;
     position: fixed;
     min-width: 40px;
@@ -47,7 +49,7 @@ const ArrowButton = styled(Button)(
     }
     .leftBar:after {
         content: '';
-        background-color: ${theme.palette.mode === 'dark' ? theme.palette.grey[400] : theme.palette.grey[700]};
+        background-color: ${theme.palette.mode === "dark" ? theme.palette.grey[400] : theme.palette.grey[700]};
         width: 20px;
         height: 5px;
         display: block;
@@ -70,7 +72,7 @@ const ArrowButton = styled(Button)(
     }
     .rightBar:after {
         content: '';
-        background-color: ${theme.palette.mode === 'dark' ? theme.palette.grey[400] : theme.palette.grey[700]};
+        background-color: ${theme.palette.mode === "dark" ? theme.palette.grey[400] : theme.palette.grey[700]};
         width: 20px;
         height: 5px;
         display: block;

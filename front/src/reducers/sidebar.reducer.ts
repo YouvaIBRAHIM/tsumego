@@ -1,13 +1,13 @@
-import { StoreApi, UseBoundStore, create } from 'zustand';
+import { StoreApi, UseBoundStore, create } from "zustand"
 
 interface UseSideBar {
-  isOpen: boolean;
-  toggleOpenSideBar: () => void;
+  isOpen: boolean
+  toggleOpenSideBar: () => void
 }
 
 export const useSideBar: UseBoundStore<StoreApi<UseSideBar>> = create((set) => ({
-  isOpen: true, 
+  isOpen: true,
   toggleOpenSideBar: () => {
-    set((prev) => ({ isOpen: !prev.isOpen }));
+    set((prev) => ({ isOpen: !prev.isOpen }))
   },
-}));
+}))
