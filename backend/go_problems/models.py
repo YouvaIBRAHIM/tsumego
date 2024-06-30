@@ -39,3 +39,9 @@ class Problem(models.Model):
   @property
   def author(self):
       return f"{self.pk_user.first_name} {self.pk_user.last_name}"
+  
+
+class Parties(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    tsumego_problem = models.ForeignKey('Problem', on_delete=models.CASCADE)
+    won = models.BooleanField(default=False)

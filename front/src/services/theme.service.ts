@@ -76,7 +76,9 @@ export const getTheme = (mode: PaletteMode) => ({
       styleOverrides: {
         root: {
           padding: "1rem 2.5rem",
-          overflow: "overlay",
+          [`@media (min-width:${breakpoints.sm}px)`]: {
+            overflow: "overlay",
+          },
           [`@media (min-width:${breakpoints.md}px)`]: {
             padding: "1rem 6rem",
           },

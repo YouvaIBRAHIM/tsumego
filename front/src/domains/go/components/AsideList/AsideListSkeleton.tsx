@@ -1,11 +1,11 @@
-import { Paper, Skeleton } from "@mui/material"
+import { Skeleton, Stack } from "@mui/material"
 
 const AsideListSkeleton = () => {
   return (
-    <Paper
+    <Stack
+      p={2}
       sx={{
         minHeight: "50vh",
-        padding: 2,
       }}
     >
       <Skeleton height={90} />
@@ -15,7 +15,7 @@ const AsideListSkeleton = () => {
       <Skeleton height={60} />
       <Skeleton height={60} />
       <Skeleton height={60} />
-    </Paper>
+    </Stack>
   )
 }
 

@@ -1,9 +1,22 @@
 import { useEffect, useState } from "react"
 
+import { Theme } from "@mui/material"
+
+import { useMediaQuery } from "@mui/system"
+import { useSnackBarStore } from "@src/reducers/snackbar.reducer"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
-import { IProblem, ITsumegoProblemSearch } from "../../types/go.types"
-import { deleteProblem, getProblems, updateProblemStatus } from "../api.services"
+import {
+  IProblem,
+  IProblemSolutionData,
+  ITsumegoProblemSearch,
+} from "../../types/go.types"
+import {
+  checkProblemSolution,
+  deleteProblem,
+  getProblems,
+  updateProblemStatus,
+} from "../api.services"
 import { useDebounce } from "./global.hook"
 
 export const useTsumegoList = () => {
@@ -112,5 +125,80 @@ export const useTsumegoList = () => {
     handleChangePage,
     updateSearch,
     onUpdateTsumegoStatus,
+  }
+}
+
+export const useTsumegoProblemList = () => {
+  const queryClient = useQueryClient()
+  const [page, setPage] = useState(1)
+  const perPage = 9
+  const [search, setSearch] = useState<ITsumegoProblemSearch>({
+    value: "",
+    searchBy: "label",
+    level: "all",
+    status: "active",
+    order: "asc",
+    orderBy: "label",
+  })
+  const { showSnackBar } = useSnackBarStore()
+
+  const debouncedSearch = useDebounce(search.value, 500)
+
+  const isMobileScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("sm"),
+  )
+
+  const {
+    data: problems,
+    isFetching,
+    refetch,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["problems", page, perPage],
+    queryFn: () => getProblems(page, perPage, search),
+    retry: 3,
+  })
+
+  const checkProblemSolutionMutation = useMutation({
+    mutationFn: (data: IProblemSolutionData) => checkProblemSolution(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["problems"] })
+      showSnackBar("Bravo ! Vous avez trouvé la solution", "success")
+    },
+    onError: (error: Error) => {
+      showSnackBar(error.message, "error")
+    },
+  })
+
+  useEffect(() => {
+    refetch()
+  }, [page, debouncedSearch, search.level])
+
+  const handleChangePage = (_: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value)
+  }
+
+  const updateSearch = (key: keyof ITsumegoProblemSearch, value: unknown) => {
+    setSearch((prev) => ({
+      ...prev,
+      [key]: value,
+    }))
+  }
+
+  return {
+    page,
+    perPage,
+    search,
+    setSearch,
+    problems,
+    isFetching,
+    refetch,
+    isError,
+    error,
+    handleChangePage,
+    updateSearch,
+    isMobileScreen,
+    checkProblemSolutionMutation,
   }
 }

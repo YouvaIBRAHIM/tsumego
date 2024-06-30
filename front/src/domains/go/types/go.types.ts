@@ -1,5 +1,5 @@
 export interface IGo {
-  position: { [key: string]: "white" | "black" }
+  position: { [key: string]: NexToPlayType }
   markers: { [key: string]: string }
   theme: "classic" | "night" | "paper"
   coordSystem?: string
@@ -10,7 +10,7 @@ export interface IGo {
     | null
   noMargin?: boolean
   intersection?: string
-  nextToPlay: "white" | "black"
+  nextToPlay: NexToPlayType
   size: number
 }
 
@@ -112,4 +112,9 @@ export interface ITsumegoProblemSearch {
   order: "asc" | "desc"
   level: IProblem["level"]
   status: "all" | "active" | "inactive"
+}
+
+export interface IProblemSolutionData {
+  problem_id: number
+  solution: string
 }

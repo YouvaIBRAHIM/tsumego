@@ -6,7 +6,7 @@ import {
   filterExcludedPoints,
   generateGoBoardPoints,
 } from "../../services/global.service"
-import { IGo, ITheme } from "../../types/go.types"
+import { IGo, ITheme, NexToPlayType } from "../../types/go.types"
 import AutoCompleteGoPoint from "../AutocompleteGoPoint"
 import Go from "./Go"
 import GoTheme from "./GoTheme"
@@ -17,7 +17,7 @@ export interface IPlateau {
   defaultState: {
     position: IGo["position"]
     size: number
-    nextToPlay: "black" | "white"
+    nextToPlay: NexToPlayType
     markers: IGo["markers"]
   } | null
   onPointChange: (
@@ -26,7 +26,7 @@ export interface IPlateau {
   ) => void
   setCurrentChoice: (value: string) => void
   canPlay: boolean
-  onConfirmChoice: () => void
+  onConfirmChoice: (solution: string) => void
   title: string
 }
 
@@ -115,13 +115,15 @@ const Plateau = ({
   // }
 
   const onSubmitButton = () => {
-    onConfirmChoice()
+    if (state.intersection) {
+      onConfirmChoice(state.intersection)
 
-    setState((state) => {
-      const tmpState = state
-      tmpState.markers = {}
-      return tmpState
-    })
+      setState((state) => {
+        const tmpState = state
+        tmpState.markers = {}
+        return tmpState
+      })
+    }
 
     isDefaultStateLoaded.current = true
   }

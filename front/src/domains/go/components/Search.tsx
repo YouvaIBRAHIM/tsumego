@@ -36,8 +36,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 interface ISearch {
   onChange: (value: string) => void
+  value: string
 }
-export default function Search({ onChange }: ISearch) {
+export default function Search({ onChange, value }: ISearch) {
   const onHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value)
   }
@@ -51,6 +52,7 @@ export default function Search({ onChange }: ISearch) {
         placeholder="Rechercher"
         inputProps={{ "aria-label": "search" }}
         onChange={onHandleChange}
+        value={value}
       />
     </SearchInput>
   )

@@ -1,12 +1,22 @@
-import { ListItem, ListItemButton, ListItemText, alpha } from "@mui/material"
+import {
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Tooltip,
+  alpha,
+} from "@mui/material"
 
+import { truncateString } from "@src/services/utils.service"
+
+import { levelToNumber } from "../../services/utils.service"
 import { IProblem } from "../../types/go.types"
+import Level from "../Level"
 import { IAsideListData } from "./AsideList"
 
 export interface IProblemsAsideList {
   data: IAsideListData[] | null
   onSetCurrentItem: (value: IProblem) => void
-  currentItemId: string | undefined
+  currentItemId: string | null
 }
 
 const ProblemsAsideList = ({
@@ -19,7 +29,11 @@ const ProblemsAsideList = ({
       {data?.map((el) => {
         const value: IProblem = el.value as IProblem
         return (
-          <ListItem key={el.id} disablePadding>
+          <ListItem
+            key={el.id}
+            disablePadding
+            secondaryAction={<Level level={levelToNumber(value.level)} />}
+          >
             <ListItemButton
               onClick={() => onSetCurrentItem(value)}
               sx={(theme) => ({
@@ -27,11 +41,23 @@ const ProblemsAsideList = ({
                   border: `2px solid ${theme.palette.mode === "dark" ? alpha(theme.palette.common.white, 0.5) : alpha(theme.palette.common.black, 0.5)}`,
                 }),
                 ...(value.won && {
-                  backgroundColor: `${theme.palette.success.light}!important`,
+                  backgroundColor: `${theme.palette.primary.dark}!important`,
                 }),
+                "&.MuiListItemButton-root": {
+                  margin: 0.5,
+                },
               })}
             >
-              <ListItemText primary={el.label} />
+              {value.label.length > 35 ? (
+                <Tooltip title={value.label}>
+                  <ListItemText
+                    primary={truncateString(value.label, 35)}
+                    secondary={value.author}
+                  />
+                </Tooltip>
+              ) : (
+                <ListItemText primary={value.label} secondary={value.author} />
+              )}
             </ListItemButton>
           </ListItem>
         )

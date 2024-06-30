@@ -1,8 +1,4 @@
-import { List, Paper, Stack } from "@mui/material"
-
-import { ISearchState, ISelectDifficulty } from "../../types/go.types"
-import Search from "../Search"
-import SelectFilter from "../SelectFilter"
+import { List, Pagination, Stack } from "@mui/material"
 
 export interface IAsideListData {
   id: string
@@ -12,64 +8,32 @@ export interface IAsideListData {
 
 export interface IAsideList {
   list: JSX.Element
-  onChangeFilter: (value: string) => void
-  onChangeSearchValue: (value: string) => void
-  search: ISearchState
+  page: number
+  perPage: number
+  total: number
+  handleChangePage: (event: React.ChangeEvent<unknown>, page: number) => void
 }
 
-export const difficulties: ISelectDifficulty[] = [
-  {
-    label: "Toutes les difficultés",
-    value: "all",
-  },
-  {
-    label: "Facile",
-    value: "beginner",
-  },
-  {
-    label: "Intermediaire",
-    value: "intermediate",
-  },
-  {
-    label: "Difficile",
-    value: "advanced",
-  },
-]
-
-const AsideList = ({
-  list,
-  onChangeFilter,
-  onChangeSearchValue,
-  search,
-}: IAsideList) => {
+const AsideList = ({ list, total, perPage, page, handleChangePage }: IAsideList) => {
   return (
-    <Paper
-      sx={{
-        minHeight: "50vh",
-        padding: 2,
-      }}
-    >
-      <Stack gap={2} px={1}>
-        <Stack direction="row" gap={2}>
-          <Search onChange={onChangeSearchValue} />
-          <SelectFilter
-            currentValue={search.difficulty}
-            onChange={onChangeFilter}
-            values={difficulties}
-          />
-        </Stack>
-      </Stack>
-
+    <Stack>
       <List
         sx={{
           overflow: "auto",
           maxHeight: "75vh",
-          marginTop: 2,
         }}
       >
         {list}
       </List>
-    </Paper>
+
+      <Pagination
+        color="primary"
+        count={Math.ceil(total / perPage)}
+        page={Number(page)}
+        siblingCount={5}
+        onChange={handleChangePage}
+      />
+    </Stack>
   )
 }
 

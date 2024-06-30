@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-import { Box, Button, Grid, Modal, Stack, Theme, useMediaQuery } from "@mui/material"
+import { Box, Button, Grid, Modal, Paper, Stack } from "@mui/material"
 
 import AsideList from "../components/AsideList/AsideList"
 import AsideListSkeleton from "../components/AsideList/AsideListSkeleton"
@@ -9,28 +9,66 @@ import ButtonOpenCreationModal from "../components/CreationTsumego/ButtonOpenCre
 import CreationModal from "../components/CreationTsumego/CreationModal"
 import Plateau from "../components/Plateau/Plateau"
 import PlateauSkeleton from "../components/Plateau/PlateauSkeleton"
-import { data } from "../components/mocks/tsumego.mock"
+import Search from "../components/Search"
+import SelectFilter from "../components/SelectFilter"
+import ErrorView from "../components/Views/ErrorView"
 import {
   problemListDataToAsideListData,
   transformProblemToGoState,
 } from "../services/global.service"
-import { IGo, IProblem, ISearchState, ISelectDifficulty } from "../types/go.types"
+import { useTsumegoProblemList } from "../services/hooks/tsumego.hook"
+import { IGo, IProblem, ISelectDifficulty } from "../types/go.types"
+
+export const difficulties: ISelectDifficulty[] = [
+  {
+    label: "Toutes les difficultés",
+    value: "all",
+  },
+  {
+    label: "Facile",
+    value: "beginner",
+  },
+  {
+    label: "Intermediaire",
+    value: "intermediate",
+  },
+  {
+    label: "Difficile",
+    value: "advanced",
+  },
+]
 
 export default function Problems() {
-  const isLoading = false
   const [currentProblem, setCurrentProblem] = useState<IProblem | null>(null)
   const [currentChoice, setCurrentChoice] = useState<string | null>(null)
   const [canPlay, setCanPlay] = useState<boolean>(true)
-  const [search, setSearch] = useState<ISearchState>({
-    value: "",
-    difficulty: "all",
-  })
   const [openModal, setOpenModal] = useState(false)
   const [openCreationModal, setOpenCreationModal] = useState(false)
 
+  const {
+    page,
+    perPage,
+    search,
+    problems,
+    isFetching,
+    refetch,
+    isError,
+    error,
+    handleChangePage,
+    updateSearch,
+    isMobileScreen,
+    checkProblemSolutionMutation,
+  } = useTsumegoProblemList()
+
   const onSetCurrentChoice = (value: string) => setCurrentChoice(value)
-  const onConfirmChoice = () => stopPlaying()
-  const stopPlaying = () => setTimeout(() => setCanPlay(false), 0)
+  const onConfirmChoice = (solution: string) => {
+    if (currentProblem?.id) {
+      checkProblemSolutionMutation.mutate({
+        problem_id: Number(currentProblem.id),
+        solution,
+      })
+    }
+  }
 
   const onSetCurrentProblem = (asideData: IProblem) => {
     const problem: IProblem = asideData
@@ -42,11 +80,11 @@ export default function Problems() {
   }
 
   useEffect(() => {
-    if (!currentProblem && data) {
-      setCurrentProblem(data[0])
-      setCanPlay(!data[0].won)
+    if (!currentProblem && problems?.data) {
+      setCurrentProblem(problems?.data[0])
+      setCanPlay(!problems?.data[0].won)
     }
-  }, [data])
+  }, [problems?.data])
 
   const handleIntersectionClick = (
     intersection: string,
@@ -59,7 +97,7 @@ export default function Problems() {
         const position: IGo["position"] = {}
         position[intersection] = state.nextToPlay
         if (Object.prototype.hasOwnProperty.call(state.markers, intersection)) {
-          onConfirmChoice()
+          onConfirmChoice(intersection)
           onSetCurrentChoice(intersection)
           return {
             ...state,
@@ -91,41 +129,42 @@ export default function Problems() {
   }
 
   const onChangeFilter = (value: string) => {
-    setSearch((prev) => ({
-      ...prev,
-      difficulty: value as ISelectDifficulty["value"],
-    }))
+    updateSearch("level", value)
   }
 
   const onChangeSearchValue = (value: string) => {
-    setSearch((prev) => ({
-      ...prev,
-      value: value,
-    }))
+    updateSearch("value", value)
   }
 
-  const isMobileScreen = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down("sm"),
-  )
-
   const renderAsideList = () => {
-    return !isLoading && data ? (
+    return !isFetching && problems?.data ? (
       <AsideList
-        onChangeSearchValue={onChangeSearchValue}
-        onChangeFilter={onChangeFilter}
-        search={search}
         list={
           <ProblemsAsideList
-            currentItemId={currentProblem?.id}
+            currentItemId={currentProblem && currentProblem?.id}
             onSetCurrentItem={onSetCurrentProblem}
-            data={problemListDataToAsideListData(data)}
+            data={problemListDataToAsideListData(problems?.data)}
           />
         }
+        perPage={perPage}
+        page={page}
+        total={problems.data ? problems.total : 0}
+        handleChangePage={handleChangePage}
       />
     ) : (
       <AsideListSkeleton />
     )
   }
+
+  if (isError) {
+    return (
+      <ErrorView
+        message={error?.message ?? "Une erreur est survenue"}
+        refetch={refetch}
+      />
+    )
+  }
+
   return (
     <Grid
       container
@@ -133,7 +172,7 @@ export default function Problems() {
       direction={isMobileScreen ? "column-reverse" : "row"}
     >
       <Grid item xs={12} sm={8}>
-        {!isLoading && data ? (
+        {problems?.data ? (
           <>
             <Plateau
               onConfirmChoice={onConfirmChoice}
@@ -178,6 +217,16 @@ export default function Problems() {
                   transform: "translate(-50%, -50%)",
                 }}
               >
+                <Stack gap={2} px={1}>
+                  <Stack direction="row" gap={2}>
+                    <Search value={search.value} onChange={onChangeSearchValue} />
+                    <SelectFilter
+                      currentValue={search.level as string}
+                      onChange={onChangeFilter}
+                      values={difficulties}
+                    />
+                  </Stack>
+                </Stack>
                 {renderAsideList()}
                 <Stack alignItems={"flex-end"}>
                   <Button onClick={() => setOpenModal(false)}>Fermer</Button>
@@ -187,10 +236,27 @@ export default function Problems() {
           </>
         ) : (
           <>
-            {renderAsideList()}
-            <Box mt={2}>
+            <Box mb={2}>
               <ButtonOpenCreationModal setOpen={setOpenCreationModal} />
             </Box>
+            <Paper
+              sx={{
+                minHeight: "50vh",
+                padding: 2,
+              }}
+            >
+              <Stack gap={2} px={1}>
+                <Stack direction="row" gap={2}>
+                  <Search value={search.value} onChange={onChangeSearchValue} />
+                  <SelectFilter
+                    currentValue={search.level as string}
+                    onChange={onChangeFilter}
+                    values={difficulties}
+                  />
+                </Stack>
+              </Stack>
+              {renderAsideList()}
+            </Paper>
           </>
         )}
       </Grid>

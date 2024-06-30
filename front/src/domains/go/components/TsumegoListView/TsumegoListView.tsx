@@ -68,7 +68,7 @@ const TsumegoListView = () => {
         <TableToolbar
           perPage={perPage}
           setPerPage={(value: number) => setPerPage(value)}
-          level={search.level}
+          level={search.level as string}
           setLevel={(val: ITsumegoProblemSearch["level"]) =>
             updateSearch("level", val)
           }

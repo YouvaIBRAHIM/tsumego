@@ -20,7 +20,7 @@ export const transformProblemToGoState = (
   if (obj === null) return null
 
   const result: IGo["position"] = {}
-  const { AB, AW, SZ, nextToPlay } = obj
+  const { AB, AW, SZ, nextToPlay, SOL, won } = obj
 
   if (AB && Array.isArray(AB)) {
     AB.forEach((position) => {
@@ -36,11 +36,19 @@ export const transformProblemToGoState = (
     })
   }
 
+  let markers: { [key: string]: string } = {}
+  if (won && SOL && SOL[1]) {
+    markers[SOL[1] as string] = "circle"
+    if (nextToPlay === "white" || nextToPlay === "black") {
+      result[SOL[1]] = nextToPlay
+    }
+  }
+
   return {
     position: result,
     size: Number(SZ),
     nextToPlay: nextToPlay,
-    markers: {},
+    markers,
   }
 }
 

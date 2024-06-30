@@ -2,8 +2,10 @@ import {
   IProblem,
   IProblemCreate,
   IProblemList,
+  IProblemSolutionData,
   ITsumegoProblemSearch,
 } from "../types/go.types"
+import { checkResponse } from "./utils.service"
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
@@ -14,7 +16,7 @@ export const getProblems = async (
 ): Promise<IProblemList> => {
   try {
     const response = await fetch(
-      `${BACKEND_BASE_URL}/api/problems?page=${page}&perPage=${perPage}&level=${search.level}&searchBy=${search.searchBy}&searchValue=${search.value}&status=${search.status}`,
+      `${BACKEND_BASE_URL}/api/problems?page=${page}&pagination=${perPage}&level=${search.level}&searchBy=${search.searchBy}&searchValue=${search.value}&status=${search.status}`,
       {
         credentials: "include",
       },
@@ -126,5 +128,30 @@ export async function getCsrfToken(): Promise<string | null> {
     return csrfData.csrfToken
   } catch (error) {
     return null
+  }
+}
+
+export async function checkProblemSolution(data: IProblemSolutionData) {
+  try {
+    const csrfToken = await getCsrfToken()
+
+    const response = await fetch(
+      `${BACKEND_BASE_URL}/api/problems/check/solution/`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken || "",
+        },
+        body: JSON.stringify(data),
+      },
+    )
+
+    return await checkResponse(response)
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message)
+    }
   }
 }

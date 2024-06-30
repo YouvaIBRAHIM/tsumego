@@ -21,7 +21,8 @@ class UserRole(models.Model):
     
 class User(AbstractUser):
     roles = models.ManyToManyField(Role, through='UserRole', related_name='users')
-
+    score = models.IntegerField(default=0)
+    
     def __str__(self):
         return self.username
 
