@@ -32,7 +32,7 @@ const TsumegoModal = ({
 
   useEffect(() => {
     setDefaultGoState(transformProblemToGoState(problem))
-  }, [])
+  }, [problem])
 
   const isMobileScreen = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm"),
@@ -44,6 +44,7 @@ const TsumegoModal = ({
       onClose={() => onCancelation()}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      fullWidth
     >
       <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       <DialogContent
@@ -56,13 +57,16 @@ const TsumegoModal = ({
           spacing={4}
           direction={isMobileScreen ? "column-reverse" : "row"}
         >
-          <Grid item xs={12} sm={7}>
+          <Grid
+            item
+            xs={12}
+            sm={7}
+            sx={{
+              minWidth: isMobileScreen ? "300px" : "350px",
+            }}
+          >
             {defaultGoState && (
-              <Box
-                sx={{
-                  minWidth: isMobileScreen ? "300px" : "350px",
-                }}
-              >
+              <Box>
                 <Go
                   theme={
                     (localStorage.getItem("goTheme") as keyof ITheme) ?? "paper"
@@ -86,7 +90,9 @@ const TsumegoModal = ({
               <Typography variant="h4" component="div">
                 {problem.label}
               </Typography>
-              <Typography sx={{ fontSize: 14 }}>{problem.level}</Typography>
+              <Typography sx={{ fontSize: 14 }}>
+                {problem.level as string}
+              </Typography>
               <Stack direction="row" alignItems="center">
                 <Typography sx={{ fontSize: 14 }} color="text.secondary">
                   Status :

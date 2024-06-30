@@ -9,8 +9,10 @@ import { useNavigate } from "react-router-dom"
 
 const SideBarListItem = ({
   sideBarListElement,
+  isAuthorized,
 }: {
   sideBarListElement: ISideBarListItem
+  isAuthorized: boolean
 }) => {
   const { isOpen } = useSideBar()
   const navigate = useNavigate()
@@ -31,7 +33,7 @@ const SideBarListItem = ({
       <ListItem
         key={sideBarListElement.id}
         disablePadding
-        sx={{ display: "block" }}
+        sx={{ display: isAuthorized ? "block" : "none" }}
         onClick={onHandleClick}
       >
         <ListItemButton

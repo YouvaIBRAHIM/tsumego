@@ -28,7 +28,6 @@ const TsumegoListView = () => {
     tsumegoToDelete,
     setTsumegoToDelete,
     problems,
-    isFetching,
     refetch,
     isError,
     error,
@@ -46,12 +45,17 @@ const TsumegoListView = () => {
     return (
       <TsumegoListBody
         problems={visibleRows}
-        isFetching={isFetching}
         setTsumegoToDelete={setTsumegoToDelete}
         setTsumegoToModerate={setTsumegoToModerate}
       />
     )
-  }, [isFetching, problems, search.order, search.orderBy])
+  }, [
+    problems,
+    search.order,
+    search.orderBy,
+    setTsumegoToDelete,
+    setTsumegoToModerate,
+  ])
 
   if (isError) {
     return (
@@ -93,13 +97,16 @@ const TsumegoListView = () => {
           <ListNotFound message="Aucun Tsumego trouvé." />
         )}
       </Paper>
-      <Pagination
-        color="primary"
-        count={problems?.total ? Math.ceil(problems.total / perPage) : 0}
-        page={Number(page)}
-        siblingCount={5}
-        onChange={handleChangePage}
-      />
+      {problems && problems.total > perPage && (
+        <Pagination
+          color="primary"
+          count={Math.ceil(problems.total / perPage)}
+          page={page}
+          siblingCount={2}
+          boundaryCount={1}
+          onChange={handleChangePage}
+        />
+      )}
       {tsumegoToDelete && (
         <ConfirmationModal
           open={Boolean(tsumegoToDelete)}

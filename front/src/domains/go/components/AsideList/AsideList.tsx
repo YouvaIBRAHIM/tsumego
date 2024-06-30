@@ -25,14 +25,16 @@ const AsideList = ({ list, total, perPage, page, handleChangePage }: IAsideList)
       >
         {list}
       </List>
-
-      <Pagination
-        color="primary"
-        count={Math.ceil(total / perPage)}
-        page={Number(page)}
-        siblingCount={5}
-        onChange={handleChangePage}
-      />
+      {total > perPage && (
+        <Pagination
+          color="primary"
+          count={Math.ceil(total / perPage)}
+          page={Number(page)}
+          siblingCount={1}
+          boundaryCount={1}
+          onChange={handleChangePage}
+        />
+      )}
     </Stack>
   )
 }

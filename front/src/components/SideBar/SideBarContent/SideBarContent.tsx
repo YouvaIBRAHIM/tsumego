@@ -3,6 +3,7 @@ import { Box, Divider, List } from "@mui/material"
 import { ISideBarContent } from "@components/SideBar/SideBarContent/ISideBarContent"
 import SideBarListItem from "@components/SideBar/SideBarListItem/SideBarListItem"
 import Switch from "@components/Switch"
+import useIsAuthorized from "@src/components/hooks/useIsAuthorized"
 import { useColorMode } from "@src/reducers/theme.reducer"
 
 const DrawerContent = ({
@@ -10,6 +11,7 @@ const DrawerContent = ({
   sideBarList,
 }: ISideBarContent): JSX.Element => {
   const { colorMode, toggleColorMode } = useColorMode()
+  const { isAuthorized } = useIsAuthorized()
 
   return (
     <>
@@ -18,6 +20,7 @@ const DrawerContent = ({
           <SideBarListItem
             sideBarListElement={sideBarHeader}
             key={sideBarHeader.id}
+            isAuthorized={isAuthorized(sideBarHeader.roles)}
           />
           <Divider />
         </>
@@ -28,6 +31,7 @@ const DrawerContent = ({
             <SideBarListItem
               sideBarListElement={sideBarListElement}
               key={sideBarListElement.id}
+              isAuthorized={isAuthorized(sideBarListElement.roles)}
             />
           ))}
         </List>

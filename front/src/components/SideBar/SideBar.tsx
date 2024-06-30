@@ -6,33 +6,38 @@ import DrawerContent from "@components/SideBar/SideBarContent/SideBarContent"
 import { HouseSimple, Kanban, Plus, PuzzlePiece } from "@phosphor-icons/react"
 import { breakpoints, sideBarConst } from "@services/constants.service"
 import { useSideBar } from "@src/reducers/sidebar.reducer"
+import { ISideBarListItem } from "./SideBarListItem/ISideBarListItem"
 
-const sideBarList = [
+const sideBarList: ISideBarListItem[] = [
   {
     id: "home",
     label: "Accueil",
     icon: <HouseSimple size={24} />,
     link: "/",
+    roles: ["all"],
   },
   {
     id: "problems",
     label: "Problèmes",
     icon: <PuzzlePiece size={24} />,
     link: "/problems",
+    roles: ["all"],
   },
   {
     id: "admin",
     label: "Administration",
     icon: <Kanban size={24} />,
     link: "/admin",
+    roles: ["admin", "editor"],
   },
 ]
 
-const sideBarHeader = {
+const sideBarHeader: ISideBarListItem = {
   id: "new_party",
   label: "Nouvelle partie",
   icon: <Plus size={24} />,
   action: () => console.log("new_party"),
+  roles: ["all"],
 }
 
 const SideBar = () => {

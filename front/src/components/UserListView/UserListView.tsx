@@ -89,12 +89,16 @@ const UserListView = () => {
           <ListNotFound message="Aucun utilisateur trouvé." />
         )}
       </Paper>
-      <Pagination
-        color="primary"
-        count={users?.count ? Math.ceil(users.count / perPage) : 0}
-        page={Number(page)}
-        onChange={handleChangePage}
-      />
+      {users && users.count > perPage && (
+        <Pagination
+          color="primary"
+          count={users?.count ? Math.ceil(users.count / perPage) : 0}
+          page={Number(page)}
+          siblingCount={2}
+          boundaryCount={1}
+          onChange={handleChangePage}
+        />
+      )}
       {userToDelete && (
         <ConfirmationModal
           open={Boolean(userToDelete)}

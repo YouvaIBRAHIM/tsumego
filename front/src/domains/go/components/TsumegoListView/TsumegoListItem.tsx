@@ -6,26 +6,26 @@ import TableRow from "@mui/material/TableRow"
 
 import { Check, Eye, Trash, X } from "@phosphor-icons/react"
 
+import { Suspense } from "react"
+import { useTsumegoList } from "../../services/hooks/tsumego.hook"
 import { IProblem } from "../../types/go.types"
 import TableSkeleton from "./TableSkeletons"
 
 interface ITsumegoListBody {
   problems: IProblem[]
-  isFetching: boolean
   setTsumegoToModerate: (user: IProblem) => void
   setTsumegoToDelete: (user: IProblem) => void
 }
 
 const TsumegoListBody = ({
   problems,
-  isFetching,
   setTsumegoToModerate,
   setTsumegoToDelete,
 }: ITsumegoListBody) => {
-  if (isFetching) {
-    return <TableSkeleton rows={10} cells={5} />
-  } else if (problems) {
-    return (
+  const { onUpdateTsumegoStatus } = useTsumegoList()
+
+  return (
+    <Suspense fallback={<TableSkeleton rows={10} cells={5} />}>
       <TableBody>
         {problems?.map((problem: IProblem, index: number) => {
           const labelId = `enhanced-table-checkbox-${index}`
@@ -35,21 +35,29 @@ const TsumegoListBody = ({
                 {problem.label}
               </TableCell>
               <TableCell align="left">{problem.author}</TableCell>
-              <TableCell align="left">{problem.level}</TableCell>
+              <TableCell align="left">{problem.level as string}</TableCell>
               <TableCell align="left">
-                <Chip
-                  color={problem.active ? "success" : "warning"}
-                  icon={problem.active ? <Check size={16} /> : <X size={16} />}
-                  label={problem.active ? "Visible" : "Inactif"}
-                />
+                <Tooltip
+                  title={problem.active ? "Rendre inactif" : "Rendre visible"}
+                >
+                  <Chip
+                    color={problem.active ? "success" : "warning"}
+                    icon={problem.active ? <Check size={16} /> : <X size={16} />}
+                    label={problem.active ? "Visible" : "Inactif"}
+                    clickable
+                    onClick={() => onUpdateTsumegoStatus(problem.id)}
+                  />
+                </Tooltip>
               </TableCell>
               <TableCell align="left">
                 <Box>
-                  <Tooltip
-                    title="Voir"
-                    onClick={() => setTsumegoToModerate(problem)}
-                  >
-                    <IconButton aria-label="action" size="small">
+                  <Tooltip title="Voir">
+                    <IconButton
+                      aria-label="action"
+                      size="small"
+                      onClick={() => setTsumegoToModerate(problem)}
+                      sx={{ ":hover": { color: "info.main" } }}
+                    >
                       <Eye fontSize="inherit" weight="duotone" />
                     </IconButton>
                   </Tooltip>
@@ -58,6 +66,7 @@ const TsumegoListBody = ({
                       aria-label="action"
                       size="small"
                       onClick={() => setTsumegoToDelete(problem)}
+                      sx={{ ":hover": { color: "error.main" } }}
                     >
                       <Trash fontSize="inherit" weight="duotone" />
                     </IconButton>
@@ -68,8 +77,8 @@ const TsumegoListBody = ({
           )
         })}
       </TableBody>
-    )
-  }
+    </Suspense>
+  )
 }
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
