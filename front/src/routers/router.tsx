@@ -24,7 +24,7 @@ const router = createBrowserRouter([
       {
         path: "/problems",
         element: (
-          <PrivateRoute roles={["player", "editor"]}>
+          <PrivateRoute roles={["player", "editor", "admin"]}>
             <Problems />
           </PrivateRoute>
         ),
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
       {
         path: "/admin",
         element: (
-          <PrivateRoute roles={["player"]}>
+          <PrivateRoute roles={["admin", "editor"]}>
             <Admin />
           </PrivateRoute>
         ),

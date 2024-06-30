@@ -10,6 +10,7 @@ import Tabs from "@mui/material/Tabs"
 import TsumegoListView from "@src/domains/go/components/TsumegoListView/TsumegoListView"
 
 import UsersListView from "@src/components/UserListView/UserListView"
+import { useAuthStore } from "@src/reducers/auth.reducer"
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -43,7 +44,8 @@ function a11yProps(index: number) {
 
 export default function Admin() {
   const theme = useTheme()
-  const [value, setValue] = React.useState(1)
+  const [value, setValue] = React.useState(0)
+  const { user } = useAuthStore()
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
@@ -59,16 +61,20 @@ export default function Admin() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Utilisateurs" {...a11yProps(0)} />
-          <Tab label="Tsumego" {...a11yProps(1)} />
+          <Tab label="Tsumego" {...a11yProps(0)} />
+          {user?.roles.includes("admin") && (
+            <Tab label="Utilisateurs" {...a11yProps(1)} />
+          )}
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0} dir={theme.direction}>
-        <UsersListView />
-      </TabPanel>
-      <TabPanel value={value} index={1} dir={theme.direction}>
         <TsumegoListView />
       </TabPanel>
+      {user?.roles.includes("admin") && (
+        <TabPanel value={value} index={1} dir={theme.direction}>
+          <UsersListView />
+        </TabPanel>
+      )}
     </Box>
   )
 }

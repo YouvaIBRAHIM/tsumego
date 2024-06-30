@@ -1,3 +1,4 @@
+import { IRole } from "@src/types/user.type"
 import { ReactElement } from "react"
 
 export interface ISideBarListItem {
@@ -6,4 +7,5 @@ export interface ISideBarListItem {
   label: string
   action?: () => void
   link?: string
+  roles: IRole["role"][]
 }
