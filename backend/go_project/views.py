@@ -8,7 +8,10 @@ from rest_framework.response import Response
 from users.models import User, Role, UserRole
 from django.contrib.auth import update_session_auth_hash
 from django.middleware.csrf import get_token
-from users.serializers import UserProfileSerializer, PasswordChangeSerializer
+from users.serializers import UserProfileSerializer, PasswordChangeSerializer, TopPlayerSerializer
+from go_problems.models import Problem, Parties
+from go_problems.serializers import ProblemSerializer
+from django.db.models import Count
 
 @csrf_exempt
 @api_view(['POST'])
@@ -43,7 +46,8 @@ def register_view(request):
                     'roles': [role.name],
                     'id': user.id,
                     'firstName': user.first_name,
-                    'lastName': user.last_name
+                    'lastName': user.last_name,
+                    'score': user.score
                 }
             })
         else:
@@ -70,7 +74,8 @@ def login_view(request):
                 'roles': list(roles),
                 'id': user.id,
                 'firstName': user.first_name,
-                'lastName': user.last_name
+                'lastName': user.last_name,
+                'score': user.score
             }
         })
     else:
@@ -98,7 +103,8 @@ def check_auth_view(request):
                 'roles': list(roles),
                 'id': user.id,
                 'firstName': user.first_name,
-                'lastName': user.last_name
+                'lastName': user.last_name,
+                'score': user.score
             }
         }, status=200)
     return JsonResponse({'is_authenticated': False}, status=401)
@@ -148,3 +154,43 @@ def delete_user_account_view(request):
 def get_csrf_token(request):
     token = get_token(request)
     return JsonResponse({'csrfToken': token})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def top_players(request):
+    top_users = User.objects.filter(is_active=True).order_by('-score')[:10]
+    serializer = TopPlayerSerializer(top_users, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_progress(request):
+    user = request.user
+
+    total = Problem.objects.exclude(pk_user=user).count()
+
+    won = Parties.objects.filter(user=user, won=True).count()
+
+    progress = {
+        "won": won,
+        "total": total
+    }
+
+    return Response(progress, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_top_problems(request):
+    sort_by = request.query_params.get('sort_by', 'recent')
+    user = request.user
+
+    if sort_by == 'popular':
+        problems = Problem.objects.annotate(num_parties=Count('parties')).order_by('-num_parties')[:10]
+    else:
+        problems = Problem.objects.order_by('-created_at')[:10]
+
+    serializer = ProblemSerializer(problems, many=True, context={'request': request})
+    return Response(serializer.data, status=status.HTTP_200_OK)

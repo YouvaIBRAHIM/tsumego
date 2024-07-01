@@ -6,6 +6,13 @@ from users.models import Role, UserRole
 
 User = get_user_model()
 
+
+POINTS = {
+    'beginner': 10,
+    'intermediate': 20,
+    'advanced': 30,
+}
+
 class Command(BaseCommand):
     help = 'Create fake users with random roles'
 
@@ -29,6 +36,7 @@ class Command(BaseCommand):
                     'last_name': last_name,
                     'email': email,
                     'is_active': True,
+                    'score': self.get_random_score(),
                 }
             )
             if created:
@@ -41,3 +49,8 @@ class Command(BaseCommand):
                     UserRole.objects.create(user=user, role=role)
 
         self.stdout.write(self.style.SUCCESS('Successfully created 100 fake users with random roles'))
+
+    def get_random_score(self):
+        score_options = list(POINTS.values())
+        score = random.choice(score_options) * random.randint(1, 10) 
+        return score

@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 import { Box, Button, Grid, Modal, Paper, Stack } from "@mui/material"
 
 import AsideList from "../components/AsideList/AsideList"
-import AsideListSkeleton from "../components/AsideList/AsideListSkeleton"
+import AsideListSkeleton from "../components/Skeletons/ListSkeleton"
 import ProblemsAsideList from "../components/AsideList/ProblemsAsideList"
 import ButtonOpenCreationModal from "../components/CreationTsumego/ButtonOpenCreationModal"
 import CreationModal from "../components/CreationTsumego/CreationModal"
 import Plateau from "../components/Plateau/Plateau"
-import PlateauSkeleton from "../components/Plateau/PlateauSkeleton"
+import PlateauSkeleton from "../components/Skeletons/PlateauSkeleton"
 import Search from "../components/Search"
 import SelectFilter from "../components/SelectFilter"
 import ErrorView from "../components/Views/ErrorView"
@@ -58,6 +58,8 @@ export default function Problems() {
     updateSearch,
     isMobileScreen,
     checkProblemSolutionMutation,
+    problem,
+    setProblem
   } = useTsumegoProblemList()
 
   const onSetCurrentChoice = (value: string) => setCurrentChoice(value)
@@ -86,6 +88,12 @@ export default function Problems() {
     }
   }, [problems?.data])
 
+  useEffect(() => {
+    if (problem) {
+      setCurrentProblem(problem)
+      setProblem(null)
+    }
+  }, [problem])
   const handleIntersectionClick = (
     intersection: string,
     setState: React.Dispatch<React.SetStateAction<IGo>>,

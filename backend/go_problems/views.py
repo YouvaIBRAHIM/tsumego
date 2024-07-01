@@ -130,3 +130,31 @@ def check_solution(request):
     else:
         return Response({"message": "Solution incorrecte"}, status=status.HTTP_406_NOT_ACCEPTABLE)
     
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def problems_success_rate(request):
+    user = request.user
+    problems = Problem.objects.filter(pk_user=user)[:10]
+    
+    data = []
+    for problem in problems:
+        total = Parties.objects.filter(tsumego_problem=problem).count()
+        successful = Parties.objects.filter(tsumego_problem=problem, won=True).count()
+        failed = total - successful
+        
+        data.append({
+            'label': problem.label[0:25],
+            'successful': successful,
+            'failed': failed,
+        })
+
+    stats = [[], [], []]
+
+    for dt in data:
+        stats[0].append(dt['successful'])
+        stats[1].append(dt['failed'])
+        stats[2].append(dt['label'])
+
+    
+    return Response(stats)

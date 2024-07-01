@@ -34,3 +34,4 @@ class ProblemSerializer(serializers.ModelSerializer):
               data.pop('SOL', None)
 
         return data
+        

@@ -1,17 +1,9 @@
-import {
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Tooltip,
-  alpha,
-} from "@mui/material"
-
-import { truncateString } from "@src/services/utils.service"
-
-import { levelToNumber } from "../../services/utils.service"
-import { IProblem } from "../../types/go.types"
-import Level from "../Level"
+import { ListItem, ListItemButton, ListItemText, Tooltip, alpha } from "@mui/material"
 import { IAsideListData } from "./AsideList"
+import { IProblem } from "../../types/go.types"
+import { truncateString } from "@src/services/utils.service"
+import Level from "../Level"
+import { levelToNumber } from "../../services/utils.service"
 
 export interface IProblemsAsideList {
   data: IAsideListData[] | null

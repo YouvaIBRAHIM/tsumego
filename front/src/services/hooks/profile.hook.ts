@@ -45,6 +45,7 @@ export const useProfile = () => {
         const { first_name, last_name, email, username } = data
         setUser({
           id: user?.id as number,
+          score: user?.score as number,
           roles: user?.roles ?? [],
           firstName: first_name,
           lastName: last_name,

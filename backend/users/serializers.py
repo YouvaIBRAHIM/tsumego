@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'roles']
+        fields = ['id', 'first_name', 'last_name', 'email', 'roles', 'score']
 
     def get_roles(self, obj):
         return [role.name for role in obj.roles.all()]
@@ -78,3 +78,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
+
+class TopPlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'score']

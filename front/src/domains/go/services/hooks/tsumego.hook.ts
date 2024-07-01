@@ -18,6 +18,7 @@ import {
   updateProblemStatus,
 } from "../api.services"
 import { useDebounce } from "./global.hook"
+import { useProblem } from "@src/reducers/problem.store"
 
 export const useTsumegoList = () => {
   const queryClient = useQueryClient()
@@ -141,6 +142,7 @@ export const useTsumegoProblemList = () => {
     orderBy: "label",
   })
   const { showSnackBar } = useSnackBarStore()
+  const { problem, setProblem } = useProblem()
 
   const debouncedSearch = useDebounce(search.value, 500)
 
@@ -200,5 +202,7 @@ export const useTsumegoProblemList = () => {
     updateSearch,
     isMobileScreen,
     checkProblemSolutionMutation,
+    problem,
+    setProblem
   }
 }

@@ -1,9 +1,9 @@
 import { Skeleton, Stack } from "@mui/material"
 
-const AsideListSkeleton = () => {
+const ListSkeleton = () => {
   return (
     <Stack
-      p={2}
+      p={0.5}
       sx={{
         minHeight: "50vh",
       }}
@@ -15,8 +15,9 @@ const AsideListSkeleton = () => {
       <Skeleton height={60} />
       <Skeleton height={60} />
       <Skeleton height={60} />
+      <Skeleton height={60} />
     </Stack>
   )
 }
 
-export default AsideListSkeleton
+export default ListSkeleton

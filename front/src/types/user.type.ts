@@ -3,7 +3,8 @@ export interface IUser {
   first_name: string
   last_name: string
   email: string
-  roles: IValideUserRoles[]
+  roles: IValideUserRoles[],
+  score: number
 }
 
 export interface IRole {
@@ -32,7 +33,8 @@ export interface AuthCheckResponse {
     roles: IValideUserRoles[]
     firstName: string
     lastName: string
-    id: number
+    id: number,
+    score: number
   }
 }
 

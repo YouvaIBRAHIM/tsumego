@@ -22,18 +22,21 @@ export interface IBreakPoints {
 }
 
 export interface ThemePalette {
-  primary: {
-    main: string
-  }
-  divider: string
-  background: {
-    default: string
-    paper: string
-  }
-  text: {
-    primary: string
-    secondary: string
-  }
+    primary: {
+        main: string;
+    };
+    secondary: {
+        main: string;
+    };
+    divider: string;
+    background: {
+        default: string;
+        paper: string;
+    };
+    text: {
+        primary: string;
+        secondary: string;
+    };
 }
 
 export interface ThemeObject {

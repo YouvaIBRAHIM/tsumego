@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
 from enum import Enum
+from datetime import datetime
 
 User = get_user_model()
 
@@ -24,6 +25,8 @@ class Problem(models.Model):
     default=NextToPlay.BLACK.value,
   )
   active = models.BooleanField(default=False, verbose_name='active')
+  created_at = models.DateTimeField(default=datetime.now())
+  updated_at = models.DateTimeField(default=datetime.now())
 
   def clean(self):
     if self.nextToPlay not in NextToPlay._value2member_map_:

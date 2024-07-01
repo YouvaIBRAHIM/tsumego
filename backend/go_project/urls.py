@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import register_view, login_view, logout_view, check_auth_view, user_profile_view, change_password_view, delete_user_account_view, get_csrf_token
+from .views import register_view, login_view, logout_view, check_auth_view, user_profile_view, change_password_view, delete_user_account_view, get_csrf_token, top_players, user_progress, get_top_problems
 
 
 urlpatterns = [
@@ -31,4 +31,7 @@ urlpatterns = [
     path('api/profile/change-password/', change_password_view, name='change-password'),
     path('api/profile/delete/', delete_user_account_view, name='delete-account'),
     path('api/csrf-token/', get_csrf_token, name='get-csrf-token'),
+    path('api/top/players/', top_players, name='top-players'),
+    path('api/user/progression/', user_progress, name='user-progression'),
+    path('api/top/problems/', get_top_problems, name='top-problems'),
 ]
