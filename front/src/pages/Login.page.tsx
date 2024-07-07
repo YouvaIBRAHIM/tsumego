@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react"
 
 import {
-  Alert,
   Box,
   Button,
   Container,
   Link,
   Paper,
   Typography,
+  useTheme,
 } from "@mui/material"
 
 import { useAuthStore } from "@reducers/auth.reducer"
 import { useNavigate } from "react-router-dom"
 
 import CustomTextField from "@src/components/TextField"
+import { useSnackBarStore } from "@src/reducers/snackbar.reducer"
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const login = useAuthStore((state) => state.login)
   const user = useAuthStore((state) => state.user)
   const navigate = useNavigate()
+  const theme = useTheme()
+  const { showSnackBar } = useSnackBarStore()
+
 
   useEffect(() => {
     if (user) {
@@ -33,12 +36,14 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     setLoading(true)
-    setError(null)
     try {
       await login(email, password)
     } catch (error) {
-      console.error("Login failed:", error)
-      setError("Login failed. Please check your username and password.")
+      if (error instanceof Error) {
+        showSnackBar(error.message, 'error')
+      }else{
+        showSnackBar('Une erreur est survenue lors de l\'inscription. Veuilllez réessayer.', 'error')
+      }
     } finally {
       setLoading(false)
       console.log("Login process finished")
@@ -49,6 +54,12 @@ const LoginPage: React.FC = () => {
     <Container component="main" maxWidth="sm">
       <Paper elevation={3} sx={{ padding: 3, marginTop: 8 }}>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <img
+            src={theme.palette.mode === 'dark' ? 'logo-dark.png' : 'logo-light.png'}
+            alt='GoHub logo'
+            loading="lazy"
+            height={150}
+          />
           <Typography component="h1" variant="h5">
             Connexion
           </Typography>
@@ -67,11 +78,6 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            {error && (
-              <Alert severity="error" sx={{ mt: 2 }}>
-                {error}
-              </Alert>
-            )}
             <Button
               type="submit"
               variant="contained"
@@ -85,7 +91,7 @@ const LoginPage: React.FC = () => {
             <Link
               onClick={() => navigate("/register")}
               variant="body2"
-              sx={{ color: "rgb(192, 192, 192)" }}
+              sx={{ color: theme.palette.mode === 'dark' ? "rgb(192, 192, 192)" : "rgb(25, 25, 25)" }}
             >
               {"Vous n'avez pas de compte ? Inscrivez-vous"}
             </Link>

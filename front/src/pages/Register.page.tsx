@@ -1,13 +1,13 @@
 import React, { useState } from "react"
 
 import {
-  Alert,
   Box,
   Button,
   Container,
   Link,
   Paper,
   Typography,
+  useTheme,
 } from "@mui/material"
 
 import { useAuthStore } from "@reducers/auth.reducer"
@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom"
 import CustomTextField from "@src/components/TextField"
 
 import { IUserRegister } from "@src/types/user.type"
+import { useSnackBarStore } from "@src/reducers/snackbar.reducer"
 
 const RegisterPage: React.FC = () => {
   const [user, setUser] = useState<IUserRegister>({
@@ -25,19 +26,23 @@ const RegisterPage: React.FC = () => {
     password: "",
   })
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const { register } = useAuthStore()
   const navigate = useNavigate()
+  const theme = useTheme()
+  const { showSnackBar } = useSnackBarStore()
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     setLoading(true)
-    setError(null)
     try {
       await register(user)
       navigate("/")
     } catch (error) {
-      setError("Registration failed. Please check your input.")
+      if (error instanceof Error) {
+        showSnackBar(error.message, 'error')
+      }else{
+        showSnackBar('Une erreur est survenue lors de l\'inscription. Veuilllez réessayer.', 'error')
+      }
     } finally {
       setLoading(false)
     }
@@ -54,6 +59,12 @@ const RegisterPage: React.FC = () => {
     <Container component="main" maxWidth="sm">
       <Paper elevation={3} sx={{ padding: 3, marginTop: 8 }}>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <img
+            src={theme.palette.mode === 'dark' ? 'logo-dark.png' : 'logo-light.png'}
+            alt='GoHub logo'
+            loading="lazy"
+            height={150}
+          />
           <Typography component="h1" variant="h5">
             Inscription
           </Typography>
@@ -88,11 +99,6 @@ const RegisterPage: React.FC = () => {
               onChange={(e) => onSetUser("password", e.target.value)}
               required
             />
-            {error && (
-              <Alert severity="error" sx={{ mt: 2 }}>
-                {error}
-              </Alert>
-            )}
             <Button
               type="submit"
               variant="contained"
@@ -106,7 +112,7 @@ const RegisterPage: React.FC = () => {
             <Link
               onClick={() => navigate("/login")}
               variant="body2"
-              sx={{ color: "rgb(192, 192, 192)" }}
+              sx={{ color: theme.palette.mode === 'dark' ? "rgb(192, 192, 192)" : "rgb(25, 25, 25)" }}
             >
               {"Vous avez déjà un compte ? Connectez-vous"}
             </Link>

@@ -216,30 +216,37 @@ export default function Problems() {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Stack
-                sx={{
-                  width: "90%",
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <Stack gap={2} px={1}>
-                  <Stack direction="row" gap={2}>
-                    <Search value={search.value} onChange={onChangeSearchValue} />
-                    <SelectFilter
-                      currentValue={search.level as string}
-                      onChange={onChangeFilter}
-                      values={difficulties}
-                    />
+                <Stack
+                  sx={{
+                    width: "90%",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                  >
+                  <Paper
+                    sx={{
+                      px: 2,
+                      py: 3,
+                    }}
+                  >
+                    <Stack gap={2} px={1}>
+                      <Stack direction="row" gap={2}>
+                        <Search value={search.value} onChange={onChangeSearchValue} />
+                        <SelectFilter
+                          currentValue={search.level as string}
+                          onChange={onChangeFilter}
+                          values={difficulties}
+                        />
+                      </Stack>
+                    </Stack>
+                    {renderAsideList()}
+                  </Paper>
+                  <Stack alignItems={"flex-end"}>
+                    <Button onClick={() => setOpenModal(false)}>Fermer</Button>
                   </Stack>
                 </Stack>
-                {renderAsideList()}
-                <Stack alignItems={"flex-end"}>
-                  <Button onClick={() => setOpenModal(false)}>Fermer</Button>
-                </Stack>
-              </Stack>
             </Modal>
           </>
         ) : (

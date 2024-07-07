@@ -33,7 +33,7 @@ const ProblemsAsideList = ({
                   border: `2px solid ${theme.palette.mode === "dark" ? alpha(theme.palette.common.white, 0.5) : alpha(theme.palette.common.black, 0.5)}`,
                 }),
                 ...(value.won && {
-                  backgroundColor: `${theme.palette.primary.dark}!important`,
+                  backgroundColor: `${theme.palette.primary.light}!important`,
                 }),
                 "&.MuiListItemButton-root": {
                   margin: 0.5,

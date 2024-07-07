@@ -21,7 +21,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ user: data.user })
       localStorage.setItem("user", JSON.stringify(data.user))
     } catch (error) {
-      console.error("Login failed:", error)
+      throw new Error(error as string);
     }
   },
   register: async (user) => {
@@ -30,7 +30,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ user: data.user })
       localStorage.setItem("user", JSON.stringify(data.user))
     } catch (error) {
-      console.error("Registration failed:", error)
+      throw new Error(error as string);
     }
   },
   logout: async () => {

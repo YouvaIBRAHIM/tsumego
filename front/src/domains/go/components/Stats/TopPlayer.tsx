@@ -25,7 +25,7 @@ const TopPlayer = ({topPlayers} : {topPlayers: ITopPlayer[]}) => {
                         }
                     >
                         <ListItemAvatar sx={{minWidth: '40px'}}>
-                            <Avatar sx={{ width: 32, height: 32 }}>{value.username[0]}</Avatar>
+                            <Avatar sx={{ width: 32, height: 32 }}>{value.username[0].toUpperCase()}</Avatar>
                         </ListItemAvatar>
                         {value.username.length > 15 ? (
                             <Tooltip title={value.username}>

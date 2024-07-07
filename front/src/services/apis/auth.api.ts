@@ -3,6 +3,7 @@ import {
   IUserRegister,
   IValideUserRoles,
 } from "@src/types/user.type"
+import { checkResponse } from "@services/utils.service"
 
 const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL
 
@@ -61,11 +62,8 @@ export async function fetchAccess(
     credentials: "include",
   })
 
-  if (!response.ok) {
-    throw new Error("Network response was not ok")
-  }
 
-  const { user: loggedUser } = await response.json()
+  const { user: loggedUser } = await checkResponse(response) as AuthCheckResponse
   return { user: loggedUser }
 }
 
@@ -88,7 +86,7 @@ export async function fetchRegister(
     throw new Error("Network response was not ok")
   }
 
-  const { user: registeredUser } = await response.json()
+  const { user: registeredUser } = await checkResponse(response) as AuthCheckResponse
   return { user: registeredUser }
 }
 

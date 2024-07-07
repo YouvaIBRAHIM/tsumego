@@ -10,6 +10,7 @@ import { SignOut, User } from "@phosphor-icons/react"
 import { useAuthStore } from "@src/reducers/auth.reducer"
 import { truncateString } from "@src/services/utils.service"
 import { useNavigate } from "react-router-dom"
+import { TOOLBAR_HEIGTH } from "@src/services/constants.service"
 
 const Header = () => {
   const isMobileScreen = useMediaQuery((theme: Theme) =>
@@ -22,7 +23,7 @@ const Header = () => {
   const menu = useMemo(
     () => ({
       label: "Menu",
-      openIcon: <Avatar sx={{ width: 32, height: 32 }}>{user?.username[0]}</Avatar>,
+      openIcon: <Avatar sx={{ width: 32, height: 32 }}>{user?.username[0].toUpperCase()}</Avatar>,
       options: [
         [
           {
@@ -62,7 +63,14 @@ const Header = () => {
             alignItems="center"
           >
             <Stack>
-              <Typography variant="h6">Header</Typography>
+              <img
+                src='logo-dark.png'
+                alt='GoHub logo'
+                loading="lazy"
+                style={{
+                  height: `${TOOLBAR_HEIGTH}rem`
+                }}
+              />
             </Stack>
             <Stack direction="row" alignItems="center" gap={1}>
               <Typography>

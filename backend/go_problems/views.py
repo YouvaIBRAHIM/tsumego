@@ -12,6 +12,7 @@ from .serializers import ProblemSerializer
 from .filters import ProblemFilter
 from utils.pagination import StandardResultsSetPagination
 from users.models import UserRole
+from django.db.models import Count
 
 class ProblemViewSet(viewsets.ModelViewSet):
     queryset = Problem.objects.all()
@@ -135,7 +136,7 @@ def check_solution(request):
 @permission_classes([IsAuthenticated])
 def problems_success_rate(request):
     user = request.user
-    problems = Problem.objects.filter(pk_user=user)[:10]
+    problems = Problem.objects.filter(pk_user=user).annotate(total_parties=Count('parties')).order_by('-total_parties')[:10]
     
     data = []
     for problem in problems:
