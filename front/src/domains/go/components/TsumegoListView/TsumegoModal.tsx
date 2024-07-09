@@ -12,6 +12,8 @@ import { IProblem, ITheme } from "../../types/go.types"
 import Go from "../Plateau/Go"
 import { IPlateau } from "../Plateau/Plateau"
 import CustomSwitch from "../Switch"
+import Level from "../Level"
+import { levelToNumber } from "../../services/utils.service"
 
 interface ITsumegoModal {
   open: boolean
@@ -91,7 +93,7 @@ const TsumegoModal = ({
                 {problem.label}
               </Typography>
               <Typography sx={{ fontSize: 14 }}>
-                {problem.level as string}
+                <Level level={levelToNumber(problem.level)} />
               </Typography>
               <Stack direction="row" alignItems="center">
                 <Typography sx={{ fontSize: 14 }} color="text.secondary">

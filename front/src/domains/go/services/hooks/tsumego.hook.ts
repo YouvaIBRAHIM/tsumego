@@ -42,12 +42,13 @@ export const useTsumegoList = () => {
     isFetching,
     refetch,
     isError,
-    error,
+    error
   } = useQuery({
     queryKey: ["problems", page, perPage],
     queryFn: () => getProblems(page, perPage, search),
     retry: 3,
   })
+
 
   useEffect(() => {
     if (tsumegoToModerate) {
@@ -59,7 +60,12 @@ export const useTsumegoList = () => {
 
   useEffect(() => {
     refetch()
-  }, [page, perPage, debouncedSearch, search.searchBy, search.level, search.status])
+  }, [page])
+
+  useEffect(() => {
+    refetch()
+    .then(() => setPage(1))
+  }, [perPage, debouncedSearch, search.searchBy, search.level, search.status])
 
   const deleteTsumegoMutation = useMutation({
     mutationFn: (id: string) => deleteProblem(id),
@@ -83,12 +89,13 @@ export const useTsumegoList = () => {
   })
 
   const handleRequestSort = (property: ITsumegoProblemSearch["orderBy"]) => {
-    const isAsc = search.orderBy === property && search.order === "asc"
-    setSearch((prev) => ({
-      ...prev,
-      order: isAsc ? "desc" : "asc",
-      orderBy: property,
-    }))
+    console.log("🚀 ~ handleRequestSort ~ property:", property)
+    // const isAsc = search.orderBy === property && search.order === "asc"
+    // setSearch((prev) => ({
+    //   ...prev,
+    //   order: isAsc ? "desc" : "asc",
+    //   orderBy: property,
+    // }))
   }
 
   const handleChangePage = (_: React.ChangeEvent<unknown>, value: number) => {

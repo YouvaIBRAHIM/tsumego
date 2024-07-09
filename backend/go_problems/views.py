@@ -37,7 +37,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
         if 'player' in roles and len(roles) == 1:
             self.queryset = self.queryset.exclude(pk_user=user)
 
-        return self.queryset
+        return self.queryset.order_by('-created_at')
 
     def create(self, seializer, *args, **kwargs):
         serializer = ProblemSerializer(data=self.request.data)

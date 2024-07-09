@@ -10,6 +10,8 @@ import { Suspense } from "react"
 import { useTsumegoList } from "../../services/hooks/tsumego.hook"
 import { IProblem } from "../../types/go.types"
 import TableSkeleton from "./TableSkeletons"
+import Level from "../Level"
+import { levelToNumber } from "../../services/utils.service"
 
 interface ITsumegoListBody {
   problems: IProblem[]
@@ -35,7 +37,9 @@ const TsumegoListBody = ({
                 {problem.label}
               </TableCell>
               <TableCell align="left">{problem.author}</TableCell>
-              <TableCell align="left">{problem.level as string}</TableCell>
+              <TableCell align="left">
+                <Level level={levelToNumber(problem.level)} />
+              </TableCell>
               <TableCell align="left">
                 <Tooltip
                   title={problem.active ? "Rendre inactif" : "Rendre visible"}

@@ -3,7 +3,7 @@ import MuiDrawer from "@mui/material/Drawer"
 
 import OpenButtonSideBar from "@components/SideBar/OpenButtonSideBar"
 import DrawerContent from "@components/SideBar/SideBarContent/SideBarContent"
-import { HouseSimple, Kanban, Plus, PuzzlePiece } from "@phosphor-icons/react"
+import { HouseSimple, Kanban, PuzzlePiece } from "@phosphor-icons/react"
 import { breakpoints, sideBarConst } from "@services/constants.service"
 import { useSideBar } from "@src/reducers/sidebar.reducer"
 import { ISideBarListItem } from "./SideBarListItem/ISideBarListItem"
@@ -32,14 +32,6 @@ const sideBarList: ISideBarListItem[] = [
   },
 ]
 
-const sideBarHeader: ISideBarListItem = {
-  id: "new_party",
-  label: "Nouvelle partie",
-  icon: <Plus size={24} />,
-  action: () => console.log("new_party"),
-  roles: ["all"],
-}
-
 const SideBar = () => {
   const { isOpen, toggleOpenSideBar } = useSideBar()
   const matches = useMediaQuery(`(min-width:${breakpoints.md}px)`)
@@ -65,7 +57,7 @@ const SideBar = () => {
           }),
         }}
       >
-        <DrawerContent sideBarList={sideBarList} sideBarHeader={sideBarHeader} />
+        <DrawerContent sideBarList={sideBarList} />
       </Drawer>
       <OpenButtonSideBarContainer open={isOpen}>
         <OpenButtonSideBar />

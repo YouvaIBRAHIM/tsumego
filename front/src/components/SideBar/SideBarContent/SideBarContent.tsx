@@ -7,7 +7,6 @@ import useIsAuthorized from "@src/components/hooks/useIsAuthorized"
 import { useColorMode } from "@src/reducers/theme.reducer"
 
 const DrawerContent = ({
-  sideBarHeader,
   sideBarList,
 }: ISideBarContent): JSX.Element => {
   const { colorMode, toggleColorMode } = useColorMode()
@@ -15,16 +14,6 @@ const DrawerContent = ({
 
   return (
     <>
-      {sideBarHeader && (
-        <>
-          <SideBarListItem
-            sideBarListElement={sideBarHeader}
-            key={sideBarHeader.id}
-            isAuthorized={isAuthorized(sideBarHeader.roles)}
-          />
-          <Divider />
-        </>
-      )}
       {sideBarList && (
         <List>
           {sideBarList.map((sideBarListElement) => (

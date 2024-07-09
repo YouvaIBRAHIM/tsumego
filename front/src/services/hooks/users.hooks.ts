@@ -36,7 +36,12 @@ export const useUserList = () => {
 
   useEffect(() => {
     refetch()
-  }, [page, perPage, debouncedSearch, search.role, search.searchBy])
+  }, [page])
+
+  useEffect(() => {
+    refetch()
+    .then(() => setPage(1))
+  }, [perPage, debouncedSearch, search.role, search.searchBy])
 
   const deleteUserMutation = useMutation({
     mutationFn: (id: string) => deleteUser(id),
